@@ -36,7 +36,6 @@ section{padding:72px 0}
 
 .notify-foot{display:flex;justify-content:space-between;gap:12px;margin-top:8px;font-size:11px;color:var(--muted);letter-spacing:.02em}.notify-foot #quakeFeedState{color:#8fe3b2}.notify-foot #quakeFeedState.offline{color:#ff9b9b}.notify-actions .secondary{opacity:.82}.notify-actions .secondary:hover{opacity:1}
 </style>
-</style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#07111f">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3eZK4GqK6bYl1XjY7x5h4jY6Yj2E=" crossorigin=""/>
@@ -77,7 +76,7 @@ section{padding:72px 0}
     <button id="enableQuakeNotifications" type="button">Enable alerts</button>
     <button id="testQuakeNotification" type="button" class="secondary">Test</button>
   </div>
-  <div class="notify-foot"><span id="quakeFeedState">● USGS feed connecting</span><span id="quakeLastSync">Last sync: --</span></div>
+  <div class="notify-foot"><span id="quakeFeedState">● Multi-source seismic feed connecting</span><span id="quakeLastSync">Last sync: --</span></div>
 </div>
 <div id="envStatus" class="env-status">Connecting to live environmental data...</div>
 </div></div></div></section>
@@ -220,104 +219,41 @@ section{padding:72px 0}
   function formatAgo(ms){ const min=Math.max(0,Math.round(ms/60000)); return min<1?'just now':min+' min ago'; }
   const NOTIFY_KEY='igersEarthquakeNotifications';
   const seenKey='igersSeenEarthquakeIds';
-  const notifyPanel=$('quakeNotifyPanel');
-  const notifyButton=$('enableQuakeNotifications');
-  const notifyStatus=$('notifyStatus');
-  const notifyThreshold=$('notifyThreshold');
-  const testNotifyButton=$('testQuakeNotification');
-  const quakeFeedState=$('quakeFeedState');
-  const quakeLastSync=$('quakeLastSync');
-  let quakeInitialized=false;
-  let quakePollingTimer=null;
-  let quakeLastSuccessfulSync=0;
-
-  function getNotifySettings(){
-    try{return JSON.parse(localStorage.getItem(NOTIFY_KEY)||'null')||{enabled:false,threshold:'4.5'};}catch(_){return {enabled:false,threshold:'4.5'};}
-  }
-  function setNotifyStatus(text,on=false,error=false){
-    if(notifyStatus) notifyStatus.textContent=text;
-    notifyPanel?.classList.toggle('is-on',on); notifyPanel?.classList.toggle('is-error',error);
-  }
+  const notifyPanel=$('quakeNotifyPanel'), notifyButton=$('enableQuakeNotifications'), notifyStatus=$('notifyStatus'), notifyThreshold=$('notifyThreshold'), testNotifyButton=$('testQuakeNotification');
+  const quakeFeedState=$('quakeFeedState'), quakeLastSync=$('quakeLastSync');
+  let quakeInitialized=false, quakePollingTimer=null;
+  const USGS='https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson';
+  const EMSC_BASE='https://www.seismicportal.eu/fdsnws/event/1/query?format=json&limit=100&orderby=time&minmagnitude=2.5';
+  function getNotifySettings(){try{return JSON.parse(localStorage.getItem(NOTIFY_KEY)||'null')||{enabled:false,threshold:'4.5'};}catch(_){return {enabled:false,threshold:'4.5'};}}
+  function setNotifyStatus(text,on=false,error=false){if(notifyStatus)notifyStatus.textContent=text;notifyPanel?.classList.toggle('is-on',on);notifyPanel?.classList.toggle('is-error',error);}
   function notificationSupported(){return 'Notification' in window;}
-  function setQuakeFeedState(ok,text){ if(quakeFeedState){quakeFeedState.textContent='● '+(text|| (ok?'USGS feed online':'USGS feed offline')); quakeFeedState.classList.toggle('offline',!ok);} }
-  function markQuakeSync(){ quakeLastSuccessfulSync=Date.now(); if(quakeLastSync) quakeLastSync.textContent='Last sync: '+new Date(quakeLastSuccessfulSync).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
-  async function testQuakeNotification(){
-    if(!notificationSupported()){setNotifyStatus('Browser notifications are not supported',false,true);return;}
-    try{
-      if(Notification.permission!=='granted'){const permission=await Notification.requestPermission(); if(permission!=='granted'){setNotifyStatus('Permission not granted',false,true);return;}}
-      if('serviceWorker' in navigator){ const reg=await navigator.serviceWorker.ready; await reg.showNotification('IGERS earthquake alert test',{body:'Browser alert channel is working. No real earthquake is being reported.',tag:'igers-test',renotify:false,icon:'icon.svg',badge:'icon.svg',data:{url:location.href}}); }
-      else new Notification('IGERS earthquake alert test',{body:'Browser alert channel is working.'});
-    }catch(_){setNotifyStatus('Test notification failed',false,true);}
-  }
-  async function requestQuakeNotifications(){
-    if(!notificationSupported()){setNotifyStatus('Browser notifications are not supported',false,true);return;}
-    try{
-      const permission=await Notification.requestPermission();
-      if(permission==='granted'){
-        const settings={enabled:true,threshold:notifyThreshold?.value||'4.5'};
-        localStorage.setItem(NOTIFY_KEY,JSON.stringify(settings));
-        setNotifyStatus('Alerts enabled · '+(settings.threshold==='significant'?'Significant':'M'+settings.threshold+'+ · Asia'),true);
-        if('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
-      }else setNotifyStatus('Permission not granted',false,true);
-    }catch(_){setNotifyStatus('Could not enable notifications',false,true);}
-  }
-  function updateNotifyUI(){
-    const s=getNotifySettings();
-    if(notifyThreshold) notifyThreshold.value=s.threshold||'4.5';
-    if(s.enabled && notificationSupported() && Notification.permission==='granted') setNotifyStatus('Alerts enabled · '+(s.threshold==='significant'?'Significant':'M'+s.threshold+'+ · Asia'),true);
-    else setNotifyStatus('Notifications are off');
-  }
-  notifyButton?.addEventListener('click',requestQuakeNotifications);
-  testNotifyButton?.addEventListener('click',testQuakeNotification);
-  notifyThreshold?.addEventListener('change',()=>{try{const s=getNotifySettings();s.threshold=notifyThreshold.value;localStorage.setItem(NOTIFY_KEY,JSON.stringify(s));}catch(_){} updateNotifyUI();});
-  updateNotifyUI();
-
-  async function fireEarthquakeNotification(event){
-    const s=getNotifySettings(); if(!s.enabled || !notificationSupported() || Notification.permission!=='granted') return;
-    const p=event.properties||{}, m=Number(p.mag);
-    const qualifies=s.threshold==='significant' ? (p.alert || m>=6) : Number.isFinite(m) && m>=Number(s.threshold);
-    if(!qualifies) return;
-    const id=event.id || (p.code||'')+'-'+(p.time||'');
-    let seen=[]; try{seen=JSON.parse(localStorage.getItem(seenKey)||'[]');}catch(_){}
-    if(seen.includes(id)) return;
-    seen=[id,...seen].slice(0,100); try{localStorage.setItem(seenKey,JSON.stringify(seen));}catch(_){}
-    const place=p.place||'Unknown location';
-    const title='Earthquake alert · M'+(Number.isFinite(m)?m.toFixed(1):'?');
-    const body=place+' · '+new Date(p.time||Date.now()).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-    try{
-      if(navigator.serviceWorker?.controller){
-        const reg=await navigator.serviceWorker.ready; await reg.showNotification(title,{body,tag:'quake-'+id,renotify:true,data:{url:p.url||location.href},icon:'icon.svg',badge:'icon.svg'});
-      }else new Notification(title,{body,tag:'quake-'+id});
-    }catch(_){}
-  }
-
+  function setQuakeFeedState(ok,text){if(quakeFeedState){quakeFeedState.textContent='● '+text;quakeFeedState.classList.toggle('offline',!ok);}}
+  function markQuakeSync(){if(quakeLastSync)quakeLastSync.textContent='Last sync: '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+  async function testQuakeNotification(){if(!notificationSupported()){setNotifyStatus('Browser notifications are not supported',false,true);return;}try{if(Notification.permission!=='granted'&&await Notification.requestPermission()!=='granted')return setNotifyStatus('Permission not granted',false,true);const reg='serviceWorker' in navigator?await navigator.serviceWorker.ready:null;if(reg)await reg.showNotification('IGERS earthquake alert test',{body:'Alert channel is working. No real earthquake is being reported.',tag:'igers-test',icon:'icon.svg',badge:'icon.svg',data:{url:location.href}});else new Notification('IGERS earthquake alert test',{body:'Alert channel is working.'});}catch(_){setNotifyStatus('Test notification failed',false,true);}}
+  async function requestQuakeNotifications(){if(!notificationSupported())return setNotifyStatus('Browser notifications are not supported',false,true);try{const permission=await Notification.requestPermission();if(permission==='granted'){const settings={enabled:true,threshold:notifyThreshold?.value||'4.5'};localStorage.setItem(NOTIFY_KEY,JSON.stringify(settings));setNotifyStatus('Alerts enabled · '+(settings.threshold==='significant'?'Significant':'M'+settings.threshold+'+ · Asia'),true);if('serviceWorker' in navigator)await navigator.serviceWorker.register('sw.js');}else setNotifyStatus('Permission not granted',false,true);}catch(_){setNotifyStatus('Could not enable notifications',false,true);}}
+  function updateNotifyUI(){const x=getNotifySettings();if(notifyThreshold)notifyThreshold.value=x.threshold||'4.5';if(x.enabled&&notificationSupported()&&Notification.permission==='granted')setNotifyStatus('Alerts enabled · '+(x.threshold==='significant'?'Significant':'M'+x.threshold+'+ · Asia'),true);else setNotifyStatus('Notifications are off');}
+  notifyButton?.addEventListener('click',requestQuakeNotifications);testNotifyButton?.addEventListener('click',testQuakeNotification);notifyThreshold?.addEventListener('change',()=>{try{const x=getNotifySettings();x.threshold=notifyThreshold.value;localStorage.setItem(NOTIFY_KEY,JSON.stringify(x));}catch(_){}updateNotifyUI();});updateNotifyUI();
+  async function fireEarthquakeNotification(event){const x=getNotifySettings();if(!x.enabled||!notificationSupported()||Notification.permission!=='granted')return;const p=event.properties||{},m=Number(p.mag);const g=event.geometry?.coordinates||[],lat=Number(g[1]),lon=Number(g[0]),dist=haversineKm(bangladeshLat,bangladeshLon,lat,lon);const threshold=x.threshold==='significant'?(p.alert||m>=6):Number.isFinite(m)&&m>=Number(x.threshold);if(!threshold)return;const id=event.id||event._id||((p.code||p.place||'quake')+'-'+(p.time||''));let seen=[];try{seen=JSON.parse(localStorage.getItem(seenKey)||'[]');}catch(_){}if(seen.includes(id))return;seen=[id,...seen].slice(0,200);try{localStorage.setItem(seenKey,JSON.stringify(seen));}catch(_){}const title='Earthquake alert · M'+(Number.isFinite(m)?m.toFixed(1):'?');const body=(p.place||'Unknown location')+' · '+Math.round(dist)+' km from Dhaka';try{if(navigator.serviceWorker?.controller){const reg=await navigator.serviceWorker.ready;await reg.showNotification(title,{body,tag:'quake-'+id,renotify:true,icon:'icon.svg',badge:'icon.svg',data:{url:p.url||location.href}});}else new Notification(title,{body});}catch(_){} }
+  function normalizeUSGS(data){return (data.features||[]).map(f=>{f._source='USGS';return f;});}
+  function toEpoch(v){if(Number.isFinite(Number(v)))return Number(v);const n=Date.parse(v);return Number.isFinite(n)?n:NaN;}
+  function normalizeEMSC(data){const rows=Array.isArray(data)?data:(data?.features||data?.events||[]);return rows.map((e,i)=>{const o=e.properties||e;const g=e.geometry?.coordinates||[o.longitude,o.latitude,o.depth];const tm=toEpoch(o.time||o.origin_time||o.originTime);return {type:'Feature',id:'emsc-'+(e.id||o.id||i),_source:'EMSC',properties:{mag:Number(o.mag??o.magnitude),place:o.place||o.flynn_region||o.region||'EMSC event',time:tm,updated:toEpoch(o.updated||o.time),url:o.url||o.event_url},geometry:{type:'Point',coordinates:[Number(g[0]),Number(g[1]),Number(g[2]||0)]}};}).filter(f=>Number.isFinite(f.properties.mag)&&Number.isFinite(f.properties.time));}
+  async function fetchJSON(url,timeoutMs=10000){const c=new AbortController(),t=setTimeout(()=>c.abort(),timeoutMs);try{const r=await fetch(url,{cache:'no-store',signal:c.signal,headers:{Accept:'application/json'}});if(!r.ok)throw Error('feed '+r.status);return await r.json();}finally{clearTimeout(t);}}
   async function loadEarthquakes(){
     const alert=$('quakeAlert');
-    try{
-      const url='https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson';
-      const controller=new AbortController(); const timeout=setTimeout(()=>controller.abort(),12000);
-      let r; try{r=await fetch(url,{cache:'no-store',signal:controller.signal});}finally{clearTimeout(timeout);}
-      if(!r.ok) throw new Error('earthquake feed failed');
-      const data=await r.json(); markQuakeSync(); setQuakeFeedState(true,'USGS feed online'); const features=(data.features||[]).sort((a,b)=>(b.properties?.time||0)-(a.properties?.time||0));
-      const relevant=features.filter(f=>{ const g=f.geometry?.coordinates||[]; const lat=Number(g[1]), lon=Number(g[0]), mag=Number(f.properties?.mag); return Number.isFinite(lat)&&Number.isFinite(lon)&&Number.isFinite(mag)&&isInAsia(lat,lon); }).slice(0,6);
-      if(!quakeInitialized){
-        quakeInitialized=true;
-        // Prime the seen set with current events so enabling alerts does not replay old quakes.
-        try{const ids=features.filter(f=>{const g=f.geometry?.coordinates||[];return isInAsia(Number(g[1]),Number(g[0]));}).map(f=>f.id).filter(Boolean);localStorage.setItem(seenKey,JSON.stringify(ids.slice(0,100)));}catch(_){}
-      } else {
-        relevant.forEach(f=>fireEarthquakeNotification(f));
-      }
-      if(!relevant.length){ alert?.classList.add('clear'); alert?.classList.remove('attention'); setText('quakeMain','No recent qualifying earthquake event in the monitored view.'); setText('quakeMeta','USGS past-hour feed checked successfully · '+features.length+' global events scanned'); }
-      else{
-        const top=relevant[0], p=top.properties||{}, g=top.geometry?.coordinates||[]; const mag=Number(p.mag), dist=haversineKm(bangladeshLat,bangladeshLon,Number(g[1]),Number(g[0]));
-        alert?.classList.remove('clear'); alert?.classList.add(mag>=5?'attention':'clear');
-        setText('quakeMain','M'+(Number.isFinite(mag)?mag.toFixed(1):'?')+' · '+(p.place||'Unknown location'));
-        setText('quakeMeta','Approx. '+Math.round(dist)+' km from Dhaka · '+formatAgo(Date.now()-Number(p.time||Date.now()))+' · USGS Asia-region feed view');
-        setText('quakeTime',p.time?new Date(p.time).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'--');
-        const ql=$('quakeList');
-        if(ql){ql.textContent='';relevant.forEach(f=>{const pr=f.properties||{},gg=f.geometry?.coordinates||[],m=Number(pr.mag),di=haversineKm(bangladeshLat,bangladeshLon,Number(gg[1]),Number(gg[0]));const row=document.createElement('div');row.className='eq-item';const magEl=document.createElement('span');magEl.className='eq-mag';magEl.textContent='M'+(Number.isFinite(m)?m.toFixed(1):'?');const placeEl=document.createElement('span');placeEl.className='eq-place';placeEl.textContent=(pr.place||'Unknown')+' · '+Math.round(di)+' km';row.append(magEl,placeEl);ql.appendChild(row);});}
-      }
-    }catch(_){ setQuakeFeedState(false,'USGS feed unavailable'); setText('quakeMain','Earthquake feed temporarily unavailable.'); setText('quakeMeta','USGS connection could not be reached from this browser.'); const ql=$('quakeList'); if(ql) ql.innerHTML=''; }
+    const startTime=new Date(Date.now()-2*60*60*1000).toISOString();
+    const emscUrl=EMSC_BASE+'&starttime='+encodeURIComponent(startTime);
+    const results=await Promise.allSettled([fetchJSON(USGS),fetchJSON(emscUrl)]);
+    let events=[];let sources=[];
+    if(results[0].status==='fulfilled'){events.push(...normalizeUSGS(results[0].value));sources.push('USGS');}
+    if(results[1].status==='fulfilled'){events.push(...normalizeEMSC(results[1].value));sources.push('EMSC');}
+    const unique=new Map();
+    for(const f of events){const g=f.geometry?.coordinates||[],lat=Number(g[1]),lon=Number(g[0]),m=Number(f.properties?.mag),tm=Number(f.properties?.time);if(!Number.isFinite(lat)||!Number.isFinite(lon)||!Number.isFinite(m)||!Number.isFinite(tm)||!isInAsia(lat,lon))continue;const key=f.id||((Math.round(lat*20)/20)+'|'+(Math.round(lon*20)/20)+'|'+Math.round(tm/60000));if(!unique.has(key)||Number(unique.get(key).properties?.updated||0)<Number(f.properties?.updated||0))unique.set(key,f);}
+    const relevant=[...unique.values()].sort((a,b)=>Number(b.properties?.time)-Number(a.properties?.time)).slice(0,8);
+    if(sources.length){markQuakeSync();setQuakeFeedState(true,'Live seismic feeds · '+sources.join(' + '));}
+    else{setQuakeFeedState(false,'All seismic feeds unavailable');setText('quakeMain','Earthquake feeds temporarily unavailable.');setText('quakeMeta','Automatic retry is active; no alert is inferred while feeds are offline.');return;}
+    if(!quakeInitialized){quakeInitialized=true;try{localStorage.setItem(seenKey,JSON.stringify(relevant.map(f=>f.id).filter(Boolean).slice(0,200)));}catch(_){} } else relevant.forEach(f=>fireEarthquakeNotification(f));
+    if(!relevant.length){alert?.classList.add('clear');alert?.classList.remove('attention');setText('quakeMain','No recent qualifying earthquake event in the monitored Asia view.');setText('quakeMeta','USGS + EMSC checked successfully.');}
+    else{const top=relevant[0],p=top.properties||{},g=top.geometry?.coordinates||[],mag=Number(p.mag),dist=haversineKm(bangladeshLat,bangladeshLon,Number(g[1]),Number(g[0]));alert?.classList.toggle('attention',mag>=5);alert?.classList.toggle('clear',mag<5);setText('quakeMain','M'+(Number.isFinite(mag)?mag.toFixed(1):'?')+' · '+(p.place||'Unknown location'));setText('quakeMeta','Approx. '+Math.round(dist)+' km from Dhaka · '+formatAgo(Date.now()-Number(p.time||Date.now()))+' · '+(top._source||'multi-source')+' seismic feed');setText('quakeTime',p.time?new Date(Number(p.time)).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'--');const ql=$('quakeList');if(ql){ql.textContent='';relevant.forEach(f=>{const pr=f.properties||{},gg=f.geometry?.coordinates||[],m=Number(pr.mag),di=haversineKm(bangladeshLat,bangladeshLon,Number(gg[1]),Number(gg[0]));const row=document.createElement('div');row.className='eq-item';const a=document.createElement('span');a.className='eq-mag';a.textContent='M'+(Number.isFinite(m)?m.toFixed(1):'?');const b=document.createElement('span');b.className='eq-place';b.textContent=(pr.place||'Unknown')+' · '+Math.round(di)+' km · '+(f._source||'feed');row.append(a,b);ql.appendChild(row);});}}
   }
   loadEnvironment(); setInterval(loadEnvironment,60000);
   const scheduleQuakePoll=()=>{ clearTimeout(quakePollingTimer); const delay=document.visibilityState==='visible'?30000:90000; quakePollingTimer=setTimeout(async()=>{await loadEarthquakes(); scheduleQuakePoll();},delay); };
@@ -386,5 +322,6 @@ section{padding:72px 0}
   loadWeather();
 })();
 </script>
+<script src="igers-live-enhancer.js" defer></script>
 </body>
 </html>
