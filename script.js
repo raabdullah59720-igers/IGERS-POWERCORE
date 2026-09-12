@@ -67,30 +67,47 @@
     const map={0:['Clear sky','☀️'],1:['Mainly clear','🌤️'],2:['Partly cloudy','⛅'],3:['Overcast','☁️'],45:['Fog','🌫️'],48:['Rime fog','🌫️'],51:['Light drizzle','🌦️'],53:['Drizzle','🌦️'],55:['Heavy drizzle','🌧️'],61:['Light rain','🌦️'],63:['Rain','🌧️'],65:['Heavy rain','🌧️'],71:['Light snow','🌨️'],73:['Snow','🌨️'],75:['Heavy snow','❄️'],80:['Rain showers','🌦️'],81:['Showers','🌧️'],82:['Heavy showers','⛈️'],95:['Thunderstorm','⛈️'],96:['Thunderstorm + hail','⛈️'],99:['Thunderstorm + hail','⛈️']};
     return map[code] || ['Weather update','🌤️'];
   }
+  const weatherState={lat:23.8103,lon:90.4125,place:'Dhaka, Bangladesh'};
+  function weatherHourLabel(iso){try{return new Date(iso).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}catch(_){return '--';}}
+  function nextRainEstimate(times, probs, codes, currentIndex){
+    for(let i=Math.max(0,currentIndex);i<Math.min(times.length,currentIndex+24);i++){
+      const p=Number(probs?.[i]||0), c=Number(codes?.[i]);
+      const raining=[51,53,55,61,63,65,80,81,82,95,96,99].includes(c);
+      if(p>=45 || (p>=30 && raining)) return {time:times[i],prob:p};
+    }
+    return null;
+  }
+  function renderHourlyWeather(data){
+    const box=$('weatherHourly'); if(!box||!data?.hourly)return;
+    const h=data.hourly, n=Math.min(8,h.time?.length||0); let html='';
+    for(let i=0;i<n;i++){
+      const code=Number(h.weather_code?.[i]); const desc=weatherText(code); const prob=Math.round(Number(h.precipitation_probability?.[i]||0));
+      html += `<div class="weather-hour"><span>${weatherHourLabel(h.time[i])}</span><b>${desc[1]}</b><strong>${prob}%</strong><small>${desc[0]}</small></div>`;
+    }
+    box.innerHTML=html;
+  }
   async function loadWeather(){
-    try {
-      const url='https://api.open-meteo.com/v1/forecast?latitude=23.8103&longitude=90.4125&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=Asia%2FDhaka';
-      const response=await fetch(url,{cache:'no-store'});
+    try{
+      const q=new URLSearchParams({latitude:String(weatherState.lat),longitude:String(weatherState.lon),current:'temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,weather_code,precipitation,rain,showers',hourly:'temperature_2m,precipitation_probability,precipitation,rain,showers,weather_code,wind_speed_10m',forecast_days:'2',timezone:'Asia/Dhaka'});
+      const response=await fetch('https://api.open-meteo.com/v1/forecast?'+q.toString(),{cache:'no-store'});
       if(!response.ok) throw new Error('Weather request failed');
-      const data=await response.json();
-      const current=data.current || {};
+      const data=await response.json(), current=data.current||{}, hourly=data.hourly||{};
       const desc=weatherText(current.weather_code);
-      setText('temp', Math.round(Number(current.temperature_2m))+'°C');
-      setText('weatherText', desc[0]);
-      setText('weatherIcon', desc[1]);
-      setText('wind', Math.round(Number(current.wind_speed_10m))+' km/h');
-      setText('humidity', Math.round(Number(current.relative_humidity_2m))+'%');
-      setText('weatherUpdated', current.time ? new Date(current.time).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}) : 'Live');
-      setText('weatherStatus','Live Dhaka weather loaded. The weather panel can fail independently without breaking the rest of the site.');
-    } catch (_) {
-      setText('weatherText','Weather unavailable');
-      setText('weatherIcon','☁️');
-      setText('weatherStatus','Weather is temporarily unavailable. Time and all other website sections remain functional.');
+      const t=Number(current.temperature_2m);
+      setText('weatherText',desc[0]); setText('weatherIcon',desc[1]); setText('temp',Number.isFinite(t)?Math.round(t)+'°':'--°');
+      setText('wind',Number.isFinite(Number(current.wind_speed_10m))?Math.round(Number(current.wind_speed_10m))+' km/h':'--');
+      setText('humidity',Number.isFinite(Number(current.relative_humidity_2m))?Math.round(Number(current.relative_humidity_2m))+'%':'--');
+      const nowIdx=0; const probs=hourly.precipitation_probability||[]; const codes=hourly.weather_code||[]; const next=nextRainEstimate(hourly.time||[],probs,codes,nowIdx);
+      const nowProb=Number(probs[0]??0); setText('rainProb',Math.round(nowProb)+'%');
+      setText('nextRain',next?(Math.round(next.prob)+'% · '+weatherHourLabel(next.time)):'No significant rain signal in next 24h');
+      renderHourlyWeather(data);
+      setText('weatherUpdated',current.time?new Date(current.time).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'Live');
+      setText('weatherStatus',`${weatherState.place} · live forecast refreshed · rain timing is an hourly forecast estimate, not a guarantee.`);
+    }catch(e){
+      setText('weatherText','Weather unavailable'); setText('weatherIcon','☁️'); setText('weatherStatus','Weather is temporarily unavailable. Time and all other website sections remain functional.');
     }
   }
 
-  function setWidth(id, pct){ const el=$(id); if(el) el.style.width=Math.max(0,Math.min(100,pct))+'%'; }
-  function degToCompass(deg){ if(!Number.isFinite(deg)) return '--'; const dirs=['N','NE','E','SE','S','SW','W','NW']; return dirs[Math.round(deg/45)%8]; }
   async function loadEnvironment(){
     try{
       const url='https://api.open-meteo.com/v1/forecast?latitude=23.8103&longitude=90.4125&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,weather_code&timezone=Asia%2FDhaka';
