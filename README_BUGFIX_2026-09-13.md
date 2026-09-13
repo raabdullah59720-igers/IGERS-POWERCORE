@@ -16,3 +16,10 @@ Run locally:
 3. Allow location permission to use current browser coordinates; otherwise Dhaka fallback remains active.
 
 Note: live external feeds still require internet access and can be unavailable when their public providers are down or browser/network policy blocks them.
+
+## Legal / privacy hardening — 13 September 2026
+- Added public `copyright.html`, `privacy.html` and `terms.html` pages.
+- Added legal links and copyright line to the main site footer.
+- Added a project-specific proprietary notice in `LICENSE` so the bundled Apache-2.0 template license is no longer presented as the project license.
+- Privacy notice documents browser geolocation, functional localStorage, notifications and current external live-data providers.
+- Terms page explicitly distinguishes conceptual/illustrative engineering information from certified or measured performance and limits reliance on live feeds for safety-critical decisions.
