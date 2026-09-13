@@ -38,7 +38,6 @@ section{padding:72px 0}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#07111f">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3eZK4GqK6bYl1XjY7x5h4jY6Yj2E=" crossorigin=""/>
 </head>
 <body>
 <nav class="nav"><div class="wrap navin"><a href="#home" class="brand">IGERS-BD-01<small>INTEGRATED ENERGY RECOVERY &amp; STORAGE</small></a><div class="navlinks"><a href="#concept">Concept</a><a href="#energy">Energy</a><a href="#journey">Journey</a><a href="#environment">Environment</a><a href="#applications">Applications</a><a href="#sentinel">Sentinel Grid</a><a href="#deployment">Deployment</a><a href="#time">Live Time</a><a href="#airtraffic">Air Traffic</a><a href="#weather">Weather</a><a href="#inventor">Inventor</a></div></div></nav>
@@ -90,12 +89,11 @@ section{padding:72px 0}
   <div class="live-left"><span class="live-dot"></span><div><b>LIVE UPDATE</b><span>System data updating in real time</span></div></div>
   <div class="live-metrics"><span><strong id="liveTick">--:--:--</strong><small>LAST SYNC</small></span><span><strong>1s</strong><small>REFRESH</small></span><span><strong id="liveState">SYNCING</strong><small>STATUS</small></span></div>
 </div></div></section>
-<section id="weather"><div class="wrap"><div class="section-head"><div><div class="kicker">09 · Live weather</div><h2>Weather-ready information layer.</h2></div></div><div class="weather"><article class="card"><div class="weather-main"><div><div class="label">Dhaka, Bangladesh</div><div class="temp" id="temp">--°</div><div id="weatherText" class="date">Loading weather...</div></div><div id="weatherIcon" class="weather-icon">☁️</div></div></article><article class="card"><div class="grid" style="grid-template-columns:repeat(2,1fr)"><div><div class="label">Wind</div><h3 id="wind">--</h3></div><div><div class="label">Humidity</div><h3 id="humidity">--</h3></div><div><div class="label">Rain probability</div><h3 id="rainProb">--%</h3></div><div><div class="label">Next rain estimate</div><h3 id="nextRain">Checking...</h3></div><div><div class="label">Updated</div><h3 id="weatherUpdated">--</h3></div><div><div class="label">Source</div><h3>Open-Meteo</h3></div></div><p id="weatherStatus">Weather data is loaded from the browser through a public weather endpoint.</p><div class="weather-hourly" id="weatherHourly"></div></article></div></div></section>
+<section id="weather"><div class="wrap"><div class="section-head"><div><div class="kicker">09 · Live weather</div><h2>Weather-ready information layer.</h2></div><div class="location-tools"><button id="useMyLocation" class="btn secondary" type="button">Use my location</button><span id="locationStatus" class="location-status">Using Dhaka fallback until browser location is available.</span></div></div><div class="weather"><article class="card"><div class="weather-main"><div><div class="label" id="weatherPlace">Dhaka, Bangladesh</div><div class="temp" id="temp">--°</div><div id="weatherText" class="date">Loading weather...</div></div><div id="weatherIcon" class="weather-icon">☁️</div></div></article><article class="card"><div class="grid" style="grid-template-columns:repeat(2,1fr)"><div><div class="label">Wind</div><h3 id="wind">--</h3></div><div><div class="label">Humidity</div><h3 id="humidity">--</h3></div><div><div class="label">Rain probability</div><h3 id="rainProb">--%</h3></div><div><div class="label">Next rain estimate</div><h3 id="nextRain">Checking...</h3></div><div><div class="label">Updated</div><h3 id="weatherUpdated">--</h3></div><div><div class="label">Source</div><h3>Open-Meteo</h3></div></div><p id="weatherStatus">Weather data is loaded from the browser through a public weather endpoint.</p><div class="weather-hourly" id="weatherHourly"></div></article></div></div></section>
 <section id="inventor"><div class="wrap"><div class="section-head"><div><div class="kicker">10 · Inventor &amp; author</div><h2>Abdullah Al Rafi [BD]</h2></div></div><div class="profile"><div class="portrait">AAR</div><div class="card"><h3>IGERS-BD-01</h3><p>Integrated Gradient-Based Energy Recovery and Storage System</p><div class="timeline" style="margin-top:18px"><div class="tl"><b>Concept / invention date</b><br><span class="mini">14 August 2026</span></div><div class="tl"><b>Project position</b><br><span class="mini">Research / conceptual engineering framework</span></div><div class="tl"><b>Core narrative</b><br><span class="mini">Distributed recovery of suitable underutilized energy, followed by conversion, storage, control and local use.</span></div></div><p class="warning" style="margin-top:15px">The website presents IGERS as a research concept. Real deployment requires site-specific engineering, safety review, approvals, testing and measured performance.</p></div></div></div></section>
 <section id="limits"><div class="wrap"><div class="section-head"><div><div class="kicker">11 · Engineering reality</div><h2>Ambition needs a measurement layer.</h2></div></div><div class="grid"><article class="card"><h3>Feasibility first</h3><p>Survey the site, quantify available energy, model recovery losses and confirm structural compatibility before fabrication.</p></article><article class="card"><h3>Safety first</h3><p>Traffic, water, electrical systems, batteries, moving components and environmental conditions require dedicated safety controls.</p></article><article class="card"><h3>Measure before claiming</h3><p>Concept-stage calculations are preliminary. Prototype measurements should replace assumptions before performance or profitability claims are published.</p></article></div></div></section>
 </main>
 <footer class="footer"><div class="wrap">IGERS-BD-01 · Integrated Gradient-Based Energy Recovery &amp; Storage System · Inventor &amp; Author: Abdullah Al Rafi [BD]<br>Concept website / research presentation interface. No official government or military affiliation is claimed.</div></footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
 (function(){
   'use strict';
@@ -165,7 +163,9 @@ section{padding:72px 0}
     const map={0:['Clear sky','☀️'],1:['Mainly clear','🌤️'],2:['Partly cloudy','⛅'],3:['Overcast','☁️'],45:['Fog','🌫️'],48:['Rime fog','🌫️'],51:['Light drizzle','🌦️'],53:['Drizzle','🌦️'],55:['Heavy drizzle','🌧️'],61:['Light rain','🌦️'],63:['Rain','🌧️'],65:['Heavy rain','🌧️'],71:['Light snow','🌨️'],73:['Snow','🌨️'],75:['Heavy snow','❄️'],80:['Rain showers','🌦️'],81:['Showers','🌧️'],82:['Heavy showers','⛈️'],95:['Thunderstorm','⛈️'],96:['Thunderstorm + hail','⛈️'],99:['Thunderstorm + hail','⛈️']};
     return map[code] || ['Weather update','🌤️'];
   }
-  const weatherState={lat:23.8103,lon:90.4125,place:'Dhaka, Bangladesh'};
+  const DEFAULT_WEATHER={lat:23.8103,lon:90.4125,place:'Dhaka, Bangladesh',timezone:'Asia/Dhaka'};
+  const weatherState={...DEFAULT_WEATHER,source:'Dhaka fallback'};
+  const geocodeCache=new Map();
   function weatherHourLabel(iso){try{return new Date(iso).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}catch(_){return '--';}}
   function nextRainEstimate(times, probs, codes, currentIndex){
     for(let i=Math.max(0,currentIndex);i<Math.min(times.length,currentIndex+24);i++){
@@ -174,6 +174,33 @@ section{padding:72px 0}
       if(p>=45 || (p>=30 && raining)) return {time:times[i],prob:p};
     }
     return null;
+  }
+  function haversineApproxPlace(lat,lon){
+    const key=`${lat.toFixed(2)},${lon.toFixed(2)}`;
+    if(geocodeCache.has(key)) return geocodeCache.get(key);
+    // Keep the display safe when reverse geocoding is unavailable. Do not fabricate a city.
+    const fallback=`${lat.toFixed(2)}°, ${lon.toFixed(2)}°`;
+    geocodeCache.set(key,fallback); return fallback;
+  }
+  function setLocationStatus(text, ok=true){const el=$('locationStatus'); if(el){el.textContent=text;el.classList.toggle('ok',ok);el.classList.toggle('warn',!ok);}}
+  function updateLocationDisplay(){
+    setText('weatherPlace', weatherState.place);
+    setLocationStatus(weatherState.source==='browser' ? 'Browser location active · weather uses current coordinates.' : 'Using Dhaka fallback · choose “Use my location” to update.', weatherState.source==='browser');
+  }
+  function applyBrowserLocation(position){
+    const lat=Number(position?.coords?.latitude), lon=Number(position?.coords?.longitude);
+    if(!Number.isFinite(lat)||!Number.isFinite(lon)) throw new Error('Invalid browser coordinates');
+    weatherState.lat=lat; weatherState.lon=lon; weatherState.place=`Current location · ${haversineApproxPlace(lat,lon)}`; weatherState.timezone='auto'; weatherState.source='browser';
+    updateLocationDisplay(); loadWeather(); loadEnvironment();
+  }
+  function requestBrowserLocation(manual=false){
+    if(!('geolocation' in navigator)){setLocationStatus('Geolocation is not supported by this browser. Using Dhaka fallback.',false);return;}
+    setLocationStatus(manual?'Requesting browser location permission…':'Detecting browser location…',true);
+    navigator.geolocation.getCurrentPosition(applyBrowserLocation,()=>{
+      weatherState.lat=DEFAULT_WEATHER.lat; weatherState.lon=DEFAULT_WEATHER.lon; weatherState.place=DEFAULT_WEATHER.place; weatherState.timezone=DEFAULT_WEATHER.timezone; weatherState.source='Dhaka fallback';
+      updateLocationDisplay(); loadWeather(); loadEnvironment();
+      setLocationStatus('Location permission unavailable. Dhaka fallback is active.',false);
+    },{enableHighAccuracy:false,timeout:10000,maximumAge:300000});
   }
   function renderHourlyWeather(data){
     const box=$('weatherHourly'); if(!box||!data?.hourly)return;
@@ -186,7 +213,7 @@ section{padding:72px 0}
   }
   async function loadWeather(){
     try{
-      const q=new URLSearchParams({latitude:String(weatherState.lat),longitude:String(weatherState.lon),current:'temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,weather_code,precipitation,rain,showers',hourly:'temperature_2m,precipitation_probability,precipitation,rain,showers,weather_code,wind_speed_10m',forecast_days:'2',timezone:'Asia/Dhaka'});
+      const q=new URLSearchParams({latitude:String(weatherState.lat),longitude:String(weatherState.lon),current:'temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,weather_code,precipitation,rain,showers',hourly:'temperature_2m,precipitation_probability,precipitation,rain,showers,weather_code,wind_speed_10m',forecast_days:'2',timezone:weatherState.timezone||'auto'});
       const response=await fetch('https://api.open-meteo.com/v1/forecast?'+q.toString(),{cache:'no-store'});
       if(!response.ok) throw new Error('Weather request failed');
       const data=await response.json(), current=data.current||{}, hourly=data.hourly||{};
@@ -201,14 +228,16 @@ section{padding:72px 0}
       renderHourlyWeather(data);
       setText('weatherUpdated',current.time?new Date(current.time).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'Live');
       setText('weatherStatus',`${weatherState.place} · live forecast refreshed · rain timing is an hourly forecast estimate, not a guarantee.`);
+      updateLocationDisplay();
     }catch(e){
       setText('weatherText','Weather unavailable'); setText('weatherIcon','☁️'); setText('weatherStatus','Weather is temporarily unavailable. Time and all other website sections remain functional.');
+      setLocationStatus('Live weather endpoint unavailable. Using last known location state.',false);
     }
   }
 
   async function loadEnvironment(){
     try{
-      const url='https://api.open-meteo.com/v1/forecast?latitude=23.8103&longitude=90.4125&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,weather_code&timezone=Asia%2FDhaka';
+      const url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(weatherState.lat)+'&longitude='+encodeURIComponent(weatherState.lon)+'&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,weather_code&timezone='+encodeURIComponent(weatherState.timezone||'auto');
       const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error('environment feed failed');
       const d=await r.json(), c=d.current||{};
       const h=Number(c.relative_humidity_2m), w=Number(c.wind_speed_10m), t=Number(c.temperature_2m), wd=Number(c.wind_direction_10m);
@@ -218,10 +247,11 @@ section{padding:72px 0}
       setText('envTemp',Number.isFinite(t)?t.toFixed(1):'--'); setText('envTempText','Open-Meteo current atmospheric feed');
       setText('envState','LIVE'); setText('envUpdated',c.time?'Updated '+c.time.replace('T',' '):'Updated live');
       setText('radarSync','SYNC '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'}));
-      setText('envStatus','Environmental feed online. Humidity and airflow are live external readings for the Dhaka display point.');
+      setText('envStatus',`Environmental feed online for ${weatherState.place}.`);
     }catch(_){ setText('envState','OFFLINE'); setText('envUpdated','Live environmental feed unavailable'); setText('envStatus','Environmental feed unavailable. The rest of the interface remains operational.'); }
   }
   const bangladeshLat=23.8103, bangladeshLon=90.4125;
+
   function haversineKm(lat1,lon1,lat2,lon2){ const R=6371, toRad=x=>x*Math.PI/180, dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1); const a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2; return 2*R*Math.asin(Math.sqrt(a)); }
   // Broad Asia polygon for a presentation/monitoring view. Events are classified by coordinates, not by name text.
   // Presentation-focused geographic envelope for Asia. This intentionally uses a generous
@@ -273,6 +303,10 @@ section{padding:72px 0}
     else{const top=relevant[0],p=top.properties||{},g=top.geometry?.coordinates||[],mag=Number(p.mag),dist=haversineKm(bangladeshLat,bangladeshLon,Number(g[1]),Number(g[0]));alert?.classList.toggle('attention',mag>=5);alert?.classList.toggle('clear',mag<5);setText('quakeMain','M'+(Number.isFinite(mag)?mag.toFixed(1):'?')+' · '+(p.place||'Unknown location'));setText('quakeMeta','Approx. '+Math.round(dist)+' km from Dhaka · '+formatAgo(Date.now()-Number(p.time||Date.now()))+' · '+(top._source||'multi-source')+' seismic feed');setText('quakeTime',p.time?new Date(Number(p.time)).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'--');const ql=$('quakeList');if(ql){ql.textContent='';relevant.forEach(f=>{const pr=f.properties||{},gg=f.geometry?.coordinates||[],m=Number(pr.mag),di=haversineKm(bangladeshLat,bangladeshLon,Number(gg[1]),Number(gg[0]));const row=document.createElement('div');row.className='eq-item';const a=document.createElement('span');a.className='eq-mag';a.textContent='M'+(Number.isFinite(m)?m.toFixed(1):'?');const b=document.createElement('span');b.className='eq-place';b.textContent=(pr.place||'Unknown')+' · '+Math.round(di)+' km · '+(f._source||'feed');row.append(a,b);ql.appendChild(row);});}}
   }
   loadEnvironment(); setInterval(loadEnvironment,60000);
+  $('useMyLocation')?.addEventListener('click',()=>requestBrowserLocation(true));
+  updateLocationDisplay();
+  // Non-blocking automatic location attempt; denial safely keeps the Dhaka fallback.
+  requestBrowserLocation(false);
   const scheduleQuakePoll=()=>{ clearTimeout(quakePollingTimer); const delay=document.visibilityState==='visible'?30000:90000; quakePollingTimer=setTimeout(async()=>{await loadEarthquakes(); scheduleQuakePoll();},delay); };
   loadEarthquakes().finally(scheduleQuakePoll);
   document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'){loadEarthquakes().finally(scheduleQuakePoll);} else scheduleQuakePoll(); });
