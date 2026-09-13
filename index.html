@@ -36,12 +36,27 @@ section{padding:72px 0}
 
 .notify-foot{display:flex;justify-content:space-between;gap:12px;margin-top:8px;font-size:11px;color:var(--muted);letter-spacing:.02em}.notify-foot #quakeFeedState{color:#8fe3b2}.notify-foot #quakeFeedState.offline{color:#ff9b9b}.notify-actions .secondary{opacity:.82}.notify-actions .secondary:hover{opacity:1}
 .footer-legal{display:inline-flex;gap:10px;flex-wrap:wrap;margin-top:9px;align-items:center}.footer-legal a{color:var(--cyan);text-decoration:none}.footer-legal a:hover{text-decoration:underline}@media(max-width:650px){.footer-legal{display:flex;gap:7px 12px}}
+
+/* Developer demo: visitor comments + customer care */
+.feedback-shell{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:18px}
+.feedback-card{border:1px solid rgba(120,210,240,.14);background:linear-gradient(180deg,rgba(14,31,43,.86),rgba(7,17,27,.9));border-radius:18px;padding:22px;box-shadow:0 18px 46px rgba(0,0,0,.22)}
+.feedback-card h3{margin:4px 0 8px}.feedback-card p{margin:0;color:var(--muted)}
+.feedback-form{display:grid;gap:12px;margin-top:18px}.feedback-label{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#b7cfdb}
+.feedback-input,.feedback-textarea{width:100%;border:1px solid rgba(120,210,240,.17);background:rgba(2,9,15,.72);color:var(--text);border-radius:12px;padding:12px 13px;font:inherit;outline:none;transition:.2s;border-color:rgba(120,210,240,.17)}
+.feedback-input:focus,.feedback-textarea:focus{border-color:rgba(85,221,255,.62);box-shadow:0 0 0 3px rgba(85,221,255,.08)}
+.feedback-textarea{min-height:132px;resize:vertical}.feedback-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.feedback-btn{border:0;border-radius:11px;padding:11px 15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#55ddff,#8af3bf);color:#061019}.feedback-btn.alt{background:rgba(255,255,255,.06);color:var(--text);border:1px solid rgba(255,255,255,.1)}
+.feedback-note{font-size:11px!important;color:#6f8d9d!important}.feedback-status{font-size:12px;font-weight:700;min-height:18px}.feedback-status.ok{color:#8af3bf}.feedback-status.err{color:#ff9b9b}
+.feedback-list{display:grid;gap:10px;margin-top:16px;max-height:420px;overflow:auto;padding-right:4px}.feedback-item{padding:13px 14px;border-radius:13px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)}.feedback-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.feedback-meta strong{font-size:12px}.feedback-meta span{font-size:10px;color:var(--muted)}.feedback-item p{font-size:13px;color:#dcecf3;white-space:pre-wrap}.feedback-empty{padding:24px 10px;text-align:center;color:var(--muted);font-size:12px}
+.demo-badge{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,211,122,.22);background:rgba(255,211,122,.06);color:#ffd37a;padding:6px 9px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+@media(max-width:850px){.feedback-shell{grid-template-columns:1fr}}
+
 </style>
+<link rel="stylesheet" href="feedback-premium.css">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#07111f">
 </head>
 <body>
-<nav class="nav"><div class="wrap navin"><a href="#home" class="brand">IGERS-BD-01<small>INTEGRATED ENERGY RECOVERY &amp; STORAGE</small></a><div class="navlinks"><a href="#concept">Concept</a><a href="#energy">Energy</a><a href="#journey">Journey</a><a href="#environment">Environment</a><a href="#applications">Applications</a><a href="#sentinel">Sentinel Grid</a><a href="#deployment">Deployment</a><a href="#time">Live Time</a><a href="#airtraffic">Air Traffic</a><a href="#weather">Weather</a><a href="#inventor">Inventor</a></div></div></nav>
+<nav class="nav"><div class="wrap navin"><a href="#home" class="brand">IGERS-BD-01<small>INTEGRATED ENERGY RECOVERY &amp; STORAGE</small></a><div class="navlinks"><a href="#concept">Concept</a><a href="#energy">Energy</a><a href="#journey">Journey</a><a href="#environment">Environment</a><a href="#applications">Applications</a><a href="#sentinel">Sentinel Grid</a><a href="#deployment">Deployment</a><a href="#time">Live Time</a><a href="#airtraffic">Air Traffic</a><a href="#weather">Weather</a><a href="#feedback">Comments / Care</a><a href="#inventor">Inventor</a></div></div></nav>
 <main>
 <section id="home" class="hero"><div class="wrap hero-grid"><div><span class="eyebrow"><i class="pulse"></i> Conceptual engineering ecosystem</span><h1>Energy is moving everywhere.<br><span style="color:var(--cyan)">IGERS asks what can be recovered.</span></h1><p class="lead">IGERS-BD-01 is an integrated concept for exploring distributed recovery of otherwise underutilized mechanical and environmental energy across transportation, infrastructure and selected environmental systems.</p><div class="actions"><a class="btn primary" href="#concept">Explore IGERS</a><a class="btn" href="#journey">How it works</a><a class="btn" href="#time">Open live time</a></div></div><div class="hero-visual"><div class="orb one"></div><div class="orb two"></div><div class="hub"><div><b>IGERS<br>BD-01</b><div class="mini">Recovery ecosystem</div></div></div><div class="node n1">ROAD / VEHICLE</div><div class="node n2">WATER / FLOW</div><div class="node n3">SOLAR / AIRFLOW</div><div class="node n4">VIBRATION / HUMAN</div><div class="line l1"></div><div class="line l2"></div><div class="line l3"></div><div class="line l4"></div></div></div></section>
 <section id="concept"><div class="wrap"><div class="section-head"><div><div class="kicker">01 · What is IGERS?</div><h2>A distributed recovery framework.</h2></div><p class="mini" style="max-width:440px">Available Energy ≠ Recoverable Energy. Every application needs separate engineering feasibility analysis.</p></div><div class="grid"><article class="card"><div class="num">THE IDEA</div><h3>Look where energy is already moving</h3><p>Instead of depending only on new centralized generation, IGERS explores strategically selected recovery points inside existing infrastructure.</p></article><article class="card"><div class="num">THE OUTPUT</div><h3>Recover → convert → store → use</h3><p>Recovered mechanical or environmental energy can be converted into electricity, conditioned, stored, monitored and routed to suitable nearby loads.</p></article><article class="card"><div class="num">THE LIMIT</div><h3>Engineering decides what is practical</h3><p>Speed, mass, elevation, flow, vibration, losses, structural constraints, safety, maintenance and economics all affect real output.</p></article></div></div></section>
@@ -93,6 +108,27 @@ section{padding:72px 0}
 <section id="weather"><div class="wrap"><div class="section-head"><div><div class="kicker">09 · Live weather</div><h2>Weather-ready information layer.</h2></div><div class="location-tools"><button id="useMyLocation" class="btn secondary" type="button">Use my location</button><span id="locationStatus" class="location-status">Using Dhaka fallback until browser location is available.</span></div></div><div class="weather"><article class="card"><div class="weather-main"><div><div class="label" id="weatherPlace">Dhaka, Bangladesh</div><div class="temp" id="temp">--°</div><div id="weatherText" class="date">Loading weather...</div></div><div id="weatherIcon" class="weather-icon">☁️</div></div></article><article class="card"><div class="grid" style="grid-template-columns:repeat(2,1fr)"><div><div class="label">Wind</div><h3 id="wind">--</h3></div><div><div class="label">Humidity</div><h3 id="humidity">--</h3></div><div><div class="label">Rain probability</div><h3 id="rainProb">--%</h3></div><div><div class="label">Next rain estimate</div><h3 id="nextRain">Checking...</h3></div><div><div class="label">Updated</div><h3 id="weatherUpdated">--</h3></div><div><div class="label">Source</div><h3>Open-Meteo</h3></div></div><p id="weatherStatus">Weather data is loaded from the browser through a public weather endpoint.</p><div class="weather-hourly" id="weatherHourly"></div></article></div></div></section>
 <section id="inventor"><div class="wrap"><div class="section-head"><div><div class="kicker">10 · Inventor &amp; author</div><h2>Abdullah Al Rafi [BD]</h2></div></div><div class="profile"><div class="portrait">AAR</div><div class="card"><h3>IGERS-BD-01</h3><p>Integrated Gradient-Based Energy Recovery and Storage System</p><div class="timeline" style="margin-top:18px"><div class="tl"><b>Concept / invention date</b><br><span class="mini">14 August 2026</span></div><div class="tl"><b>Project position</b><br><span class="mini">Research / conceptual engineering framework</span></div><div class="tl"><b>Core narrative</b><br><span class="mini">Distributed recovery of suitable underutilized energy, followed by conversion, storage, control and local use.</span></div></div><p class="warning" style="margin-top:15px">The website presents IGERS as a research concept. Real deployment requires site-specific engineering, safety review, approvals, testing and measured performance.</p></div></div></div></section>
 <section id="limits"><div class="wrap"><div class="section-head"><div><div class="kicker">11 · Engineering reality</div><h2>Ambition needs a measurement layer.</h2></div></div><div class="grid"><article class="card"><h3>Feasibility first</h3><p>Survey the site, quantify available energy, model recovery losses and confirm structural compatibility before fabrication.</p></article><article class="card"><h3>Safety first</h3><p>Traffic, water, electrical systems, batteries, moving components and environmental conditions require dedicated safety controls.</p></article><article class="card"><h3>Measure before claiming</h3><p>Concept-stage calculations are preliminary. Prototype measurements should replace assumptions before performance or profitability claims are published.</p></article></div></div></section>
+
+<section id="feedback" class="feedback-section"><div class="wrap"><div class="section-head"><div><div class="kicker">12 · Visitor interface</div><h2>Comments &amp; Customer Care</h2><p class="feedback-intro">A polished developer-demo interface for visitor comments, suggestions and support messages—without expanding the information collected.</p></div><div class="feedback-head-badges"><span class="demo-badge"><i></i>Developer demo</span><span class="local-badge"><span>⌂</span> Local browser storage</span></div></div>
+<div class="feedback-shell">
+  <article class="feedback-card feedback-form-card">
+    <div class="feedback-card-top"><div class="num">COMMENT / SUPPORT</div><span class="feedback-secure">EMAIL + MESSAGE ONLY</span></div>
+    <h3>Send a message to the IGERS interface</h3>
+    <p>Only an email address and your message are requested. No name, phone number, location, account or other personal profile fields are collected by this demo module.</p>
+    <form id="feedbackForm" class="feedback-form" novalidate>
+      <div class="field-shell"><label class="feedback-label" for="feedbackEmail">Email address</label><div class="field-wrap"><span class="field-icon">@</span><input class="feedback-input" id="feedbackEmail" name="email" type="email" autocomplete="email" maxlength="160" required placeholder="you@example.com" aria-describedby="feedbackEmailHint"><span class="field-state" aria-hidden="true"></span></div><span class="field-hint" id="feedbackEmailHint">Used only as the demo contact identifier.</span></div>
+      <div class="field-shell"><div class="message-label-row"><label class="feedback-label" for="feedbackMessage">Comment / customer care message</label><span class="char-count"><span id="feedbackCharCount">0</span>/2000</span></div><textarea class="feedback-textarea" id="feedbackMessage" name="message" maxlength="2000" required placeholder="Write your comment, suggestion, question or support request..." aria-describedby="feedbackMessageHint"></textarea><span class="field-hint" id="feedbackMessageHint">Keep messages clear and relevant to the website or IGERS concept.</span></div>
+      <div class="feedback-row"><button class="feedback-btn" type="submit"><span class="btn-dot"></span>Submit message</button><button class="feedback-btn alt" id="feedbackClear" type="button">Clear form</button></div>
+      <div id="feedbackStatus" class="feedback-status" aria-live="polite"></div>
+      <div class="feedback-local-note"><span>LOCK</span><p><strong>Local demo mode.</strong> Entries remain in this browser only. Nothing is emailed, uploaded or sent to a remote service.</p></div>
+    </form>
+  </article>
+  <article class="feedback-card feedback-list-card">
+    <div class="feedback-card-top"><div class="num">VISITOR COMMENTS</div><span class="entry-count" id="feedbackCount">0 entries</span></div>
+    <div class="list-heading"><div><h3>Recent local demo entries</h3><p>Messages saved on this browser/device appear here for demonstration and UI testing.</p></div><span class="list-pulse" aria-hidden="true"></span></div>
+    <div id="feedbackList" class="feedback-list" aria-live="polite"></div>
+  </article>
+</div></div></section>
 </main>
 <footer class="footer"><div class="wrap">IGERS-BD-01 · Integrated Gradient-Based Energy Recovery &amp; Storage System · Inventor &amp; Author: Abdullah Al Rafi [BD]<br>Concept website / research presentation interface. No official government or military affiliation is claimed.<br><span class="footer-legal"><strong>© 2026 IGERS POWERCORE TECHNOLOGIES LTD.</strong> · <a href="copyright.html">Copyright &amp; Attribution</a> · <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms &amp; Disclaimer</a></span></div></footer>
 <script>
@@ -369,6 +405,30 @@ section{padding:72px 0}
   function scheduleAirPoll(){clearTimeout(airTimer); airTimer=setTimeout(async()=>{await loadAirTraffic();scheduleAirPoll();},document.visibilityState==='visible'?20000:60000);}
   const liveFrame=airEl('airLiveFrame');
   if(liveFrame){liveFrame.addEventListener('load',()=>setMapFallback(false)); liveFrame.addEventListener('error',()=>setMapFallback(true));}
+
+  // Developer/demo visitor feedback module: local browser storage only.
+  (function initFeedbackModule(){
+    const form=$('feedbackForm'), email=$('feedbackEmail'), message=$('feedbackMessage'), status=$('feedbackStatus'), list=$('feedbackList'), clearBtn=$('feedbackClear'), count=$('feedbackCount'), charCount=$('feedbackCharCount');
+    if(!form||!email||!message||!status||!list||!clearBtn) return;
+    const KEY='igersDeveloperFeedbackV1';
+    const read=()=>{try{const v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v:[];}catch(_){return[];}};
+    const write=(items)=>{try{localStorage.setItem(KEY,JSON.stringify(items.slice(0,50)));return true;}catch(_){return false;}};
+    const esc=(value)=>String(value).replace(/[&<>''"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\'':'&#39;','"':'&quot;'}[ch]));
+    const format=(stamp)=>{try{return new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short'}).format(new Date(stamp));}catch(_){return new Date(stamp).toLocaleString();}};
+    function render(){
+      const items=read();
+      if(count) count.textContent=items.length+' entr'+(items.length===1?'y':'ies');
+      if(!items.length){list.innerHTML='<div class="feedback-empty"><div class="empty-orb">✦</div><strong>No demo messages yet</strong><span>Your first local entry will appear here for interface testing.</span></div>';return;}
+      list.innerHTML=items.map(item=>`<article class="feedback-item"><div class="feedback-meta"><div class="feedback-email"><span class="email-dot">@</span><strong>${esc(item.email)}</strong></div><span>${esc(format(item.createdAt))}</span></div><p>${esc(item.message)}</p></article>`).join('');
+    }
+    function syncCharCount(){if(charCount) charCount.textContent=String(message.value.length);}
+    message.addEventListener('input',syncCharCount);
+    form.addEventListener('submit',(e)=>{e.preventDefault(); status.textContent=''; status.className='feedback-status'; const em=email.value.trim(), msg=message.value.trim(); if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){status.textContent='Please enter a valid email address.';status.classList.add('err');email.focus();return;} if(!msg){status.textContent='Please write a comment or customer-care message.';status.classList.add('err');message.focus();return;} const ok=write([{email:em,message:msg,createdAt:new Date().toISOString()},...read()]); if(!ok){status.textContent='Local storage is unavailable in this browser.';status.classList.add('err');return;} form.reset();syncCharCount();status.textContent='Message saved in developer demo mode.';status.classList.add('ok');render();});
+    clearBtn.addEventListener('click',()=>{form.reset();syncCharCount();status.textContent='';status.className='feedback-status';email.focus();});
+    syncCharCount();
+    render();
+  })();
+
   loadAirTraffic().finally(scheduleAirPoll);
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){loadAirTraffic().finally(scheduleAirPoll);}else scheduleAirPoll();});
   loadWeather();
