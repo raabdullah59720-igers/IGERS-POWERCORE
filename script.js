@@ -89,7 +89,7 @@
   async function loadWeather(){
     try{
       const q=new URLSearchParams({latitude:String(weatherState.lat),longitude:String(weatherState.lon),current:'temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,weather_code,precipitation,rain,showers',hourly:'temperature_2m,precipitation_probability,precipitation,rain,showers,weather_code,wind_speed_10m',forecast_days:'2',timezone:'Asia/Dhaka'});
-      const response=await fetch('https://api.open-meteo.com/v1/forecast?'+q.toString(),{cache:'no-store'});
+      const response=await fetch('/api/provider?provider=weather&'+q.toString(),{cache:'no-store'});
       if(!response.ok) throw new Error('Weather request failed');
       const data=await response.json(), current=data.current||{}, hourly=data.hourly||{};
       const desc=weatherText(current.weather_code);
@@ -110,7 +110,7 @@
 
   async function loadEnvironment(){
     try{
-      const url='https://api.open-meteo.com/v1/forecast?latitude=23.8103&longitude=90.4125&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,weather_code&timezone=Asia%2FDhaka';
+      const url='/api/provider?provider=weather&latitude=23.8103&longitude=90.4125&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,weather_code&timezone=Asia%2FDhaka';
       const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error('environment feed failed');
       const d=await r.json(), c=d.current||{};
       const h=Number(c.relative_humidity_2m), w=Number(c.wind_speed_10m), t=Number(c.temperature_2m), wd=Number(c.wind_direction_10m);
@@ -134,7 +134,7 @@
   async function loadEarthquakes(){
     const alert=$('quakeAlert');
     try{
-      const url='https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson';
+      const url='/api/provider?provider=usgs';
       const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error('earthquake feed failed');
       const data=await r.json(); const features=(data.features||[]).sort((a,b)=>(b.properties?.time||0)-(a.properties?.time||0));
       const relevant=features.filter(f=>{ const g=f.geometry?.coordinates||[]; const lat=Number(g[1]), lon=Number(g[0]), mag=Number(f.properties?.mag); return Number.isFinite(lat)&&Number.isFinite(lon)&&Number.isFinite(mag)&&pointInPolygon(lat,lon); }).slice(0,6);
