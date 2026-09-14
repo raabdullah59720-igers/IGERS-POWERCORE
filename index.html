@@ -67,6 +67,11 @@ section{padding:72px 0}
 
 </style>
 <style>.nasa-panel{margin-top:18px}.nasa-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.nasa-reading-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.nasa-reading-grid>div{padding:14px;border:1px solid var(--line);border-radius:12px;background:#07131b}.nasa-reading-grid strong{display:block;margin-top:6px;font-size:22px;font-variant-numeric:tabular-nums}.nasa-foot{display:flex;justify-content:space-between;gap:10px;margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:10px;color:var(--muted)}.nasa-note{margin-top:12px;padding:10px;border:1px dashed var(--line);border-radius:11px;font-size:10px;color:var(--muted);line-height:1.5}@media(max-width:850px){.nasa-grid{grid-template-columns:1fr}}@media(max-width:620px){.nasa-reading-grid{grid-template-columns:1fr 1fr}.nasa-foot{display:block}.nasa-foot>*+*{display:block;margin-top:4px}}</style>
+<style>
+/* NASA Earth observation control/radar layer */
+.nasa-radar-panel{margin-top:18px}.nasa-radar-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.nasa-radar-view{position:relative;min-height:460px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#061017}.nasa-radar-view iframe{width:100%;height:460px;border:0;display:block;background:#061017}.nasa-radar-overlay{position:absolute;left:14px;right:14px;top:14px;display:flex;justify-content:space-between;gap:10px;pointer-events:none}.nasa-chip{padding:7px 10px;border-radius:999px;border:1px solid #55ddff33;background:#07131bcc;color:#bfeeff;font-size:10px;letter-spacing:.06em}.nasa-radar-side{display:grid;gap:12px}.nasa-control-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.nasa-control-grid label{font-size:10px;color:var(--muted);display:block}.nasa-control-grid input{width:100%;margin-top:5px;padding:10px;border-radius:10px;border:1px solid var(--line);background:#07131b;color:#fff}.nasa-radar-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px}.nasa-meta-card{padding:12px;border:1px solid var(--line);border-radius:12px;background:#07131b}.nasa-meta-card b{display:block;font-size:18px;margin-top:4px}.nasa-auth-note{font-size:10px;line-height:1.5;color:var(--muted);padding:11px;border:1px dashed var(--line);border-radius:11px}.nasa-status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid #2f5a4b;border-radius:999px;color:#8af3bf;font-size:10px}
+@media(max-width:900px){.nasa-radar-grid{grid-template-columns:1fr}.nasa-radar-view iframe{height:380px}}
+</style>
 </head>
 <body>
 <nav class="nav"><div class="wrap navin"><a href="#home" class="brand">IGERS-BD-01<small>INTEGRATED ENERGY RECOVERY &amp; STORAGE</small></a><div class="navlinks"><a href="#concept">Concept</a><a href="#energy">Energy</a><a href="#journey">Journey</a><a href="#environment">Environment</a><a href="#applications">Applications</a><a href="#sentinel">Sentinel Grid</a><a href="#deployment">Deployment</a><a href="#time">Live Time</a><a href="#airtraffic">Air Traffic</a><a href="#airspaceSafety">Airspace Safety</a><a href="#satelliteIntel">Satellite</a><a href="#nasaPanel">NASA Data</a><a href="#weather">Weather</a><a href="#feedback">Comments / Care</a><a href="#inventor">Inventor</a></div></div></nav>
@@ -146,6 +151,8 @@ section{padding:72px 0}
   <div class="live-left"><span class="live-dot"></span><div><b>LIVE UPDATE</b><span>System data updating in real time</span></div></div>
   <div class="live-metrics"><span><strong id="liveTick">--:--:--</strong><small>LAST SYNC</small></span><span><strong>1s</strong><small>REFRESH</small></span><span><strong id="liveState">SYNCING</strong><small>STATUS</small></span></div>
 </div></div></section>
+
+<section id="nasaRadar" class="nasa-radar-panel"><div class="wrap"><div class="section-head"><div><div class="kicker">08E · NASA satellite + precipitation view</div><h2>NASA Worldview + GPM observation panel</h2><p class="airspace-subtitle">Authorized public NASA Earth-data services: satellite imagery and near-real-time precipitation products. This panel does not claim restricted spacecraft telemetry.</p></div><span class="nasa-status-pill"><span class="pulse"></span>NASA PUBLIC DATA</span></div><div class="nasa-radar-grid"><article class="nasa-radar-view"><iframe id="nasaWorldviewFrame" title="NASA Worldview satellite observation" loading="lazy" referrerpolicy="no-referrer" src="https://worldview.earthdata.nasa.gov/?v=88.0%2C21.0%2C92.7%2C26.7"></iframe><div class="nasa-radar-overlay"><span class="nasa-chip">NASA WORLDVIEW</span><span class="nasa-chip" id="nasaViewportLabel">BANGLADESH VIEW</span></div></article><aside class="nasa-radar-side"><article class="card"><div class="label">Location / viewport</div><div class="nasa-control-grid"><div><label for="nasaLat">Latitude</label><input id="nasaLat" type="number" step="0.0001" min="-90" max="90" value="23.8103"></div><div><label for="nasaLon">Longitude</label><input id="nasaLon" type="number" step="0.0001" min="-180" max="180" value="90.4125"></div></div><div class="sat-actions" style="margin-top:10px"><button class="btn primary" id="nasaGoLocation" type="button">Update view</button><button class="btn secondary" id="nasaUseLocation" type="button">Use browser location</button></div><div class="nasa-auth-note">NASA Worldview is a public NASA Earthdata interface. Datasets that require authorization use NASA Earthdata Login/OAuth2; credentials and tokens are not stored in this static app.</div><div class="sat-actions"><a class="btn secondary" href="https://urs.earthdata.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA Earthdata Login</a><a class="btn secondary" href="https://worldview.earthdata.nasa.gov/" target="_blank" rel="noopener noreferrer">Open Worldview</a></div></article><article class="card"><div class="label">NASA GPM precipitation</div><div class="nasa-radar-meta"><div class="nasa-meta-card"><span class="label">Product</span><b>IMERG Early</b></div><div class="nasa-meta-card"><span class="label">Latency</span><b>~4 h</b></div></div><p id="nasaGpmStatus" style="margin-top:10px;color:var(--muted);font-size:10px">Preparing precipitation image…</p><div class="sat-actions"><button class="btn primary" id="nasaGpmRefresh" type="button">Refresh precipitation</button><a class="btn secondary" href="https://gis.earthdata.nasa.gov/portal/home/item.html?id=c7ab44cd7a88474cbcb36f4b8d598fde" target="_blank" rel="noopener noreferrer">Open GPM source</a></div></article></aside></div></div></section>
 <section id="nasaPanel" class="nasa-panel"><div class="wrap"><div class="section-head"><div><div class="kicker">08D · NASA Earth data</div><h2>NASA POWER atmospheric reading</h2><p class="airspace-subtitle">Latest available NASA POWER point data for the selected display location. This is an Earth-observation/reanalysis-style data service, not spacecraft telemetry.</p></div><span id="nasaState" class="eyebrow"><span class="pulse"></span>CONNECTING</span></div><div class="nasa-grid"><article class="card"><div class="nasa-reading-grid"><div><div class="label">Temperature</div><strong id="nasaTemp">-- °C</strong></div><div><div class="label">Relative humidity</div><strong id="nasaRh">-- %</strong></div><div><div class="label">Wind speed</div><strong id="nasaWind">-- m/s</strong></div><div><div class="label">Precipitation</div><strong id="nasaRain">-- mm/day</strong></div></div><div class="nasa-foot"><span id="nasaDate">Latest record: --</span><span id="nasaUpdated">Source: NASA POWER</span></div></article><article class="card"><div class="label">NASA source controls</div><p id="nasaStatus">Loading NASA POWER...</p><div class="sat-actions"><button class="btn primary" id="nasaRefresh" type="button">Refresh NASA data</button><a class="btn secondary" href="https://power.larc.nasa.gov/" target="_blank" rel="noopener noreferrer">Open NASA POWER</a><a class="btn secondary" href="https://worldview.earthdata.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA Worldview</a></div><div class="nasa-note">The dashboard labels the data as “latest available” because NASA POWER daily products may lag real-time observations.</div></article></div></div></section>
 <section id="weather"><div class="wrap"><div class="section-head"><div><div class="kicker">09 · Live weather</div><h2>Weather-ready information layer.</h2></div><div class="location-tools"><button id="useMyLocation" class="btn secondary" type="button">Use my location</button><span id="locationStatus" class="location-status">Using Dhaka fallback until browser location is available.</span></div></div><div class="weather"><article class="card"><div class="weather-main"><div><div class="label" id="weatherPlace">Dhaka, Bangladesh</div><div class="temp" id="temp">--°</div><div id="weatherText" class="date">Loading weather...</div></div><div id="weatherIcon" class="weather-icon">☁️</div></div></article><article class="card"><div class="grid" style="grid-template-columns:repeat(2,1fr)"><div><div class="label">Wind</div><h3 id="wind">--</h3></div><div><div class="label">Humidity</div><h3 id="humidity">--</h3></div><div><div class="label">Rain probability</div><h3 id="rainProb">--%</h3></div><div><div class="label">Next rain estimate</div><h3 id="nextRain">Checking...</h3></div><div><div class="label">Updated</div><h3 id="weatherUpdated">--</h3></div><div><div class="label">Source</div><h3>Open-Meteo</h3></div></div><p id="weatherStatus">Weather data is loaded from the browser through a public weather endpoint.</p><div class="weather-hourly" id="weatherHourly"></div></article></div></div></section>
 <section id="satelliteIntel" class="sat-intel"><div class="wrap"><div class="section-head"><div><div class="kicker">08C · Satellite &amp; disaster intelligence</div><h2>Satellite observation + verified navigation.</h2><p class="airspace-subtitle">A separate public-data intelligence layer for satellite imagery, weather radar, cyclone products and disaster information. Air Traffic Management remains independent.</p></div><span class="eyebrow"><span class="pulse"></span>LIVE SOURCE NAVIGATION</span></div>
@@ -610,12 +617,39 @@ section{padding:72px 0}
   (function initNASA(){
     const state=$('nasaState'), status=$('nasaStatus');
     const fallback={lat:23.8103,lon:90.4125};
+    const latInput=$('nasaLat'), lonInput=$('nasaLon'), frame=$('nasaWorldviewFrame'), viewport=$('nasaViewportLabel');
     function ymd(d){return d.toISOString().slice(0,10).replaceAll('-','');}
     function lastAvailableEnd(){const d=new Date(); d.setUTCDate(d.getUTCDate()-4); return d;}
-    function setState(label,online){if(state){state.innerHTML=`<span class="${online?'pulse':'pulse'}"></span>${label}`;}}
+    function setState(label,online){if(state){state.innerHTML=`<span class="pulse"></span>${label}`;}}
+    function getCoords(){
+      const lat=Number(latInput?.value), lon=Number(lonInput?.value);
+      return Number.isFinite(lat)&&Number.isFinite(lon)&&Math.abs(lat)<=90&&Math.abs(lon)<=180?{lat,lon}:{...fallback};
+    }
+    function updateWorldview(){
+      const {lat,lon}=getCoords();
+      const padLat=2.85, padLon=2.35;
+      const west=(lon-padLon).toFixed(4), south=(lat-padLat).toFixed(4), east=(lon+padLon).toFixed(4), north=(lat+padLat).toFixed(4);
+      if(frame) frame.src=`https://worldview.earthdata.nasa.gov/?v=${west}%2C${south}%2C${east}%2C${north}`;
+      if(viewport) viewport.textContent=`${lat.toFixed(4)}°N ${lon.toFixed(4)}°E`;
+      try{localStorage.setItem('igersNASAView',JSON.stringify({lat,lon}));}catch(_){ }
+      updateGPM();
+    }
+    function updateGPM(){
+      const {lat,lon}=getCoords();
+      const span=4.0;
+      const bbox=`${(lon-span).toFixed(4)},${(lat-span).toFixed(4)},${(lon+span).toFixed(4)},${(lat+span).toFixed(4)}`;
+      const img=`https://gis.earthdata.nasa.gov/portal/rest/services/GESDISC/GPM_3IMERGHHE/ImageServer/export?bbox=${encodeURIComponent(bbox)}&bboxSR=4326&size=900,420&imageSR=4326&format=png&transparent=true&f=image`;
+      let el=$('nasaGpmImage');
+      if(!el){
+        const host=document.querySelector('#nasaGpmStatus');
+        if(host){el=document.createElement('img');el.id='nasaGpmImage';el.alt='NASA GPM precipitation map';el.style.cssText='width:100%;height:180px;object-fit:cover;border-radius:12px;margin-top:10px;border:1px solid var(--line);background:#061017';host.parentElement.insertBefore(el,host.nextSibling);}
+      }
+      if(el){el.onload=()=>{if($('nasaGpmStatus'))$('nasaGpmStatus').textContent='NASA GPM precipitation image loaded for the selected location.'};el.onerror=()=>{if($('nasaGpmStatus'))$('nasaGpmStatus').textContent='NASA GPM image is temporarily unavailable; source link remains available.'};el.src=img;}
+    }
     async function loadNASA(){
+      const {lat,lon}=getCoords();
       const end=lastAvailableEnd(); const start=new Date(end); start.setUTCDate(start.getUTCDate()-7);
-      const u='https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,RH2M,WS2M,PRECTOTCORR&community=RE&longitude='+fallback.lon+'&latitude='+fallback.lat+'&start='+ymd(start)+'&end='+ymd(end)+'&format=JSON';
+      const u='https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,RH2M,WS2M,PRECTOTCORR&community=RE&longitude='+lon+'&latitude='+lat+'&start='+ymd(start)+'&end='+ymd(end)+'&format=JSON';
       try{
         setState('CONNECTING',false); if(status) status.textContent='Requesting latest available NASA POWER record…';
         const r=await fetch(u,{cache:'no-store'}); if(!r.ok) throw new Error('NASA POWER request failed');
@@ -627,12 +661,20 @@ section{padding:72px 0}
         setText('nasaRain',Number.isFinite(n('PRECTOTCORR'))?n('PRECTOTCORR').toFixed(1)+' mm/day':'-- mm/day');
         setText('nasaDate','Latest record: '+date.slice(0,4)+'-'+date.slice(4,6)+'-'+date.slice(6,8));
         setText('nasaUpdated','Source: NASA POWER · latest available');
-        setState('DATA AVAILABLE',true); if(status) status.textContent='NASA POWER data loaded for the Dhaka display point.';
+        setState('DATA AVAILABLE',true); if(status) status.textContent=`NASA POWER data loaded for ${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E.`;
       }catch(e){
-        setState('OFFLINE',false); if(status) status.textContent='NASA POWER is temporarily unavailable from this browser. The rest of the application remains functional.';
+        setState('OFFLINE',false); if(status) status.textContent='NASA POWER is temporarily unavailable from this browser. Satellite/Worldview and the rest of the application remain functional.';
       }
     }
-    $('nasaRefresh')?.addEventListener('click',loadNASA); loadNASA(); setInterval(loadNASA,3600000);
+    $('nasaRefresh')?.addEventListener('click',loadNASA);
+    $('nasaGoLocation')?.addEventListener('click',()=>{updateWorldview();loadNASA();});
+    $('nasaGpmRefresh')?.addEventListener('click',updateGPM);
+    $('nasaUseLocation')?.addEventListener('click',()=>{
+      if(!navigator.geolocation){updateWorldview();loadNASA();return;}
+      navigator.geolocation.getCurrentPosition(p=>{latInput.value=p.coords.latitude.toFixed(4);lonInput.value=p.coords.longitude.toFixed(4);updateWorldview();loadNASA();},()=>{updateWorldview();loadNASA();},{enableHighAccuracy:false,timeout:7000,maximumAge:300000});
+    });
+    try{const saved=JSON.parse(localStorage.getItem('igersNASAView')||'null');if(saved?.lat&&saved?.lon){latInput.value=saved.lat;lonInput.value=saved.lon;}}catch(_){ }
+    updateWorldview(); loadNASA(); setInterval(loadNASA,3600000);
   })();
 
 </script>
