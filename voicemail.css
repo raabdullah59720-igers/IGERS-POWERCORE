@@ -1,0 +1,24 @@
+
+/* IGERS-BD-01 · Public Voice Mail visual layer */
+.voicemail-card,.voicemail-list-card{grid-column:1/-1}
+.voicemail-card{margin-top:0}
+.voicemail-public-badge{background:rgba(85,221,255,.06);border-color:rgba(85,221,255,.18);color:#8dd8ea}
+.voicemail-recorder{position:relative;z-index:1;margin-top:16px;padding:18px;border:1px solid rgba(120,210,240,.13);border-radius:16px;background:rgba(3,12,18,.56)}
+.voicemail-level{height:42px;display:flex;align-items:center;justify-content:center;gap:5px;border:1px solid rgba(85,221,255,.09);border-radius:12px;background:linear-gradient(180deg,rgba(85,221,255,.035),rgba(138,243,191,.02));overflow:hidden}
+.voicemail-level i{display:block;width:4px;height:8px;border-radius:5px;background:#55ddff;opacity:.45;transform-origin:center;transition:height .12s ease,opacity .12s ease}
+.voicemail-recorder.recording .voicemail-level i{animation:vmPulse 850ms ease-in-out infinite alternate}
+.voicemail-recorder.recording .voicemail-level i:nth-child(2n){animation-delay:-180ms}.voicemail-recorder.recording .voicemail-level i:nth-child(3n){animation-delay:-390ms}.voicemail-recorder.recording .voicemail-level i:nth-child(4n){animation-delay:-590ms}
+@keyframes vmPulse{from{height:7px;opacity:.35}to{height:31px;opacity:.95}}
+.voicemail-time-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:12px}.voicemail-time-row strong{font-variant-numeric:tabular-nums;font-size:24px;letter-spacing:.04em}.voicemail-time-row span{font-size:10px;letter-spacing:.13em;color:#9ce8bf;font-weight:900}
+.voicemail-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.voicemail-controls .feedback-btn{margin-top:0}.voicemail-controls button:disabled{opacity:.42;cursor:not-allowed}
+.voicemail-preview{width:100%;margin-top:14px;height:42px;border-radius:10px}
+.voicemail-note{margin-top:12px}.voicemail-status{min-height:0}
+.voicemail-list-card .list-heading{align-items:center}.voicemail-refresh-btn{margin-top:0;white-space:nowrap}
+.voicemail-list{display:grid;gap:10px;margin-top:12px;max-height:510px;overflow:auto;padding-right:2px}
+.voicemail-empty{display:grid;place-items:center;text-align:center;gap:6px;padding:34px 18px;border:1px dashed rgba(120,210,240,.14);border-radius:14px;color:var(--muted)}
+.voicemail-item{padding:14px;border:1px solid rgba(120,210,240,.13);border-radius:14px;background:rgba(4,15,23,.68)}
+.voicemail-meta{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px;font-size:10px;color:var(--muted)}
+.voicemail-meta strong{color:var(--text);font-size:12px}.voicemail-meta span{font-variant-numeric:tabular-nums}
+.voicemail-item audio{width:100%;height:38px}.voicemail-item .vm-error{font-size:11px;color:#ffb2b2;margin-top:8px}
+.voicemail-server-note{font-size:10px;color:#7d98a7;margin-top:10px}
+@media(max-width:650px){.voicemail-controls{display:grid;grid-template-columns:1fr 1fr}.voicemail-controls .feedback-btn{width:100%}.voicemail-controls .voicemail-record-btn{grid-column:1/-1}.voicemail-item audio{height:42px}.voicemail-meta{display:block}.voicemail-meta span{display:block;margin-top:3px}.voicemail-refresh-btn{width:100%}}
