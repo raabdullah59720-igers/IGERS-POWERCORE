@@ -3,691 +3,91 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>IGERS-BD-01 | Integrated Energy Recovery & Storage</title>
-<meta name="description" content="IGERS-BD-01 conceptual engineering ecosystem, live world time, Bangladesh time, local time and weather-ready dashboard.">
-<style>
-:root{--bg:#050b10;--panel:#0b151e;--panel2:#0d1d28;--line:#1b3545;--text:#eef8fc;--muted:#8da7b6;--cyan:#55ddff;--green:#8af3bf;--gold:#ffd37a;--danger:#ff8d8d;--shadow:0 22px 70px rgba(0,0,0,.3)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 15% 0%,#123044 0,#071019 38%,#04080c 100%);color:var(--text);font:15px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}a{color:inherit;text-decoration:none}.wrap{max-width:1220px;margin:auto;padding:0 22px}.nav{position:sticky;top:0;z-index:50;background:rgba(4,10,15,.82);backdrop-filter:blur(16px);border-bottom:1px solid rgba(120,210,240,.12)}.navin{height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-weight:900;letter-spacing:.12em}.brand small{display:block;font-weight:500;letter-spacing:.03em;color:var(--muted);font-size:10px}.navlinks{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:13px}.navlinks a:hover{color:var(--cyan)}
-.hero{padding:84px 0 55px}.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:38px;align-items:center}.eyebrow{display:inline-flex;gap:9px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:7px 12px;color:var(--green);font-size:11px;letter-spacing:.13em;text-transform:uppercase}.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 18px var(--green);animation:pulse 1.6s infinite}@keyframes pulse{50%{transform:scale(.7);opacity:.45}}h1{font-size:clamp(44px,6vw,82px);line-height:.98;letter-spacing:-.04em;margin:20px 0 18px}h2{font-size:clamp(30px,4vw,48px);line-height:1.05;margin:0 0 12px;letter-spacing:-.03em}h3{margin:0 0 9px}.lead{font-size:18px;color:var(--muted);max-width:760px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{padding:12px 16px;border:1px solid var(--line);border-radius:13px;background:#0a1923;font-weight:700;font-size:13px}.btn.primary{background:linear-gradient(135deg,#44cfee,#77f0c0);color:#031016;border-color:transparent}.hero-visual{min-height:360px;border:1px solid var(--line);border-radius:28px;background:linear-gradient(145deg,rgba(22,60,79,.6),rgba(7,18,27,.78));box-shadow:var(--shadow);padding:20px;position:relative;overflow:hidden}.orb{position:absolute;border-radius:50%;filter:blur(1px);box-shadow:0 0 55px rgba(85,221,255,.28)}.orb.one{width:160px;height:160px;left:10%;top:16%;border:1px solid #55ddff88}.orb.two{width:115px;height:115px;right:14%;bottom:13%;border:1px solid #8af3bf99}.hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:140px;height:140px;border-radius:50%;display:grid;place-items:center;text-align:center;border:1px solid #64e3ff88;background:radial-gradient(circle,#17394b,#08141d 68%);box-shadow:0 0 80px #55ddff22}.hub b{font-size:18px;letter-spacing:.08em}.node{position:absolute;padding:8px 10px;border:1px solid var(--line);background:#07121aee;border-radius:12px;font-size:10px;color:var(--muted)}.n1{left:8%;top:8%}.n2{right:8%;top:9%}.n3{left:8%;bottom:8%}.n4{right:8%;bottom:8%}.line{position:absolute;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);transform-origin:left center;opacity:.7}.l1{width:37%;left:17%;top:26%;transform:rotate(24deg)}.l2{width:37%;left:55%;top:26%;transform:rotate(154deg)}.l3{width:37%;left:17%;top:74%;transform:rotate(-22deg)}.l4{width:37%;left:55%;top:74%;transform:rotate(-158deg)}
-section{padding:72px 0}
-/* Live air traffic layer */
-.airtraffic-shell{display:grid;grid-template-columns:1.35fr .65fr;gap:16px;margin-top:18px}.airmap{height:520px;border:1px solid #245160;border-radius:24px;overflow:hidden;background:#07131b;position:relative;isolation:isolate}.airmap iframe{display:block;width:100%;height:100%;border:0;background:#07131b}.air-map-fallback{position:absolute;inset:12px;display:grid;place-items:center;padding:20px;border:1px solid #245160;border-radius:16px;background:rgba(4,12,18,.92);color:#cfe4ec;text-align:center;z-index:5}.air-map-fallback[hidden]{display:none}.airmap .leaflet-container{background:#07131b;font:12px/1.4 system-ui,sans-serif}.airmap .leaflet-control-zoom a{background:#08141d;color:#eef8fc;border-color:#234454}.airmap .leaflet-control-attribution{background:rgba(4,10,15,.78);color:#8da7b6}.airmap .leaflet-control-attribution a{color:#55ddff}.airtraffic-side{display:grid;gap:16px}.air-stat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.air-stat .card{padding:16px}.air-value{font-size:28px;font-weight:900;font-variant-numeric:tabular-nums}.air-list{max-height:300px;overflow:auto;display:grid;gap:8px;margin-top:12px}.air-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:#07131b;cursor:pointer}.air-row:hover{border-color:#3a7385;background:#0a1b25}.air-callsign{font-weight:800;color:var(--text);font-size:12px}.air-meta{font-size:10px;color:var(--muted);margin-top:2px}.air-alt{font-size:11px;color:var(--cyan);text-align:right}.air-selected{border-color:#55ddff!important;box-shadow:0 0 0 1px #55ddff22 inset}.air-statusbar{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:12px;padding:10px 12px;border:1px dashed var(--line);border-radius:12px}.air-live{color:var(--green);font-size:11px;font-weight:800}.air-live.offline{color:#ff9b9b}.plane-marker{width:24px;height:24px;display:grid;place-items:center;color:#55ddff;text-shadow:0 0 12px #55ddff;filter:drop-shadow(0 0 5px #55ddff66);font-size:22px;line-height:1;transform-origin:50% 50%}.plane-marker.selected{color:#8af3bf;text-shadow:0 0 14px #8af3bf}.air-detail{min-height:120px}.air-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.air-detail-grid div{padding:9px;border:1px solid var(--line);border-radius:10px;background:#07131b}.air-detail-grid b{display:block;font-size:11px}.air-detail-grid span{display:block;color:var(--muted);font-size:10px;margin-top:2px}@media(max-width:950px){.airtraffic-shell{grid-template-columns:1fr}.airmap{height:440px}}@media(max-width:650px){.airmap{height:360px}.air-stat{grid-template-columns:1fr 1fr}.air-stat .card:last-child{grid-column:1/-1}.air-statusbar{display:block}.air-statusbar span{display:block}.air-statusbar span+span{margin-top:4px}}
-.section-head{display:flex;justify-content:space-between;gap:25px;align-items:end;margin-bottom:28px}.kicker{color:var(--cyan);text-transform:uppercase;letter-spacing:.16em;font-size:11px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.card{background:linear-gradient(145deg,rgba(13,29,40,.9),rgba(7,15,22,.9));border:1px solid var(--line);border-radius:20px;padding:21px;box-shadow:0 14px 45px rgba(0,0,0,.12)}.card p{color:var(--muted);margin:8px 0 0}.num{font-size:11px;color:var(--green);letter-spacing:.14em}.tag{display:inline-block;margin-top:13px;padding:5px 8px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:10px}.journey{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:center}.step{padding:15px 10px;text-align:center;border:1px solid var(--line);border-radius:14px;background:#07131b;font-size:11px;font-weight:800}.arrow{text-align:center;color:var(--cyan);font-size:17px}.road{position:relative;height:230px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(#102b22 0 25%,#28353c 25% 75%,#102b22 75%);overflow:hidden}.road:before{content:"";position:absolute;left:0;right:0;top:50%;border-top:4px dashed #d7e5e855}.road-label{position:absolute;padding:7px 10px;border:1px solid #ffffff22;border-radius:10px;background:#061016cc;font-size:11px}.rl1{left:5%;top:8%}.rl2{left:40%;top:31%}.rl3{right:6%;bottom:7%}.bridge{height:250px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(#102434,#08141d);position:relative;overflow:hidden}.deck{position:absolute;left:8%;right:8%;top:58%;height:18px;background:#62727c;border-radius:4px}.pier{position:absolute;top:64%;width:18px;height:28%;background:#52616b}.p1{left:24%}.p2{left:49%}.p3{left:74%}.cable{position:absolute;left:10%;right:10%;top:20%;height:40%;border-bottom:2px solid var(--cyan);border-radius:0 0 50% 50%}.wire{position:absolute;top:28%;width:1px;height:32%;background:#55ddff77}.w1{left:24%}.w2{left:49%}.w3{left:74%}
-.time-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.clock-card{background:linear-gradient(145deg,#0d212d,#071018);border:1px solid var(--line);border-radius:20px;padding:22px}.label{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted)}.clock{font-size:clamp(34px,4vw,50px);font-weight:850;letter-spacing:.02em;font-variant-numeric:tabular-nums;margin:4px 0}.date{color:var(--muted);font-size:13px}.tz{color:var(--cyan);font-size:11px;margin-top:8px}.select{margin-top:13px;width:100%;padding:11px;border:1px solid var(--line);border-radius:12px;background:#061018;color:var(--text)}.weather{display:grid;grid-template-columns:.9fr 1.1fr;gap:16px;margin-top:16px}.weather-main{display:flex;justify-content:space-between;align-items:center;gap:15px}.temp{font-size:52px;font-weight:900}.weather-icon{font-size:54px}.weather p{margin:4px 0;color:var(--muted)}.status{margin-top:16px;padding:11px 13px;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}.live-panel{display:flex;justify-content:space-between;align-items:center;gap:20px;background:linear-gradient(135deg,#081820,#0b1e27);border:1px solid #2b5664;box-shadow:0 0 0 1px #54d6ff08 inset,0 16px 45px rgba(0,0,0,.18)}.live-left{display:flex;align-items:center;gap:13px}.live-left b{display:block;letter-spacing:.1em;color:var(--green)}.live-left span:not(.live-dot){display:block;color:var(--muted);font-size:11px;margin-top:2px}.live-dot{width:11px;height:11px;border-radius:50%;background:#79f3b5;box-shadow:0 0 0 0 #79f3b555,0 0 18px #79f3b5;animation:livePulse 1.4s infinite}.live-metrics{display:flex;gap:22px}.live-metrics span{text-align:right}.live-metrics strong{display:block;font-variant-numeric:tabular-nums}.live-metrics small{display:block;color:#718a98;font-size:9px;letter-spacing:.12em;margin-top:1px}@keyframes livePulse{0%{box-shadow:0 0 0 0 #79f3b566,0 0 16px #79f3b5}70%{box-shadow:0 0 0 10px #79f3b500,0 0 22px #79f3b5}100%{box-shadow:0 0 0 0 #79f3b500,0 0 16px #79f3b5}}@media(max-width:650px){.live-panel{display:block}.live-metrics{justify-content:space-between;margin-top:14px}.live-metrics span{text-align:left}}
-.profile{display:grid;grid-template-columns:.7fr 1.3fr;gap:18px}.portrait{min-height:240px;display:grid;place-items:center;border:1px solid var(--line);border-radius:22px;background:radial-gradient(circle,#163344,#081219 62%);font-size:52px;font-weight:900;color:#8ae9ff}.timeline{display:grid;gap:10px}.tl{padding:12px 14px;border-left:2px solid var(--cyan);background:#07131b;border-radius:0 12px 12px 0}.footer{padding:34px 0 60px;color:#6f8a99;font-size:12px;border-top:1px solid #162936;margin-top:30px}.mini{font-size:12px;color:var(--muted)}.warning{color:#ffd6a0}.mapbox{min-height:280px;border:1px solid var(--line);border-radius:24px;background:radial-gradient(circle at 50% 40%,#123748,#08131b 62%);display:grid;place-items:center;text-align:center}.bd-outline{font-size:88px;letter-spacing:.1em;color:#55ddff22;border:1px solid #55ddff25;padding:25px 50px;border-radius:45% 55% 48% 52%/55% 45% 55% 45%}.legend{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:15px}.legend span{border:1px solid var(--line);border-radius:999px;padding:5px 8px;font-size:10px;color:var(--muted)}
-@media(max-width:950px){.hero-grid,.profile,.weather{grid-template-columns:1fr}.grid,.time-wrap{grid-template-columns:1fr 1fr}.journey{grid-template-columns:1fr 1fr}.navlinks{display:flex;overflow-x:auto;flex-wrap:nowrap;max-width:68vw;padding-bottom:4px}.navlinks a{white-space:nowrap}}@media(max-width:650px){.wrap{padding:0 14px}.grid,.grid2,.time-wrap{grid-template-columns:1fr}.hero{padding-top:54px}h1{font-size:48px}.journey{grid-template-columns:1fr}.arrow{display:none}.section-head{display:block}}
-
-/* Environmental intelligence dashboard */
-.env-dashboard{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:18px}
-.radar-card{position:relative;min-height:390px;overflow:hidden;background:radial-gradient(circle at 50% 50%,#0f3340 0,#07151d 48%,#050b10 100%);border:1px solid #245160;border-radius:24px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.22)}
-.radar-head{display:flex;justify-content:space-between;gap:12px;align-items:center;position:relative;z-index:3}.radar-title{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}.radar-live{font-size:10px;color:var(--green);border:1px solid #2f5a4b;padding:5px 8px;border-radius:999px}
-.radar-scope{position:absolute;left:50%;top:54%;width:270px;height:270px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid #55ddff33;background:repeating-radial-gradient(circle,#55ddff12 0 1px,transparent 1px 54px),radial-gradient(circle,#55ddff08 0 1px,transparent 1px);box-shadow:0 0 60px #55ddff0e inset}
-.radar-scope:before,.radar-scope:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:#55ddff1c}.radar-scope:after{top:50%;left:0;right:0;width:auto;height:1px}
-.sweep{position:absolute;left:50%;top:50%;width:125px;height:125px;transform-origin:0 0;transform:rotate(18deg);background:conic-gradient(from 0deg,#55ddff00 0 320deg,#55ddff45 342deg,#8af3bf70 360deg);clip-path:polygon(0 0,100% 50%,0 100%);filter:blur(.2px);animation:radarSweep 3.8s linear infinite}@keyframes radarSweep{to{transform:rotate(378deg)}}
-.radar-ring{position:absolute;inset:18px;border:1px solid #55ddff14;border-radius:50%}.radar-ring.r2{inset:70px}.radar-ring.r3{inset:122px}.radar-cross{position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);background:var(--green);box-shadow:0 0 18px var(--green)}
-.radar-blip{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);animation:blip 2.4s ease-in-out infinite}.b1{left:31%;top:35%}.b2{right:26%;top:47%;animation-delay:.7s}.b3{left:42%;bottom:25%;animation-delay:1.3s}@keyframes blip{50%{opacity:.25;transform:scale(.65)}}
-.radar-caption{position:absolute;bottom:17px;left:18px;right:18px;display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:10px}.sensor-stack{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.sensor-card{background:linear-gradient(145deg,#0d1f29,#071119);border:1px solid var(--line);border-radius:18px;padding:16px}.sensor-value{font-size:30px;font-weight:850;line-height:1.1;font-variant-numeric:tabular-nums}.sensor-unit{font-size:11px;color:var(--muted)}.sensor-bar{height:5px;border-radius:999px;background:#12242d;overflow:hidden;margin-top:12px}.sensor-bar i{display:block;height:100%;width:50%;background:linear-gradient(90deg,#55ddff,#8af3bf);border-radius:999px;transition:width .5s ease}.sensor-sub{color:var(--muted);font-size:10px;margin-top:6px}
-.alert-box{margin-top:16px;border:1px solid #66533a;background:linear-gradient(145deg,#231a0d,#0e1114);border-radius:18px;padding:15px}.alert-box.clear{border-color:#2b5547;background:linear-gradient(145deg,#0c2019,#07110e)}.alert-box.attention{border-color:#6f5b34;background:linear-gradient(145deg,#231d0d,#11100a)}.alert-top{display:flex;justify-content:space-between;align-items:center;gap:12px}.alert-badge{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#ffd37a}.clear .alert-badge{color:var(--green)}.alert-main{font-size:14px;font-weight:750;margin-top:7px}.alert-meta{color:var(--muted);font-size:10px;margin-top:4px}.eq-list{margin-top:12px;display:grid;gap:8px}.eq-item{display:flex;justify-content:space-between;gap:8px;align-items:center;border-top:1px solid #1a2a32;padding-top:8px;font-size:10px}.eq-mag{font-weight:850;color:#ffd37a}.eq-place{color:var(--muted);text-align:right}.source-note{margin-top:8px;color:#718896;font-size:9px}.env-status{margin-top:12px;font-size:10px;color:var(--muted)}
-@media(max-width:950px){.env-dashboard{grid-template-columns:1fr}.radar-scope{width:240px;height:240px}}
-
-
-<style>
-.notify-panel{margin-top:12px;padding:12px 14px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(255,255,255,.035);display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.notify-panel>div:first-child{display:flex;flex-direction:column;gap:4px}.notify-panel strong{font-size:13px}.notify-panel span{font-size:11px;opacity:.7}.notify-actions{display:flex;gap:8px;align-items:center}.notify-actions select,.notify-actions button{font:inherit}.notify-actions select{background:transparent;color:inherit;border:1px solid rgba(255,255,255,.15);padding:8px 10px;border-radius:9px}.notify-actions button{border:0;border-radius:9px;padding:9px 12px;cursor:pointer;font-weight:700}.notify-panel.is-on{border-color:rgba(75,220,145,.35)}.notify-panel.is-error{border-color:rgba(255,90,90,.35)}
-
-.notify-foot{display:flex;justify-content:space-between;gap:12px;margin-top:8px;font-size:11px;color:var(--muted);letter-spacing:.02em}.notify-foot #quakeFeedState{color:#8fe3b2}.notify-foot #quakeFeedState.offline{color:#ff9b9b}.notify-actions .secondary{opacity:.82}.notify-actions .secondary:hover{opacity:1}
-.footer-legal{display:inline-flex;gap:10px;flex-wrap:wrap;margin-top:9px;align-items:center}.footer-legal a{color:var(--cyan);text-decoration:none}.footer-legal a:hover{text-decoration:underline}@media(max-width:650px){.footer-legal{display:flex;gap:7px 12px}}
-
-/* Developer demo: visitor comments + customer care */
-.feedback-shell{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:18px}
-.feedback-card{border:1px solid rgba(120,210,240,.14);background:linear-gradient(180deg,rgba(14,31,43,.86),rgba(7,17,27,.9));border-radius:18px;padding:22px;box-shadow:0 18px 46px rgba(0,0,0,.22)}
-.feedback-card h3{margin:4px 0 8px}.feedback-card p{margin:0;color:var(--muted)}
-.feedback-form{display:grid;gap:12px;margin-top:18px}.feedback-label{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#b7cfdb}
-.feedback-input,.feedback-textarea{width:100%;border:1px solid rgba(120,210,240,.17);background:rgba(2,9,15,.72);color:var(--text);border-radius:12px;padding:12px 13px;font:inherit;outline:none;transition:.2s;border-color:rgba(120,210,240,.17)}
-.feedback-input:focus,.feedback-textarea:focus{border-color:rgba(85,221,255,.62);box-shadow:0 0 0 3px rgba(85,221,255,.08)}
-.feedback-textarea{min-height:132px;resize:vertical}.feedback-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.feedback-btn{border:0;border-radius:11px;padding:11px 15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#55ddff,#8af3bf);color:#061019}.feedback-btn.alt{background:rgba(255,255,255,.06);color:var(--text);border:1px solid rgba(255,255,255,.1)}
-.feedback-note{font-size:11px!important;color:#6f8d9d!important}.feedback-status{font-size:12px;font-weight:700;min-height:18px}.feedback-status.ok{color:#8af3bf}.feedback-status.err{color:#ff9b9b}
-.feedback-list{display:grid;gap:10px;margin-top:16px;max-height:420px;overflow:auto;padding-right:4px}.feedback-item{padding:13px 14px;border-radius:13px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)}.feedback-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.feedback-meta strong{font-size:12px}.feedback-meta span{font-size:10px;color:var(--muted)}.feedback-item p{font-size:13px;color:#dcecf3;white-space:pre-wrap}.feedback-empty{padding:24px 10px;text-align:center;color:var(--muted);font-size:12px}
-.demo-badge{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,211,122,.22);background:rgba(255,211,122,.06);color:#ffd37a;padding:6px 9px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
-@media(max-width:850px){.feedback-shell{grid-template-columns:1fr}}
-
-</style>
-<link rel="stylesheet" href="feedback-premium.css">
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#07111f">
-
-<style>
-.airspace-safety-section{padding-top:42px}.airspace-subtitle{margin:10px 0 0;color:var(--muted);max-width:860px}.airspace-badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.safety-badge{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,120,120,.22);background:rgba(255,90,90,.06);color:#ffb1a8;padding:7px 10px;border-radius:999px;font-size:9px;font-weight:900;letter-spacing:.1em}.safety-badge i{width:7px;height:7px;border-radius:50%;background:#ff9a8e;box-shadow:0 0 12px rgba(255,154,142,.8)}.safety-badge.neutral{border-color:rgba(85,221,255,.16);background:rgba(85,221,255,.04);color:#8cd7e7}.airspace-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}.airspace-status-card{position:relative;overflow:hidden;isolation:isolate}.airspace-status-card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 88% 10%,rgba(255,102,102,.09),transparent 35%),linear-gradient(140deg,rgba(85,221,255,.035),transparent 55%);z-index:-1}.airspace-top,.airspace-mini-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.airspace-severity,.airspace-zone{display:inline-flex;align-items:center;padding:6px 9px;border-radius:999px;font-size:9px;font-weight:900;letter-spacing:.1em}.airspace-severity{background:rgba(138,243,191,.07);border:1px solid rgba(138,243,191,.19);color:#9cf1bf}.airspace-severity.watch{background:rgba(255,211,122,.07);border-color:rgba(255,211,122,.22);color:#ffd88d}.airspace-severity.anomaly{background:rgba(255,158,104,.08);border-color:rgba(255,158,104,.26);color:#ffbc91}.airspace-severity.danger{background:rgba(255,102,102,.09);border-color:rgba(255,102,102,.3);color:#ff9c9c}.airspace-zone{background:#08131b;border:1px solid var(--line);color:#8fa9b6}.airspace-icon{width:66px;height:66px;display:grid;place-items:center;border-radius:20px;margin:24px 0 14px;border:1px solid rgba(138,243,191,.18);background:radial-gradient(circle,rgba(138,243,191,.1),rgba(138,243,191,.02));color:#9ff4c3;font-size:28px;font-weight:900;box-shadow:0 0 40px rgba(138,243,191,.08)}.airspace-icon.warn{border-color:rgba(255,211,122,.24);background:radial-gradient(circle,rgba(255,211,122,.11),rgba(255,211,122,.02));color:#ffd98c}.airspace-icon.danger{border-color:rgba(255,102,102,.28);background:radial-gradient(circle,rgba(255,102,102,.13),rgba(255,102,102,.02));color:#ff9e9e;animation:pulse 1.2s infinite}.airspace-status-card h3{font-size:clamp(24px,3vw,34px);margin-bottom:7px}.airspace-status-card p{max-width:760px}.airspace-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}.airspace-facts div{padding:11px;border:1px solid var(--line);border-radius:12px;background:#07131b}.airspace-facts b{display:block;font-size:10px}.airspace-facts span{display:block;margin-top:3px;color:var(--muted);font-size:11px}.airspace-actions{display:flex;gap:9px;flex-wrap:wrap}.airspace-alert-status{margin-top:12px;padding:10px 11px;border:1px dashed var(--line);border-radius:11px;color:var(--muted);font-size:10px}.airspace-alert-status.on{border-color:rgba(138,243,191,.2);color:#9fe8bf;background:rgba(138,243,191,.025)}.airspace-alert-status.error{border-color:rgba(255,141,141,.2);color:#ffaaa4}.airspace-side{display:grid;gap:16px}.airspace-checks{display:grid;gap:8px;margin-top:14px}.airspace-checks div{display:grid;grid-template-columns:22px 1fr;gap:7px;padding:11px;border:1px solid var(--line);border-radius:12px;background:#07131b}.airspace-checks span{width:20px;height:20px;display:grid;place-items:center;border-radius:7px;color:#8af3bf;border:1px solid rgba(138,243,191,.16);background:rgba(138,243,191,.05);font-size:11px;font-weight:900}.airspace-checks b{font-size:11px}.airspace-checks small{grid-column:2;color:var(--muted);font-size:10px}.airspace-live-dot{width:8px;height:8px;border-radius:50%;background:#8af3bf;box-shadow:0 0 16px rgba(138,243,191,.75);animation:pulse 1.6s infinite}.airspace-event-log{display:grid;gap:8px;margin-top:12px;max-height:220px;overflow:auto}.airspace-event{padding:10px 11px;border:1px solid var(--line);border-radius:11px;background:#07131b}.airspace-event b{display:block;font-size:10px}.airspace-event span{display:block;color:var(--muted);font-size:10px;margin-top:3px}.airspace-empty{padding:18px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:10px;text-align:center}.airspace-disclaimer{font-size:10px!important;color:#7e9aa6!important;line-height:1.55}.airspace-disclaimer strong{color:#ffca85}.airspace-disclaimer b{color:#bad7df}@media(max-width:900px){.airspace-grid{grid-template-columns:1fr}.airspace-badges{justify-content:flex-start}}@media(max-width:600px){.airspace-facts{grid-template-columns:1fr}.airspace-actions .btn{width:100%}}
-.sat-intel{margin-top:18px}.sat-intel-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.sat-dashboard{position:relative;overflow:hidden}.sat-dashboard:before{content:"";position:absolute;inset:-35%;background:radial-gradient(circle at 18% 18%,rgba(85,221,255,.09),transparent 28%),radial-gradient(circle at 85% 75%,rgba(138,243,191,.06),transparent 32%);z-index:-1}.sat-map{height:360px;border-radius:18px;border:1px solid rgba(85,221,255,.14);background:linear-gradient(180deg,#07131b,#030b10);position:relative;overflow:hidden}.sat-map-grid{position:absolute;inset:0;background:linear-gradient(rgba(85,221,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(85,221,255,.04) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,transparent,#000 15%,#000 85%,transparent)}.sat-map-glow{position:absolute;left:50%;top:48%;width:250px;height:250px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 37% 32%,#1b5168,#06151d 66%);border:1px solid rgba(85,221,255,.26);box-shadow:0 0 85px rgba(85,221,255,.14),inset 0 0 45px rgba(85,221,255,.08)}.sat-map-bd{position:absolute;left:56%;top:48%;width:45px;height:18px;border:1px solid rgba(138,243,191,.9);border-radius:50%;transform:rotate(-24deg);box-shadow:0 0 18px rgba(138,243,191,.38)}.sat-map-node{position:absolute;width:10px;height:10px;border-radius:50%;background:#8af3bf;box-shadow:0 0 18px rgba(138,243,191,.8)}.sat-map-node.n1{left:56%;top:49%}.sat-map-node.n2{left:45%;top:57%}.sat-map-node.n3{left:64%;top:40%}.sat-map-node.n4{left:36%;top:39%}.sat-map-line{position:absolute;height:1px;background:linear-gradient(90deg,rgba(85,221,255,.03),rgba(85,221,255,.65));transform-origin:left center}.sat-map-line.l1{left:56%;top:49%;width:140px;transform:rotate(-28deg)}.sat-map-line.l2{left:56%;top:49%;width:125px;transform:rotate(154deg)}.sat-map-line.l3{left:56%;top:49%;width:170px;transform:rotate(-122deg)}.sat-map-label{position:absolute;font-size:9px;letter-spacing:.12em;font-weight:900;color:#a9f2ff}.sat-map-label.bang{left:59%;top:44%}.sat-map-label.gulf{left:21%;bottom:18%}.sat-map-label.bay{right:15%;bottom:24%}.sat-map-overlay{position:absolute;left:12px;right:12px;top:12px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}.sat-source-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border-radius:999px;background:rgba(4,13,19,.82);border:1px solid rgba(85,221,255,.14);font-size:9px;font-weight:900;letter-spacing:.08em}.sat-source-chip .dot{width:7px;height:7px;border-radius:50%;background:#8af3bf;box-shadow:0 0 12px rgba(138,243,191,.8)}.sat-nav-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.sat-nav-card{padding:12px;border:1px solid var(--line);border-radius:12px;background:#07131b;transition:.2s}.sat-nav-card:hover{border-color:#3f7f93;transform:translateY(-1px)}.sat-nav-card b{display:block;font-size:11px}.sat-nav-card span{display:block;color:var(--muted);font-size:10px;margin-top:3px}.sat-nav-card a{display:inline-flex;margin-top:9px;color:var(--cyan);font-size:10px;font-weight:800}.sat-risk-list{display:grid;gap:9px;margin-top:12px}.sat-risk{display:grid;grid-template-columns:28px 1fr auto;gap:9px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px;background:#07131b}.sat-risk-icon{width:28px;height:28px;display:grid;place-items:center;border-radius:9px;background:rgba(85,221,255,.07);border:1px solid rgba(85,221,255,.15);color:#8feaff;font-size:13px}.sat-risk b{display:block;font-size:10px}.sat-risk span{display:block;color:var(--muted);font-size:9px;margin-top:2px}.sat-risk a{font-size:9px;color:#8af3bf;font-weight:800;white-space:nowrap}.sat-timebar{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:12px;padding:10px 12px;border:1px dashed var(--line);border-radius:11px;color:var(--muted);font-size:10px}.sat-timebar strong{color:#9ef0c0;font-variant-numeric:tabular-nums}.sat-location-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.sat-location-row .btn{flex:1;min-width:150px}.sat-mini-maplink{color:var(--cyan);font-size:10px}.sat-intel-note{margin-top:10px;font-size:10px;color:#7d98a4;line-height:1.5}.sat-live-image-note{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:10px;padding:10px 12px;border-radius:11px;background:rgba(255,211,122,.035);border:1px solid rgba(255,211,122,.12);font-size:10px;color:#b6a88d}.sat-live-image-note a{color:#ffd17a;font-weight:800}@media(max-width:950px){.sat-intel-grid{grid-template-columns:1fr}}@media(max-width:620px){.sat-nav-grid{grid-template-columns:1fr}.sat-risk{grid-template-columns:28px 1fr}.sat-risk a{grid-column:2}.sat-map{height:300px}.sat-timebar{display:block}.sat-timebar>*+*{display:block;margin-top:5px}.sat-location-row .btn{width:100%;min-width:0}}
-/* Bangabandhu-1 satellite connection layer */
-.sat-monitor{margin:18px 0 0}.sat-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.sat-card{position:relative;overflow:hidden;isolation:isolate}.sat-card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 86% 10%,rgba(85,221,255,.11),transparent 34%),linear-gradient(135deg,rgba(85,221,255,.04),transparent 58%);z-index:-1}.sat-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.sat-title-row{display:flex;align-items:center;gap:10px}.sat-orb{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#9cefff;background:radial-gradient(circle at 35% 30%,#1f5b75,#08131c 65%);border:1px solid rgba(85,221,255,.3);box-shadow:0 0 28px rgba(85,221,255,.16)}.sat-live{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;border:1px solid rgba(138,243,191,.18);background:rgba(138,243,191,.05);color:#99efbd;font-size:9px;font-weight:900;letter-spacing:.1em}.sat-live.offline{border-color:rgba(255,141,141,.22);background:rgba(255,90,90,.05);color:#ffaaa4}.sat-live-dot{width:7px;height:7px;border-radius:50%;background:#8af3bf;box-shadow:0 0 14px rgba(138,243,191,.9);animation:pulse 1.5s infinite}.sat-live.offline .sat-live-dot{background:#ff8f8f;box-shadow:0 0 14px rgba(255,143,143,.7)}.sat-visual{height:260px;margin-top:18px;border-radius:18px;border:1px solid rgba(85,221,255,.14);background:radial-gradient(circle at 50% 50%,rgba(85,221,255,.08),transparent 42%),linear-gradient(180deg,#061018,#091722);position:relative;overflow:hidden}.sat-earth{position:absolute;left:50%;top:52%;width:185px;height:185px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(85,221,255,.23);background:radial-gradient(circle at 34% 30%,rgba(90,180,210,.55),rgba(5,18,26,.96) 66%);box-shadow:0 0 65px rgba(85,221,255,.12),inset 0 0 50px rgba(85,221,255,.08)}.sat-orbit{position:absolute;left:50%;top:52%;width:320px;height:145px;transform:translate(-50%,-50%) rotate(-8deg);border:1px dashed rgba(138,243,191,.18);border-radius:50%}.sat-link-line{position:absolute;left:58%;top:43%;width:120px;height:1px;background:linear-gradient(90deg,rgba(85,221,255,.05),rgba(85,221,255,.7));transform:rotate(15deg);transform-origin:left center;box-shadow:0 0 12px rgba(85,221,255,.25)}.sat-node{position:absolute;left:calc(58% + 112px);top:calc(43% + 32px);width:13px;height:13px;border-radius:50%;background:#8af3bf;box-shadow:0 0 22px rgba(138,243,191,.95);animation:pulse 1.5s infinite}.sat-node-label{position:absolute;left:calc(58% + 128px);top:calc(43% + 20px);font-size:9px;font-weight:900;letter-spacing:.08em;color:#adf7cd;white-space:nowrap}.sat-caption{position:absolute;left:14px;right:14px;bottom:12px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:9px;color:#8fa9b6}.sat-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.sat-metrics>div{padding:10px;border:1px solid var(--line);border-radius:11px;background:#07131b}.sat-metrics b{display:block;font-size:10px}.sat-metrics span{display:block;color:var(--muted);font-size:10px;margin-top:3px}.sat-side{display:grid;gap:16px}.sat-row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}.sat-row:last-child{border-bottom:0}.sat-row b{font-size:10px}.sat-row span{font-size:10px;color:var(--muted);text-align:right}.sat-source-ok{color:#8af3bf!important}.sat-source-warn{color:#ffd88d!important}.sat-note{margin-top:10px;padding:11px;border:1px dashed var(--line);border-radius:11px;color:var(--muted);font-size:10px;line-height:1.5}.sat-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.sat-actions .btn{flex:1}.sat-latency{font-variant-numeric:tabular-nums}@media(max-width:900px){.sat-grid{grid-template-columns:1fr}}@media(max-width:600px){.sat-metrics{grid-template-columns:1fr}.sat-visual{height:220px}.sat-orbit{width:280px}.sat-actions .btn{width:100%;flex:auto}}
-
-
-/* Bangabandhu-1 satellite connection layer */
-.sat-monitor{margin:18px 0 0}.sat-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.sat-card{position:relative;overflow:hidden;isolation:isolate}.sat-card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 86% 10%,rgba(85,221,255,.11),transparent 34%),linear-gradient(135deg,rgba(85,221,255,.04),transparent 58%);z-index:-1}.sat-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.sat-title-row{display:flex;align-items:center;gap:10px}.sat-orb{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#9cefff;background:radial-gradient(circle at 35% 30%,#1f5b75,#08131c 65%);border:1px solid rgba(85,221,255,.3);box-shadow:0 0 28px rgba(85,221,255,.16)}.sat-live{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;border:1px solid rgba(138,243,191,.18);background:rgba(138,243,191,.05);color:#99efbd;font-size:9px;font-weight:900;letter-spacing:.1em}.sat-live.offline{border-color:rgba(255,141,141,.22);background:rgba(255,90,90,.05);color:#ffaaa4}.sat-live-dot{width:7px;height:7px;border-radius:50%;background:#8af3bf;box-shadow:0 0 14px rgba(138,243,191,.9);animation:pulse 1.5s infinite}.sat-live.offline .sat-live-dot{background:#ff8f8f;box-shadow:0 0 14px rgba(255,143,143,.7)}.sat-visual{height:260px;margin-top:18px;border-radius:18px;border:1px solid rgba(85,221,255,.14);background:radial-gradient(circle at 50% 50%,rgba(85,221,255,.08),transparent 42%),linear-gradient(180deg,#061018,#091722);position:relative;overflow:hidden}.sat-earth{position:absolute;left:50%;top:52%;width:185px;height:185px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(85,221,255,.23);background:radial-gradient(circle at 34% 30%,rgba(90,180,210,.55),rgba(5,18,26,.96) 66%);box-shadow:0 0 65px rgba(85,221,255,.12),inset 0 0 50px rgba(85,221,255,.08)}.sat-orbit{position:absolute;left:50%;top:52%;width:320px;height:145px;transform:translate(-50%,-50%) rotate(-8deg);border:1px dashed rgba(138,243,191,.18);border-radius:50%}.sat-link-line{position:absolute;left:58%;top:43%;width:120px;height:1px;background:linear-gradient(90deg,rgba(85,221,255,.05),rgba(85,221,255,.7));transform:rotate(15deg);transform-origin:left center;box-shadow:0 0 12px rgba(85,221,255,.25)}.sat-node{position:absolute;left:calc(58% + 112px);top:calc(43% + 32px);width:13px;height:13px;border-radius:50%;background:#8af3bf;box-shadow:0 0 22px rgba(138,243,191,.95);animation:pulse 1.5s infinite}.sat-node-label{position:absolute;left:calc(58% + 128px);top:calc(43% + 20px);font-size:9px;font-weight:900;letter-spacing:.08em;color:#adf7cd;white-space:nowrap}.sat-caption{position:absolute;left:14px;right:14px;bottom:12px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:9px;color:#8fa9b6}.sat-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.sat-metrics>div{padding:10px;border:1px solid var(--line);border-radius:11px;background:#07131b}.sat-metrics b{display:block;font-size:10px}.sat-metrics span{display:block;color:var(--muted);font-size:10px;margin-top:3px}.sat-side{display:grid;gap:16px}.sat-row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}.sat-row:last-child{border-bottom:0}.sat-row b{font-size:10px}.sat-row span{font-size:10px;color:var(--muted);text-align:right}.sat-source-ok{color:#8af3bf!important}.sat-source-warn{color:#ffd88d!important}.sat-note{margin-top:10px;padding:11px;border:1px dashed var(--line);border-radius:11px;color:var(--muted);font-size:10px;line-height:1.5}.sat-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.sat-actions .btn{flex:1}.sat-latency{font-variant-numeric:tabular-nums}@media(max-width:900px){.sat-grid{grid-template-columns:1fr}}@media(max-width:600px){.sat-metrics{grid-template-columns:1fr}.sat-visual{height:220px}.sat-orbit{width:280px}.sat-actions .btn{width:100%;flex:auto}}
-
-</style>
-<style>.nasa-panel{margin-top:18px}.nasa-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.nasa-reading-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.nasa-reading-grid>div{padding:14px;border:1px solid var(--line);border-radius:12px;background:#07131b}.nasa-reading-grid strong{display:block;margin-top:6px;font-size:22px;font-variant-numeric:tabular-nums}.nasa-foot{display:flex;justify-content:space-between;gap:10px;margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:10px;color:var(--muted)}.nasa-note{margin-top:12px;padding:10px;border:1px dashed var(--line);border-radius:11px;font-size:10px;color:var(--muted);line-height:1.5}@media(max-width:850px){.nasa-grid{grid-template-columns:1fr}}@media(max-width:620px){.nasa-reading-grid{grid-template-columns:1fr 1fr}.nasa-foot{display:block}.nasa-foot>*+*{display:block;margin-top:4px}}</style>
-<style>
-/* NASA Earth observation control/radar layer */
-.nasa-radar-panel{margin-top:18px}.nasa-radar-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.nasa-radar-view{position:relative;min-height:460px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#061017}.nasa-radar-view iframe{width:100%;height:460px;border:0;display:block;background:#061017}.nasa-radar-overlay{position:absolute;left:14px;right:14px;top:14px;display:flex;justify-content:space-between;gap:10px;pointer-events:none}.nasa-chip{padding:7px 10px;border-radius:999px;border:1px solid #55ddff33;background:#07131bcc;color:#bfeeff;font-size:10px;letter-spacing:.06em}.nasa-radar-side{display:grid;gap:12px}.nasa-control-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.nasa-control-grid label{font-size:10px;color:var(--muted);display:block}.nasa-control-grid input{width:100%;margin-top:5px;padding:10px;border-radius:10px;border:1px solid var(--line);background:#07131b;color:#fff}.nasa-radar-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px}.nasa-meta-card{padding:12px;border:1px solid var(--line);border-radius:12px;background:#07131b}.nasa-meta-card b{display:block;font-size:18px;margin-top:4px}.nasa-auth-note{font-size:10px;line-height:1.5;color:var(--muted);padding:11px;border:1px dashed var(--line);border-radius:11px}.nasa-status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid #2f5a4b;border-radius:999px;color:#8af3bf;font-size:10px}
-@media(max-width:900px){.nasa-radar-grid{grid-template-columns:1fr}.nasa-radar-view iframe{height:380px}}
-</style>
-<link rel="stylesheet" href="voicemail.css">
+<meta name="description" content="Pantry - a warm, Italian-inspired neighborhood shop experience with grocery essentials and animal rescue support.">
+<title>Pantry | Everyday Goodness</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<nav class="nav"><div class="wrap navin"><a href="#home" class="brand">IGERS-BD-01<small>INTEGRATED ENERGY RECOVERY &amp; STORAGE</small></a><div class="navlinks"><a href="#concept">Concept</a><a href="#energy">Energy</a><a href="#journey">Journey</a><a href="#environment">Environment</a><a href="#applications">Applications</a><a href="#sentinel">Sentinel Grid</a><a href="#deployment">Deployment</a><a href="#time">Live Time</a><a href="#airtraffic">Air Traffic</a><a href="#airspaceSafety">Airspace Safety</a><a href="#satelliteIntel">Satellite</a><a href="#nasaPanel">NASA Data</a><a href="#weather">Weather</a><a href="#feedback">Comments / Care</a><a href="#inventor">Inventor</a></div></div></nav>
-<main>
-<section id="home" class="hero"><div class="wrap hero-grid"><div><span class="eyebrow"><i class="pulse"></i> Conceptual engineering ecosystem</span><h1>Energy is moving everywhere.<br><span style="color:var(--cyan)">IGERS asks what can be recovered.</span></h1><p class="lead">IGERS-BD-01 is an integrated concept for exploring distributed recovery of otherwise underutilized mechanical and environmental energy across transportation, infrastructure and selected environmental systems.</p><div class="actions"><a class="btn primary" href="#concept">Explore IGERS</a><a class="btn" href="#journey">How it works</a><a class="btn" href="#time">Open live time</a></div></div><div class="hero-visual"><div class="orb one"></div><div class="orb two"></div><div class="hub"><div><b>IGERS<br>BD-01</b><div class="mini">Recovery ecosystem</div></div></div><div class="node n1">ROAD / VEHICLE</div><div class="node n2">WATER / FLOW</div><div class="node n3">SOLAR / AIRFLOW</div><div class="node n4">VIBRATION / HUMAN</div><div class="line l1"></div><div class="line l2"></div><div class="line l3"></div><div class="line l4"></div></div></div></section>
-<section id="concept"><div class="wrap"><div class="section-head"><div><div class="kicker">01 · What is IGERS?</div><h2>A distributed recovery framework.</h2></div><p class="mini" style="max-width:440px">Available Energy ≠ Recoverable Energy. Every application needs separate engineering feasibility analysis.</p></div><div class="grid"><article class="card"><div class="num">THE IDEA</div><h3>Look where energy is already moving</h3><p>Instead of depending only on new centralized generation, IGERS explores strategically selected recovery points inside existing infrastructure.</p></article><article class="card"><div class="num">THE OUTPUT</div><h3>Recover → convert → store → use</h3><p>Recovered mechanical or environmental energy can be converted into electricity, conditioned, stored, monitored and routed to suitable nearby loads.</p></article><article class="card"><div class="num">THE LIMIT</div><h3>Engineering decides what is practical</h3><p>Speed, mass, elevation, flow, vibration, losses, structural constraints, safety, maintenance and economics all affect real output.</p></article></div></div></section>
-<section id="energy"><div class="wrap"><div class="section-head"><div><div class="kicker">02 · Energy source map</div><h2>Where can energy come from?</h2></div></div><div class="grid"><article class="card"><div class="num">01</div><h3>Vehicle movement</h3><p>Mechanical energy associated with moving vehicles.</p><span class="tag">Transport</span></article><article class="card"><div class="num">02</div><h3>Braking / deceleration</h3><p>Recovery opportunities during controlled deceleration.</p><span class="tag">Kinetic</span></article><article class="card"><div class="num">03</div><h3>Elevation change</h3><p>Potential energy associated with movement through elevation differences.</p><span class="tag">Potential</span></article><article class="card"><div class="num">04</div><h3>Controlled water flow</h3><p>Hydraulic or flow-based recovery where technically appropriate.</p><span class="tag">Hydraulic</span></article><article class="card"><div class="num">05</div><h3>Vibration</h3><p>Small-scale mechanical recovery from suitable infrastructure.</p><span class="tag">Mechanical</span></article><article class="card"><div class="num">06</div><h3>Footstep / human movement</h3><p>Small-scale recovery from high-footfall environments.</p><span class="tag">Micro-energy</span></article><article class="card"><div class="num">07</div><h3>Airflow</h3><p>Recovery from suitable airflow conditions and site geometry.</p><span class="tag">Aerodynamic</span></article><article class="card"><div class="num">08</div><h3>Solar support</h3><p>Complementary renewable energy for distributed node architecture.</p><span class="tag">PV support</span></article><article class="card"><div class="num">09</div><h3>Infrastructure interaction</h3><p>Other site-specific mechanical interactions identified by survey and modelling.</p><span class="tag">Site-specific</span></article></div></div></section>
-<section id="journey"><div class="wrap"><div class="section-head"><div><div class="kicker">03 · Signature architecture</div><h2>The IGERS energy journey</h2></div></div><div class="journey"><div class="step">ENERGY<br>SOURCE</div><div class="arrow">→</div><div class="step">RECOVERY<br>MECHANISM</div><div class="arrow">→</div><div class="step">CONVERSION<br>+ CONDITIONING</div><div class="arrow">→</div><div class="step">STORAGE<br>+ LOCAL USE</div></div><div class="grid2" style="margin-top:16px"><article class="card"><h3>Control &amp; monitoring</h3><p>Sensor data, operating state, power condition and maintenance status can be observed through an integrated dashboard.</p></article><article class="card"><h3>Suitable local loads</h3><p>Road lighting, signs, sensors, traffic systems, communication equipment, monitoring devices and emergency-support loads are conceptual examples.</p></article></div></div></section>
-<section id="applications"><div class="wrap"><div class="section-head"><div><div class="kicker">04 · Applications</div><h2>Infrastructure becomes an energy canvas.</h2></div></div><div class="grid2"><article class="card"><h3>IGERS + Roads</h3><p>Conceptual zones include moving traffic, braking areas, junctions, speed-control sections, elevation changes, roadside systems, solar-support structures and storage nodes.</p><div class="road" style="margin-top:16px"><div class="road-label rl1">SOLAR SUPPORT</div><div class="road-label rl2">CONTROLLED RECOVERY ZONE</div><div class="road-label rl3">STORAGE + SENSOR NODE</div></div></article><article class="card"><h3>IGERS + Bridges / Flyovers</h3><p>Potential zones can include footfall, structural vibration, solar roof systems, auxiliary equipment and carefully evaluated mechanical interactions.</p><div class="bridge" style="margin-top:16px"><div class="cable"></div><div class="deck"></div><div class="pier p1"></div><div class="pier p2"></div><div class="pier p3"></div><div class="wire w1"></div><div class="wire w2"></div><div class="wire w3"></div></div></article></div><div class="grid" style="margin-top:16px"><article class="card"><h3>Water &amp; hydraulic recovery</h3><p>A water-flow turbine can be one technology card within IGERS, not the entire system. Hydraulic losses, flow constraints and civil safety must be analysed.</p></article><article class="card"><h3>Hybrid nodes</h3><p>Solar + storage + recovery + sensing can support distributed low-power loads without implying replacement of conventional generation.</p></article><article class="card"><h3>Recovery technologies</h3><p>Mechanical, hydraulic, electromechanical, vibration, pressure/flow, aerodynamic and photovoltaic support can be combined where justified.</p></article></div></div></section>
-<section id="sentinel"><div class="wrap"><div class="section-head"><div><div class="kicker">05 · Sentinel Grid</div><h2>Energy + sensing + resilience.</h2></div><span class="warning">Conceptual network only</span></div><div class="grid"><article class="card"><h3>Distributed nodes</h3><p>Land, mobile, coastal and infrastructure nodes can provide sensing, communications and local power resilience.</p></article><article class="card"><h3>NOC visibility</h3><p>A central operations concept can monitor node health, communications, weather inputs, power state and maintenance events.</p></article><article class="card"><h3>Public information layer</h3><p>A controlled public network can publish weather, flood, cyclone, road and safety information without exposing protected operational systems.</p></article></div></div></section>
-<section id="deployment"><div class="wrap"><div class="section-head"><div><div class="kicker">06 · Bangladesh-focused deployment</div><h2>Conceptual deployment zones.</h2></div></div><div class="grid2"><div class="mapbox"><div><div class="bd-outline">BD</div><div class="legend"><span>Border / land</span><span>Highway / bridge</span><span>Coastal</span><span>Major city</span><span>Disaster-prone</span></div></div></div><div class="grid" style="grid-template-columns:1fr 1fr"><article class="card"><h3>Dhaka</h3><p>Conceptual coordination / data-integration node.</p></article><article class="card"><h3>Cumilla</h3><p>Conceptual eastern-central aggregation node.</p></article><article class="card"><h3>Chattogram</h3><p>Conceptual coastal and maritime-weather aggregation node.</p></article><article class="card"><h3>Nationwide</h3><p>Highways, bridges, ports, critical infrastructure and disaster-response corridors.</p></article></div></div></div></section>
-
-<section id="environment"><div class="wrap"><div class="section-head"><div><div class="kicker">06 · Environmental intelligence</div><h2>Radar-style monitoring, humidity, airflow and earthquake alerts.</h2></div><span class="eyebrow"><span class="pulse"></span>LIVE SENSOR LAYER</span></div>
-<div class="env-dashboard">
-<article class="radar-card"><div class="radar-head"><div><div class="radar-title">IGERS environmental radar</div><div class="mini">Conceptual sensing interface · live data overlay</div></div><div id="radarLive" class="radar-live">● LIVE</div></div>
-<div class="radar-scope"><div class="radar-ring"></div><div class="radar-ring r2"></div><div class="radar-ring r3"></div><div class="sweep"></div><div class="radar-cross"></div><span class="radar-blip b1"></span><span class="radar-blip b2"></span><span class="radar-blip b3"></span></div>
-<div class="radar-caption"><span id="radarLoc">Dhaka, Bangladesh</span><span id="radarSync">SYNC --:--:--</span></div></article>
-<div>
-<div class="sensor-stack">
-<article class="sensor-card"><div class="label">Humidity</div><div id="envHumidity" class="sensor-value">--</div><div class="sensor-unit">relative humidity</div><div class="sensor-bar"><i id="humidityBar" style="width:0%"></i></div><div class="sensor-sub">Live atmospheric reading</div></article>
-<article class="sensor-card"><div class="label">Air flow</div><div id="envWind" class="sensor-value">--</div><div class="sensor-unit">km/h at 10 m</div><div class="sensor-bar"><i id="windBar" style="width:0%"></i></div><div id="windDir" class="sensor-sub">Direction: --</div></article>
-<article class="sensor-card"><div class="label">Temperature</div><div id="envTemp" class="sensor-value">--</div><div class="sensor-unit">°C · current</div><div id="envTempText" class="sensor-sub">Awaiting live feed</div></article>
-<article class="sensor-card"><div class="label">Sensor status</div><div id="envState" class="sensor-value" style="font-size:24px">SYNC</div><div id="envUpdated" class="sensor-sub">Initializing</div></article>
-</div>
-<div id="quakeAlert" class="alert-box clear"><div class="alert-top"><div class="alert-badge">Earthquake alert</div><div id="quakeTime" class="mini">--</div></div><div id="quakeMain" class="alert-main">No qualifying event loaded.</div><div id="quakeMeta" class="alert-meta">USGS live feed status: waiting</div><div id="quakeList" class="eq-list"></div><div class="source-note">Informational feed, not an official local warning system. Always follow Bangladesh authorities for public safety instructions.</div></div>
-<div class="notify-panel" id="quakeNotifyPanel">
-  <div><strong>Earthquake browser alerts</strong><span id="notifyStatus">Notifications are off</span></div>
-  <div class="notify-actions">
-    <select id="notifyThreshold" aria-label="Earthquake notification threshold">
-      <option value="2.5">M2.5+ · Asia</option>
-      <option value="4.5" selected>M4.5+ · Asia</option>
-      <option value="5.0">M5.0+ · Asia</option>
-      <option value="significant">Significant · Asia</option>
-    </select>
-    <button id="enableQuakeNotifications" type="button">Enable alerts</button>
-    <button id="testQuakeNotification" type="button" class="secondary">Test</button>
+<div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+<header class="site-header">
+  <div class="shell nav-wrap">
+    <a class="brand" href="#home" aria-label="Pantry home">
+      <svg class="brand-mark" viewBox="0 0 96 96" role="img" aria-label="Pantry logo">
+        <circle cx="48" cy="48" r="43" class="logo-ring"/>
+        <path d="M21 58c7 8 17 12 27 12s20-4 27-12" class="logo-line"/>
+        <path d="M29 50c1-14 8-23 19-23 10 0 17 8 19 23" class="logo-line"/>
+        <path d="M43 37c2-5 5-9 10-11-1 6-3 11-10 14" class="logo-leaf"/>
+        <circle cx="33" cy="47" r="2.8" class="logo-dot"/><circle cx="63" cy="47" r="2.8" class="logo-dot"/>
+        <path d="M42 57c3 3 9 3 12 0" class="logo-line"/>
+      </svg>
+      <span class="brand-copy"><strong>Pantry</strong><small>GOOD THINGS, CLOSE TO HOME</small></span>
+    </a>
+    <nav class="desktop-nav" id="desktop-nav" aria-label="Primary navigation">
+      <a href="#shop">Shop</a><a href="#categories">Categories</a><a href="#rescue">Rescue</a><a href="#about">About</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="Search">⌕</button>
+      <button class="cart-btn" id="cartBtn" aria-label="Open cart">Cart <span id="cartCount">0</span></button>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="desktop-nav">☰</button>
+    </div>
   </div>
-  <div class="notify-foot"><span id="quakeFeedState" class="quake-feed-state">● Multi-source seismic feed connecting</span><span id="quakeLastSync">Last sync: --</span></div>
-</div>
-<div id="envStatus" class="env-status">Connecting to live environmental data...</div>
-</div></div></div></section>
+</header>
 
-
-<section id="airtraffic"><div class="wrap"><div class="section-head"><div><div class="kicker">08 · Live air traffic</div><h2>Aircraft movement, updated from ADS-B data.</h2></div><span class="eyebrow"><span class="pulse"></span>LIVE AIRSPACE</span></div><div class="air-stat"><article class="card"><div class="label">Aircraft tracked</div><div id="airCount" class="air-value">--</div><div class="mini">Current regional view</div></article><article class="card"><div class="label">With position</div><div id="airPositionCount" class="air-value">--</div><div class="mini">Position-bearing targets</div></article><article class="card"><div class="label">Data age</div><div id="airAge" class="air-value">--</div><div class="mini">Newest received state</div></article></div><div class="airtraffic-shell"><div><div id="airMap" class="airmap" aria-label="Live aircraft map">
-  <iframe id="airLiveFrame" title="Airplanes.live live aircraft map" loading="eager" referrerpolicy="no-referrer" allow="fullscreen" src="https://globe.airplanes.live/?lat=23.8103&lon=90.4125&zoom=6&hideSidebar&hideButtons&largeMode=2"></iframe>
-  <div id="airMapFallback" class="air-map-fallback" hidden>Live map is reconnecting. The aircraft feed will continue when the provider is reachable.</div>
-</div><div class="air-statusbar"><span id="airFeedState" class="air-live">● Connecting to live aircraft feed</span><span id="airLastSync" class="mini">Last sync: --</span></div></div><div class="airtraffic-side"><article class="card air-detail"><div class="label">Selected aircraft</div><h3 id="airSelectedTitle" style="margin-top:6px">No aircraft selected</h3><div id="airSelectedMeta" class="mini">Click a live aircraft marker or list row.</div><div id="airDetailGrid" class="air-detail-grid"></div></article><article class="card"><div class="label">Regional traffic</div><div id="airList" class="air-list"><div class="mini">Waiting for live ADS-B positions...</div></div></article><article class="card"><h3>Live-data note</h3><p>This panel displays received ADS-B-derived aircraft states when the public provider is reachable. It does not fabricate aircraft positions. Coverage varies by receiver network and aircraft visibility.</p></article></div></div></div></section>
-
-<section id="satelliteMonitor" class="sat-monitor"><div class="wrap"><div class="section-head"><div><div class="kicker">08B · Satellite connection</div><h2>Bangabandhu-1 orbital connection monitor</h2><p class="airspace-subtitle">A live connection/status layer for public orbital-element data. It does not claim spacecraft telemetry or Earth-imaging capability.</p></div><div id="satLiveBadge" class="sat-live"><span class="sat-live-dot"></span><span id="satLiveText">CONNECTING</span></div></div>
-<div class="sat-grid">
-<article class="card sat-card"><div class="sat-head"><div class="sat-title-row"><div class="sat-orb">◉</div><div><div class="label">BANGABANDHU-1 · NORAD 43463</div><h3 style="margin-top:5px">Public orbital-data connection</h3></div></div><span id="satConnectionText" class="mini">Waiting for CelesTrak...</span></div>
-<div class="sat-visual" aria-label="Bangabandhu-1 connection visualization"><div class="sat-orbit"></div><div class="sat-earth"></div><div class="sat-link-line"></div><div class="sat-node"></div><div class="sat-node-label">BANGLADESH / DATA LINK</div><div class="sat-caption"><span>GEO · ~119.1°E nominal orbital slot</span><span id="satEpochCaption">Element epoch: --</span></div></div>
-<div class="sat-metrics"><div><b>Data connection</b><span id="satDataState">--</span></div><div><b>Last successful sync</b><span id="satLastSync">--</span></div><div><b>Request latency</b><span id="satLatency" class="sat-latency">--</span></div></div>
-</article>
-<div class="sat-side">
-<article class="card"><div class="label">Orbit data snapshot</div><div class="sat-row"><b>Orbital position</b><span>119.1°E nominal</span></div><div class="sat-row"><b>Orbit</b><span id="satOrbitType">GEO / 24 h class</span></div><div class="sat-row"><b>Altitude</b><span id="satAltitude">~35,786 km</span></div><div class="sat-row"><b>Inclination</b><span id="satInclination">--</span></div><div class="sat-row"><b>Mean motion</b><span id="satMeanMotion">--</span></div><div class="sat-row"><b>Element age</b><span id="satAge">--</span></div></article>
-<article class="card"><div class="label">Connection controls</div><div class="sat-actions"><button class="btn primary" id="satRefresh" type="button">Refresh data</button><a class="btn secondary" href="https://orbitalradar.com/satellite/43463" target="_blank" rel="noopener noreferrer">Open live orbital tracker</a></div><div class="sat-source-links"><a href="https://mobile.bmd.gov.bd/" target="_blank" rel="noopener noreferrer">BMD satellite / radar source</a><span>•</span><a href="https://celestrak.org/NORAD/documentation/gp-data-formats.php" target="_blank" rel="noopener noreferrer">CelesTrak GP documentation</a></div><div id="satHealthNote" class="sat-note">Live badge means the browser successfully reached the public orbital-data source. It does not mean live spacecraft telemetry.</div></article>
-</div></div></div></section>
-<section id="airspaceSafety" class="airspace-safety-section"><div class="wrap"><div class="section-head"><div><div class="kicker">08A · Airspace safety notice</div><h2>Bangladesh Airspace Anomaly Monitor</h2><p class="airspace-subtitle">A defensive, public-data anomaly layer beside the live aircraft system. It flags unverified ADS-B anomalies only; it does not confirm missiles, hostile intent or military threats.</p></div><div class="airspace-badges"><span class="safety-badge"><i></i>ANOMALY MONITOR</span><span class="safety-badge neutral">PUBLIC ADS-B DATA</span></div></div>
-<div class="airspace-grid">
-  <article class="card airspace-status-card" id="airspaceNoticeCard">
-    <div class="airspace-top"><span class="airspace-severity" id="airspaceSeverity">NORMAL</span><span class="airspace-zone">BANGLADESH VIEW</span></div>
-    <div class="airspace-icon" id="airspaceIcon">✓</div>
-    <h3 id="airspaceNoticeTitle">No current airspace anomaly</h3>
-    <p id="airspaceNoticeText">The monitor is waiting for the live ADS-B feed and will show an unverified notice only when a defined public-data anomaly heuristic is met.</p>
-    <div class="airspace-facts" id="airspaceFacts"><div><b>Targets checked</b><span id="airspaceTargets">--</span></div><div><b>Unverified</b><span id="airspaceUnknown">--</span></div><div><b>Last sync</b><span id="airspaceSync">--</span></div></div>
-    <div class="airspace-actions"><button class="btn primary" id="enableAirspaceAlerts" type="button">Enable notice</button><button class="btn secondary" id="testAirspaceAlert" type="button">Test notice</button></div>
-    <div id="airspaceAlertStatus" class="airspace-alert-status">Browser notices are off · developer/demo monitoring mode</div>
-  </article>
-  <div class="airspace-side">
-    <article class="card"><div class="airspace-mini-head"><div><div class="label">Detection logic</div><h3>Safe heuristic checks</h3></div><span class="airspace-live-dot"></span></div><div class="airspace-checks"><div><span>✓</span><b>Country-view geofence</b><small>Approximate Bangladesh monitoring box</small></div><div><span>✓</span><b>Identity state</b><small>Flags missing callsign/registration as unverified</small></div><div><span>✓</span><b>Flight-state anomaly</b><small>Checks unusual public ADS-B speed/altitude states</small></div><div><span>✓</span><b>Feed health</b><small>Offline data never creates a danger notice</small></div></div></article>
-    <article class="card"><div class="label">Latest notices</div><div id="airspaceEventLog" class="airspace-event-log"><div class="airspace-empty">No anomaly notice recorded.</div></div></article>
-    <article class="card airspace-disclaimer"><strong>Important:</strong> “Danger Air Device Notice” is treated as an <b>unverified public-data safety notice</b>. ADS-B coverage cannot reliably detect non-transmitting, stealth or hypersonic objects, and this website must not be used as an official defence or emergency warning system.</article>
+<main id="home">
+<section class="hero">
+  <div class="pet-scene" aria-hidden="true">
+    <div class="sun-glow"></div>
+    <div class="cloud cloud-a"></div><div class="cloud cloud-b"></div>
+    <div class="vine vine-a"></div><div class="vine vine-b"></div>
+    <div class="pet pet-cat"><div class="tail"></div><div class="body"></div><div class="head"></div><div class="ear e1"></div><div class="ear e2"></div><div class="eye eye1"></div><div class="eye eye2"></div><div class="nose"></div></div>
+    <div class="pet pet-dog"><div class="dog-body"></div><div class="dog-head"></div><div class="dog-ear"></div><div class="dog-eye"></div><div class="dog-nose"></div><div class="dog-tail"></div></div>
+    <div class="pet pet-bird"><div class="bird-body"></div><div class="bird-wing"></div><div class="bird-head"></div><div class="bird-eye"></div><div class="bird-beak"></div></div>
+    <div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>
   </div>
-</div></div></section>
-<section id="time"><div class="wrap"><div class="section-head"><div><div class="kicker">07 · Live time engine</div><h2>Time, wherever the visitor is.</h2></div><span class="eyebrow">No time API required</span></div><div class="time-wrap"><article class="clock-card"><div class="label">Bangladesh Standard Time</div><div id="bdTime" class="clock">--:--:--</div><div id="bdDate" class="date">Loading...</div><div class="tz">Asia/Dhaka · UTC+06:00</div></article><article class="clock-card"><div class="label">Your local time</div><div id="localTime" class="clock">--:--:--</div><div id="localDate" class="date">Detecting browser timezone...</div><div id="localTz" class="tz">Timezone: --</div></article><article class="clock-card"><div class="label">World time</div><div id="worldTime" class="clock">--:--:--</div><div id="worldDate" class="date">Select a location</div><select id="zoneSelect" class="select" aria-label="Select world timezone"></select></article></div><div class="mini" style="margin:12px 0 0">Browser clock + IANA timezone data. World selection is saved locally on this device.</div><div id="timeStatus" class="status live-panel">
-  <div class="live-left"><span class="live-dot"></span><div><b>LIVE UPDATE</b><span>System data updating in real time</span></div></div>
-  <div class="live-metrics"><span><strong id="liveTick">--:--:--</strong><small>LAST SYNC</small></span><span><strong>1s</strong><small>REFRESH</small></span><span><strong id="liveState">SYNCING</strong><small>STATUS</small></span></div>
-</div></div></section>
+  <div class="shell hero-content">
+    <div class="eyebrow">NEIGHBORHOOD PANTRY · SINCE 2026</div>
+    <h1>Everyday essentials,<br><em>with a little more heart.</em></h1>
+    <p>Fresh pantry staples, thoughtful finds, and a community-first space where shopping and caring for animals can live under one roof.</p>
+    <div class="hero-actions"><a class="btn btn-dark" href="#shop">Shop the pantry</a><a class="btn btn-light" href="#rescue">Report a rescue</a></div>
+    <div class="hero-note"><span class="live-dot"></span> Open for local orders · Rescue desk active</div>
+  </div>
+  <div class="hero-card">
+    <div class="hero-card-top"><span>Today at Pantry</span><span>Local</span></div>
+    <strong>Good food. Good neighbors.<br>Good care.</strong>
+    <div class="mini-stats"><span><b>40+</b><small>Essentials</small></span><span><b>24/7</b><small>Rescue report</small></span><span><b>1</b><small>Shared purpose</small></span></div>
+  </div>
+</section>
 
-<section id="nasaRadar" class="nasa-radar-panel"><div class="wrap"><div class="section-head"><div><div class="kicker">08E · NASA satellite + precipitation view</div><h2>NASA Worldview + GPM observation panel</h2><p class="airspace-subtitle">Authorized public NASA Earth-data services: satellite imagery and near-real-time precipitation products. This panel does not claim restricted spacecraft telemetry.</p></div><span class="nasa-status-pill"><span class="pulse"></span>NASA PUBLIC DATA</span></div><div class="nasa-radar-grid"><article class="nasa-radar-view"><div id="nasaGibsCanvas" class="nasa-gibs-canvas"><div class="nasa-gibs-loading" id="nasaGibsLoading">Connecting to NASA GIBS near-real-time imagery…</div><img id="nasaGibsImage" alt="NASA GIBS near-real-time satellite imagery" loading="eager" referrerpolicy="no-referrer"></div><div class="nasa-radar-overlay"><span class="nasa-chip">NASA GIBS · NRT</span><span class="nasa-chip" id="nasaViewportLabel">BANGLADESH VIEW</span><span class="nasa-chip" id="nasaGibsState">CONNECTING</span></div></article><aside class="nasa-radar-side"><article class="card"><div class="label">Location / viewport</div><div class="nasa-control-grid"><div><label for="nasaLat">Latitude</label><input id="nasaLat" type="number" step="0.0001" min="-90" max="90" value="23.8103"></div><div><label for="nasaLon">Longitude</label><input id="nasaLon" type="number" step="0.0001" min="-180" max="180" value="90.4125"></div></div><div class="sat-actions" style="margin-top:10px"><button class="btn primary" id="nasaGoLocation" type="button">Update view</button><button class="btn secondary" id="nasaUseLocation" type="button">Use browser location</button></div><div class="nasa-auth-note">NASA Worldview is opened through the official NASA Earthdata site rather than embedded in an iframe, because NASA requires domain approval for embedded Worldview. The in-app imagery uses public NASA GIBS services.</div><div class="sat-actions"><a class="btn secondary" href="https://urs.earthdata.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA Earthdata Login</a><a class="btn secondary" href="https://worldview.earthdata.nasa.gov/" target="_blank" rel="noopener noreferrer">Open Worldview</a></div></article><article class="card"><div class="label">NASA GPM precipitation</div><div class="nasa-radar-meta"><div class="nasa-meta-card"><span class="label">Product</span><b>IMERG Early</b></div><div class="nasa-meta-card"><span class="label">Latency</span><b>~4 h</b></div></div><p id="nasaGpmStatus" style="margin-top:10px;color:var(--muted);font-size:10px">Preparing precipitation image…</p><div class="sat-actions"><button class="btn primary" id="nasaGpmRefresh" type="button">Refresh precipitation</button><a class="btn secondary" href="https://gis.earthdata.nasa.gov/portal/home/item.html?id=c7ab44cd7a88474cbcb36f4b8d598fde" target="_blank" rel="noopener noreferrer">Open GPM source</a></div></article></aside></div></div></section>
-<section id="nasaPanel" class="nasa-panel"><div class="wrap"><div class="section-head"><div><div class="kicker">08D · NASA Earth data</div><h2>NASA POWER atmospheric reading</h2><p class="airspace-subtitle">Latest available NASA POWER point data for the selected display location. This is an Earth-observation/reanalysis-style data service, not spacecraft telemetry.</p></div><span id="nasaState" class="eyebrow"><span class="pulse"></span>CONNECTING</span></div><div class="nasa-grid"><article class="card"><div class="nasa-reading-grid"><div><div class="label">Temperature</div><strong id="nasaTemp">-- °C</strong></div><div><div class="label">Relative humidity</div><strong id="nasaRh">-- %</strong></div><div><div class="label">Wind speed</div><strong id="nasaWind">-- m/s</strong></div><div><div class="label">Precipitation</div><strong id="nasaRain">-- mm/day</strong></div></div><div class="nasa-foot"><span id="nasaDate">Latest record: --</span><span id="nasaUpdated">Source: NASA POWER</span></div></article><article class="card"><div class="label">NASA source controls</div><p id="nasaStatus">Loading NASA POWER...</p><div class="sat-actions"><button class="btn primary" id="nasaRefresh" type="button">Refresh NASA data</button><a class="btn secondary" href="https://power.larc.nasa.gov/" target="_blank" rel="noopener noreferrer">Open NASA POWER</a><a class="btn secondary" href="https://worldview.earthdata.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA Worldview</a></div><div class="nasa-note">The dashboard labels the data as “latest available” because NASA POWER daily products may lag real-time observations.</div></article></div></div></section>
-<section id="weather"><div class="wrap"><div class="section-head"><div><div class="kicker">09 · Live weather</div><h2>Weather-ready information layer.</h2></div><div class="location-tools"><button id="useMyLocation" class="btn secondary" type="button">Use my location</button><span id="locationStatus" class="location-status">Using Dhaka fallback until browser location is available.</span></div></div><div class="weather"><article class="card"><div class="weather-main"><div><div class="label" id="weatherPlace">Dhaka, Bangladesh</div><div class="temp" id="temp">--°</div><div id="weatherText" class="date">Loading weather...</div></div><div id="weatherIcon" class="weather-icon">☁️</div></div></article><article class="card"><div class="grid" style="grid-template-columns:repeat(2,1fr)"><div><div class="label">Wind</div><h3 id="wind">--</h3></div><div><div class="label">Humidity</div><h3 id="humidity">--</h3></div><div><div class="label">Rain probability</div><h3 id="rainProb">--%</h3></div><div><div class="label">Next rain estimate</div><h3 id="nextRain">Checking...</h3></div><div><div class="label">Updated</div><h3 id="weatherUpdated">--</h3></div><div><div class="label">Source</div><h3>Open-Meteo</h3></div></div><p id="weatherStatus">Weather data is loaded from the browser through a public weather endpoint.</p><div class="weather-hourly" id="weatherHourly"></div></article></div></div></section>
-<section id="satelliteIntel" class="sat-intel"><div class="wrap"><div class="section-head"><div><div class="kicker">08C · Satellite &amp; disaster intelligence</div><h2>Satellite observation + verified navigation.</h2><p class="airspace-subtitle">A separate public-data intelligence layer for satellite imagery, weather radar, cyclone products and disaster information. Air Traffic Management remains independent.</p></div><span class="eyebrow"><span class="pulse"></span>LIVE SOURCE NAVIGATION</span></div>
-<div class="sat-intel-grid">
-<article class="card sat-dashboard"><div class="sat-head"><div><div class="label">BANGLADESH MONITORING AREA</div><h3 style="margin-top:5px">Navigation &amp; observation view</h3></div><span id="satSourceClock" class="mini">Source clock: --</span></div>
-<div class="sat-map" aria-label="Bangladesh satellite and disaster navigation view">
-<div class="sat-map-grid"></div><div class="sat-map-glow"></div><div class="sat-map-bd"></div><div class="sat-map-node n1"></div><div class="sat-map-node n2"></div><div class="sat-map-node n3"></div><div class="sat-map-node n4"></div><div class="sat-map-line l1"></div><div class="sat-map-line l2"></div><div class="sat-map-line l3"></div><span class="sat-map-label bang">BANGLADESH</span><span class="sat-map-label gulf">BAY OF BENGAL</span><span class="sat-map-label bay">REGIONAL DATA</span><div class="sat-map-overlay"><span class="sat-source-chip"><span class="dot"></span>BMD SOURCE LAYER</span><span class="sat-source-chip">MAP NAVIGATION · 23.81°N 90.41°E</span></div></div>
-<div class="sat-location-row"><button class="btn primary" id="satUseLocation" type="button">Use my location</button><a class="btn secondary" id="satOsmLink" href="https://www.openstreetmap.org/#map=6/23.8103/90.4125" target="_blank" rel="noopener noreferrer">Open map navigation</a></div>
-<div class="sat-timebar"><span>Last UI sync <strong id="satUiSync">--:--:--</strong></span><span>Location <strong id="satLocationText">Dhaka, Bangladesh</strong></span></div>
-<div class="sat-intel-note">Navigation links open official/public sources. This interface does not claim direct spacecraft imagery or government operational control.</div></article>
+<section class="section" id="categories"><div class="shell">
+  <div class="section-head"><div><div class="eyebrow">EXPLORE</div><h2>Pantry, but personal.</h2></div><a href="#shop" class="text-link">View all products →</a></div>
+  <div class="category-grid">
+    <button class="category-card category-grocery" data-filter="Grocery"><span class="category-icon">✦</span><strong>Grocery</strong><small>Kitchen staples & fresh picks</small></button>
+    <button class="category-card category-snacks" data-filter="Snacks"><span class="category-icon">◌</span><strong>Snacks</strong><small>Little treats for every mood</small></button>
+    <button class="category-card category-home" data-filter="Home"><span class="category-icon">⌂</span><strong>Home care</strong><small>Everyday household helpers</small></button>
+    <button class="category-card category-care" data-filter="Care"><span class="category-icon">♡</span><strong>Personal care</strong><small>Simple, useful, gentle</small></button>
+  </div>
+</div></section>
 
-<aside class="sat-side">
-<article class="card"><div class="label">REAL-TIME DISASTER SOURCES</div><h3 style="margin-top:5px">Official monitoring channels</h3><div class="sat-risk-list">
-<div class="sat-risk"><div class="sat-risk-icon">🛰</div><div><b>HIMAWARI satellite</b><span>Infrared · visible · water vapour products</span></div><a href="https://www.bmd.gov.bd/web/en/satelite" target="_blank" rel="noopener noreferrer">OPEN BMD</a></div>
-<div class="sat-risk"><div class="sat-risk-icon">⛈</div><div><b>Weather radar</b><span>Dhaka · Cox's Bazar · Khepupara · Moulvibazar · Rangpur</span></div><a href="https://www.bmd.gov.bd/web/en/radar" target="_blank" rel="noopener noreferrer">OPEN RADAR</a></div>
-<div class="sat-risk"><div class="sat-risk-icon">🌀</div><div><b>Cyclone information</b><span>Track · special bulletin · storm surge · signals</span></div><a href="https://www.bmd.gov.bd/web/en/" target="_blank" rel="noopener noreferrer">OPEN BMD</a></div>
-<div class="sat-risk"><div class="sat-risk-icon">⚠</div><div><b>Warnings &amp; hazards</b><span>Heavy rain · Kalbaishakhi · marine · inland riverport</span></div><a href="https://mobile.bmd.gov.bd/" target="_blank" rel="noopener noreferrer">OPEN LIVE</a></div>
-</div></article>
-<article class="card"><div class="label">FAST DISASTER NAVIGATION</div><div class="sat-nav-grid"><div class="sat-nav-card"><b>Satellite imagery</b><span>HIMAWARI / FY-2 products</span><a href="https://www.bmd.gov.bd/web/en/satelite" target="_blank" rel="noopener noreferrer">Satellite products →</a></div><div class="sat-nav-card"><b>Radar</b><span>Precipitation / storm observation</span><a href="https://www.bmd.gov.bd/web/en/radar" target="_blank" rel="noopener noreferrer">Radar products →</a></div><div class="sat-nav-card"><b>Cyclone</b><span>Track, surge &amp; warning material</span><a href="https://www.bmd.gov.bd/web/en/" target="_blank" rel="noopener noreferrer">Cyclone page →</a></div><div class="sat-nav-card"><b>Warnings</b><span>Current public warning channels</span><a href="https://mobile.bmd.gov.bd/" target="_blank" rel="noopener noreferrer">Warning dashboard →</a></div></div><div class="sat-live-image-note"><span><strong>Source accuracy:</strong> official-source navigation is used instead of fabricating live imagery inside the app.</span><a href="https://www.bmd.gov.bd/web/en/satelite" target="_blank" rel="noopener noreferrer">Verify source →</a></div></article>
-</aside></div></div></section>
-<section id="inventor"><div class="wrap"><div class="section-head"><div><div class="kicker">10 · Inventor &amp; author</div><h2>Abdullah Al Rafi [BD]</h2></div></div><div class="profile"><div class="portrait">AAR</div><div class="card"><h3>IGERS-BD-01</h3><p>Integrated Gradient-Based Energy Recovery and Storage System</p><div class="timeline" style="margin-top:18px"><div class="tl"><b>Concept / invention date</b><br><span class="mini">14 August 2026</span></div><div class="tl"><b>Project position</b><br><span class="mini">Research / conceptual engineering framework</span></div><div class="tl"><b>Core narrative</b><br><span class="mini">Distributed recovery of suitable underutilized energy, followed by conversion, storage, control and local use.</span></div></div><p class="warning" style="margin-top:15px">The website presents IGERS as a research concept. Real deployment requires site-specific engineering, safety review, approvals, testing and measured performance.</p></div></div></div></section>
-<section id="limits"><div class="wrap"><div class="section-head"><div><div class="kicker">11 · Engineering reality</div><h2>Ambition needs a measurement layer.</h2></div></div><div class="grid"><article class="card"><h3>Feasibility first</h3><p>Survey the site, quantify available energy, model recovery losses and confirm structural compatibility before fabrication.</p></article><article class="card"><h3>Safety first</h3><p>Traffic, water, electrical systems, batteries, moving components and environmental conditions require dedicated safety controls.</p></article><article class="card"><h3>Measure before claiming</h3><p>Concept-stage calculations are preliminary. Prototype measurements should replace assumptions before performance or profitability claims are published.</p></article></div></div></section>
+<section class="section section-shop" id="shop"><div class="shell">
+  <div class="shop-toolbar"><div><div class="eyebrow">SHOP</div><h2>Featured essentials</h2></div><div class="toolbar-right"><label class="search-field"><span>⌕</span><input id="searchInput" placeholder="Search products..." autocomplete="off"></label><select id="sortSelect"><option value="featured">Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select></div></div>
+  <div class="filter-row"><button class="filter active" data-filter="All">All</button><button class="filter" data-filter="Grocery">Grocery</button><button class="filter" data-filter="Snacks">Snacks</button><button class="filter" data-filter="Home">Home</button><button class="filter" data-filter="Care">Care</button></div>
+  <div class="product-grid" id="productGrid"></div>
+</div></section>
 
+<section class="story-banner" id="about"><div class="shell story-grid"><div><div class="eyebrow">WHY PANTRY</div><h2>A little store with a wider purpose.</h2><p>Pantry is designed as a warm, family-friendly local shop experience. The store side makes everyday shopping easy; the rescue side makes it easier for a worried neighbor to say, “I found an animal that needs help.”</p><a class="btn btn-dark" href="#rescue">See the rescue desk</a></div><div class="story-orbit"><div class="orbit-ring ring1"></div><div class="orbit-ring ring2"></div><div class="orbit-core">♡<span>care<br>connect<br>continue</span></div></div></div></section>
 
-<section id="publicVoicemail" aria-labelledby="publicVoicemailTitle"><div class="wrap"><div class="section-head"><div><div class="kicker">10A · Public voice messages</div><h2 id="publicVoicemailTitle">Public Voicemail</h2><p class="airspace-subtitle">Visitors can record a short voice message and publish it to the shared IGERS site feed. Published recordings can be heard by other visitors.</p></div><span class="nasa-status-pill"><span class="pulse"></span>PUBLIC AUDIO</span></div><div class="feedback-shell"><article class="feedback-card voicemail-card"><div class="feedback-card-top"><div class="num">LEAVE A VOICEMAIL</div><span class="feedback-secure voicemail-public-badge">PUBLIC PLAYBACK · ALL USERS</span></div><p>Record a short voicemail for the IGERS site. Published recordings are visible and playable by other users through the shared website server.</p><div class="voicemail-recorder" id="voicemailRecorder"><div class="voicemail-level" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="voicemail-time-row"><strong id="voicemailTimer">00:00</strong><span id="voicemailState">READY</span></div><div class="voicemail-controls"><button class="feedback-btn voicemail-record-btn" id="voicemailRecord" type="button"><span class="btn-dot"></span>Start recording</button><button class="feedback-btn alt" id="voicemailStop" type="button" disabled>Stop</button><button class="feedback-btn alt" id="voicemailPublish" type="button" disabled>Publish voicemail</button><button class="feedback-btn alt" id="voicemailDiscard" type="button" disabled>Discard</button></div><audio id="voicemailPreview" class="voicemail-preview" controls preload="metadata" hidden></audio><div id="voicemailStatus" class="feedback-status" aria-live="polite"></div><div class="feedback-local-note voicemail-note"><span>PUBLIC</span><p><strong>Shared playback.</strong> Do not record passwords, private documents, phone numbers or other sensitive information. Maximum recording length: 60 seconds.</p></div></div></article><article class="feedback-card voicemail-list-card"><div class="feedback-card-top"><div class="num">PUBLIC VOICEMAIL FEED</div><span class="entry-count" id="voicemailCount">0 messages</span></div><div class="list-heading"><div><h3>Recent voice messages</h3><p>Published recordings are available to every visitor of the same deployed IGERS service.</p></div><button class="feedback-btn alt voicemail-refresh-btn" id="voicemailRefresh" type="button">Refresh feed</button></div><div id="voicemailList" class="voicemail-list" aria-live="polite"></div></article></div></div></section>
-<section id="feedback" class="feedback-section"><div class="wrap"><div class="section-head"><div><div class="kicker">12 · Visitor interface</div><h2>Comments &amp; Customer Care</h2><p class="feedback-intro">A polished developer-demo interface for visitor comments, suggestions and support messages—without expanding the information collected.</p></div><div class="feedback-head-badges"><span class="demo-badge"><i></i>Developer demo</span><span class="local-badge"><span>⌂</span> Local browser storage</span></div></div>
-<div class="feedback-shell">
-  <article class="feedback-card feedback-form-card">
-    <div class="feedback-card-top"><div class="num">COMMENT / SUPPORT</div><span class="feedback-secure">EMAIL + MESSAGE ONLY</span></div>
-    <h3>Send a message to the IGERS interface</h3>
-    <p>Only an email address and your message are requested. No name, phone number, location, account or other personal profile fields are collected by this demo module.</p>
-    <form id="feedbackForm" class="feedback-form" novalidate>
-      <div class="field-shell"><label class="feedback-label" for="feedbackEmail">Email address</label><div class="field-wrap"><span class="field-icon">@</span><input class="feedback-input" id="feedbackEmail" name="email" type="email" autocomplete="email" maxlength="160" required placeholder="you@example.com" aria-describedby="feedbackEmailHint"><span class="field-state" aria-hidden="true"></span></div><span class="field-hint" id="feedbackEmailHint">Used only as the demo contact identifier.</span></div>
-      <div class="field-shell"><div class="message-label-row"><label class="feedback-label" for="feedbackMessage">Comment / customer care message</label><span class="char-count"><span id="feedbackCharCount">0</span>/2000</span></div><textarea class="feedback-textarea" id="feedbackMessage" name="message" maxlength="2000" required placeholder="Write your comment, suggestion, question or support request..." aria-describedby="feedbackMessageHint"></textarea><span class="field-hint" id="feedbackMessageHint">Keep messages clear and relevant to the website or IGERS concept.</span></div>
-      <div class="feedback-row"><button class="feedback-btn" type="submit"><span class="btn-dot"></span>Submit message</button><button class="feedback-btn alt" id="feedbackClear" type="button">Clear form</button></div>
-      <div id="feedbackStatus" class="feedback-status" aria-live="polite"></div>
-      <div class="feedback-local-note"><span>LOCK</span><p><strong>Local demo mode.</strong> Entries remain in this browser only. Nothing is emailed, uploaded or sent to a remote service.</p></div>
-    </form>
-  </article>
-  <article class="feedback-card feedback-list-card">
-    <div class="feedback-card-top"><div class="num">VISITOR COMMENTS</div><span class="entry-count" id="feedbackCount">0 entries</span></div>
-    <div class="list-heading"><div><h3>Recent local demo entries</h3><p>Messages saved on this browser/device appear here for demonstration and UI testing.</p></div><span class="list-pulse" aria-hidden="true"></span></div>
-    <div id="feedbackList" class="feedback-list" aria-live="polite"></div>
-  </article>
-</div></div></section>
+<section class="section rescue-section" id="rescue"><div class="shell"><div class="rescue-card"><div class="rescue-copy"><div class="eyebrow">RESCUE DESK</div><h2>See an animal in trouble?<br><em>Make the first report.</em></h2><p>Log a cat, dog, or bird rescue with location, notes, and optional photo/video evidence. The report stays organized so a human operator can follow the case.</p><div class="rescue-buttons"><button class="btn btn-dark" id="reportBtn">Report an animal</button><button class="btn btn-light" id="mapDemoBtn">Open rescue map</button></div><div class="rescue-status"><span class="live-dot"></span> Rescue desk status: <b>ready</b></div></div><div class="rescue-illustration"><div class="badge">CARE<br>FIRST</div><div class="rescue-pet">🐾</div></div></div></div></section>
+
+<section class="newsletter"><div class="shell newsletter-box"><div><div class="eyebrow">STAY IN THE LOOP</div><h2>New stock. Local updates. Rescue stories.</h2></div><form id="subscribeForm" class="subscribe"><input type="email" id="emailInput" placeholder="Your email address" required><button class="btn btn-dark">Join</button></form></div></section>
 </main>
-<footer class="footer"><div class="wrap">IGERS-BD-01 · Integrated Gradient-Based Energy Recovery &amp; Storage System · Inventor &amp; Author: Abdullah Al Rafi [BD]<br>Concept website / research presentation interface. No official government or military affiliation is claimed.<br><span class="footer-legal"><strong>© 2026 IGERS POWERCORE TECHNOLOGIES LTD.</strong> · <a href="copyright.html">Copyright &amp; Attribution</a> · <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms &amp; Disclaimer</a></span></div></footer>
-<script>
-(function(){
-  'use strict';
-  const $ = (id) => document.getElementById(id);
-  const zones = [
-    ['Dhaka, Bangladesh','Asia/Dhaka'],['London, United Kingdom','Europe/London'],
-    ['New York, USA','America/New_York'],['Los Angeles, USA','America/Los_Angeles'],
-    ['Toronto, Canada','America/Toronto'],['Dubai, UAE','Asia/Dubai'],
-    ['Riyadh, Saudi Arabia','Asia/Riyadh'],['Delhi, India','Asia/Kolkata'],
-    ['Singapore','Asia/Singapore'],['Tokyo, Japan','Asia/Tokyo'],['Seoul, South Korea','Asia/Seoul'],
-    ['Sydney, Australia','Australia/Sydney'],['Paris, France','Europe/Paris'],['Berlin, Germany','Europe/Berlin'],
-    ['Moscow, Russia','Europe/Moscow'],['Cape Town, South Africa','Africa/Johannesburg'],
-    ['Nairobi, Kenya','Africa/Nairobi'],['São Paulo, Brazil','America/Sao_Paulo'],
-    ['Mexico City, Mexico','America/Mexico_City'],['UTC','UTC']
-  ];
-  const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-  const fmt = (zone, options) => new Intl.DateTimeFormat('en-GB', Object.assign({timeZone:zone}, options)).format(new Date());
-  const timeFmt = (zone) => fmt(zone,{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
-  const dateFmt = (zone) => fmt(zone,{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
-  const zoneName = (zone) => {
-    try {
-      return new Intl.DateTimeFormat('en-US',{timeZone:zone,timeZoneName:'long'})
-        .formatToParts(new Date()).find(p => p.type === 'timeZoneName')?.value || zone;
-    } catch (_) { return zone; }
-  };
-  const setText = (id, value) => { const el=$(id); if(el) el.textContent=value; };
 
-  const select = $('zoneSelect');
-  if (select) {
-    zones.forEach(([name, zone]) => {
-      const option=document.createElement('option');
-      option.value=zone; option.textContent=name+' · '+zone; select.appendChild(option);
-    });
-    try {
-      const saved=localStorage.getItem('igersWorldZone');
-      if(saved && zones.some(item => item[1]===saved)) select.value=saved;
-    } catch (_) {}
-  }
+<footer class="footer"><div class="shell footer-grid"><div class="brand footer-brand"><svg class="brand-mark" viewBox="0 0 96 96"><circle cx="48" cy="48" r="43" class="logo-ring"/><path d="M21 58c7 8 17 12 27 12s20-4 27-12" class="logo-line"/><path d="M29 50c1-14 8-23 19-23 10 0 17 8 19 23" class="logo-line"/><path d="M43 37c2-5 5-9 10-11-1 6-3 11-10 14" class="logo-leaf"/><circle cx="33" cy="47" r="2.8" class="logo-dot"/><circle cx="63" cy="47" r="2.8" class="logo-dot"/><path d="M42 57c3 3 9 3 12 0" class="logo-line"/></svg><span class="brand-copy"><strong>Pantry</strong><small>GOOD THINGS, CLOSE TO HOME</small></span></div><div><b>Shop</b><a href="#shop">Featured</a><a href="#categories">Categories</a></div><div><b>Care</b><a href="#rescue">Rescue desk</a><a href="#about">Our story</a></div><div><b>Contact</b><span>Local orders</span><span>Community desk</span></div></div><div class="shell footer-bottom"><span>© 2026 Pantry. Crafted for a neighborhood-first web experience.</span><span>GitHub Pages ready · No backend required for the demo</span></div></footer>
 
-  function tick(){
-    try {
-      setText('bdTime', timeFmt('Asia/Dhaka'));
-      setText('bdDate', dateFmt('Asia/Dhaka'));
-      setText('localTime', timeFmt(localZone));
-      setText('localDate', dateFmt(localZone));
-      setText('localTz', 'Timezone: '+localZone+' · '+zoneName(localZone));
-      const selected = (select && select.value) || 'UTC';
-      setText('worldTime', timeFmt(selected));
-      setText('worldDate', dateFmt(selected)+' · '+zoneName(selected));
-      setText('liveTick', new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'}));
-      setText('liveState','LIVE');
-    } catch (error) {
-      const panel=$('timeStatus');
-      if(panel) panel.innerHTML='<div class="live-left"><span class="live-dot"></span><div><b style="color:var(--danger)">LIVE UPDATE ERROR</b><span>Clock engine failed to render.</span></div></div>';
-    }
-  }
-  if(select){
-    select.addEventListener('change', () => {
-      try { localStorage.setItem('igersWorldZone', select.value); } catch (_) {}
-      tick();
-    });
-  }
-  tick();
-  setInterval(tick,1000);
-
-  function weatherText(code){
-    const map={0:['Clear sky','☀️'],1:['Mainly clear','🌤️'],2:['Partly cloudy','⛅'],3:['Overcast','☁️'],45:['Fog','🌫️'],48:['Rime fog','🌫️'],51:['Light drizzle','🌦️'],53:['Drizzle','🌦️'],55:['Heavy drizzle','🌧️'],61:['Light rain','🌦️'],63:['Rain','🌧️'],65:['Heavy rain','🌧️'],71:['Light snow','🌨️'],73:['Snow','🌨️'],75:['Heavy snow','❄️'],80:['Rain showers','🌦️'],81:['Showers','🌧️'],82:['Heavy showers','⛈️'],95:['Thunderstorm','⛈️'],96:['Thunderstorm + hail','⛈️'],99:['Thunderstorm + hail','⛈️']};
-    return map[code] || ['Weather update','🌤️'];
-  }
-  const DEFAULT_WEATHER={lat:23.8103,lon:90.4125,place:'Dhaka, Bangladesh',timezone:'Asia/Dhaka'};
-  const weatherState={...DEFAULT_WEATHER,source:'Dhaka fallback'};
-  const geocodeCache=new Map();
-  function weatherHourLabel(iso){try{return new Date(iso).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}catch(_){return '--';}}
-  function nextRainEstimate(times, probs, codes, currentIndex){
-    for(let i=Math.max(0,currentIndex);i<Math.min(times.length,currentIndex+24);i++){
-      const p=Number(probs?.[i]||0), c=Number(codes?.[i]);
-      const raining=[51,53,55,61,63,65,80,81,82,95,96,99].includes(c);
-      if(p>=45 || (p>=30 && raining)) return {time:times[i],prob:p};
-    }
-    return null;
-  }
-  function haversineApproxPlace(lat,lon){
-    const key=`${lat.toFixed(2)},${lon.toFixed(2)}`;
-    if(geocodeCache.has(key)) return geocodeCache.get(key);
-    // Keep the display safe when reverse geocoding is unavailable. Do not fabricate a city.
-    const fallback=`${lat.toFixed(2)}°, ${lon.toFixed(2)}°`;
-    geocodeCache.set(key,fallback); return fallback;
-  }
-  function setLocationStatus(text, ok=true){const el=$('locationStatus'); if(el){el.textContent=text;el.classList.toggle('ok',ok);el.classList.toggle('warn',!ok);}}
-  function updateLocationDisplay(){
-    setText('weatherPlace', weatherState.place);
-    setLocationStatus(weatherState.source==='browser' ? 'Browser location active · weather uses current coordinates.' : 'Using Dhaka fallback · choose “Use my location” to update.', weatherState.source==='browser');
-  }
-  function applyBrowserLocation(position){
-    const lat=Number(position?.coords?.latitude), lon=Number(position?.coords?.longitude);
-    if(!Number.isFinite(lat)||!Number.isFinite(lon)) throw new Error('Invalid browser coordinates');
-    weatherState.lat=lat; weatherState.lon=lon; weatherState.place=`Current location · ${haversineApproxPlace(lat,lon)}`; weatherState.timezone='auto'; weatherState.source='browser';
-    updateLocationDisplay(); loadWeather(); loadEnvironment();
-  }
-  function requestBrowserLocation(manual=false){
-    if(!('geolocation' in navigator)){setLocationStatus('Geolocation is not supported by this browser. Using Dhaka fallback.',false);return;}
-    setLocationStatus(manual?'Requesting browser location permission…':'Detecting browser location…',true);
-    navigator.geolocation.getCurrentPosition(applyBrowserLocation,()=>{
-      weatherState.lat=DEFAULT_WEATHER.lat; weatherState.lon=DEFAULT_WEATHER.lon; weatherState.place=DEFAULT_WEATHER.place; weatherState.timezone=DEFAULT_WEATHER.timezone; weatherState.source='Dhaka fallback';
-      updateLocationDisplay(); loadWeather(); loadEnvironment();
-      setLocationStatus('Location permission unavailable. Dhaka fallback is active.',false);
-    },{enableHighAccuracy:false,timeout:10000,maximumAge:300000});
-  }
-  function renderHourlyWeather(data){
-    const box=$('weatherHourly'); if(!box||!data?.hourly)return;
-    const h=data.hourly, n=Math.min(8,h.time?.length||0); let html='';
-    for(let i=0;i<n;i++){
-      const code=Number(h.weather_code?.[i]); const desc=weatherText(code); const prob=Math.round(Number(h.precipitation_probability?.[i]||0));
-      html += `<div class="weather-hour"><span>${weatherHourLabel(h.time[i])}</span><b>${desc[1]}</b><strong>${prob}%</strong><small>${desc[0]}</small></div>`;
-    }
-    box.innerHTML=html;
-  }
-  async function loadWeather(){
-    try{
-      const q=new URLSearchParams({latitude:String(weatherState.lat),longitude:String(weatherState.lon),current:'temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,weather_code,precipitation,rain,showers',hourly:'temperature_2m,precipitation_probability,precipitation,rain,showers,weather_code,wind_speed_10m',forecast_days:'2',timezone:weatherState.timezone||'auto'});
-      const response=await fetch('https://api.open-meteo.com/v1/forecast?'+q.toString(),{cache:'no-store'});
-      if(!response.ok) throw new Error('Weather request failed');
-      const data=await response.json(), current=data.current||{}, hourly=data.hourly||{};
-      const desc=weatherText(current.weather_code);
-      const t=Number(current.temperature_2m);
-      setText('weatherText',desc[0]); setText('weatherIcon',desc[1]); setText('temp',Number.isFinite(t)?Math.round(t)+'°':'--°');
-      setText('wind',Number.isFinite(Number(current.wind_speed_10m))?Math.round(Number(current.wind_speed_10m))+' km/h':'--');
-      setText('humidity',Number.isFinite(Number(current.relative_humidity_2m))?Math.round(Number(current.relative_humidity_2m))+'%':'--');
-      const nowIdx=0; const probs=hourly.precipitation_probability||[]; const codes=hourly.weather_code||[]; const next=nextRainEstimate(hourly.time||[],probs,codes,nowIdx);
-      const nowProb=Number(probs[0]??0); setText('rainProb',Math.round(nowProb)+'%');
-      setText('nextRain',next?(Math.round(next.prob)+'% · '+weatherHourLabel(next.time)):'No significant rain signal in next 24h');
-      renderHourlyWeather(data);
-      setText('weatherUpdated',current.time?new Date(current.time).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'Live');
-      setText('weatherStatus',`${weatherState.place} · live forecast refreshed · rain timing is an hourly forecast estimate, not a guarantee.`);
-      updateLocationDisplay();
-    }catch(e){
-      setText('weatherText','Weather unavailable'); setText('weatherIcon','☁️'); setText('weatherStatus','Weather is temporarily unavailable. Time and all other website sections remain functional.');
-      setLocationStatus('Live weather endpoint unavailable. Using last known location state.',false);
-    }
-  }
-
-  async function loadEnvironment(){
-    try{
-      const url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(weatherState.lat)+'&longitude='+encodeURIComponent(weatherState.lon)+'&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,weather_code&timezone='+encodeURIComponent(weatherState.timezone||'auto');
-      const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error('environment feed failed');
-      const d=await r.json(), c=d.current||{};
-      const h=Number(c.relative_humidity_2m), w=Number(c.wind_speed_10m), t=Number(c.temperature_2m), wd=Number(c.wind_direction_10m);
-      setText('envHumidity',Number.isFinite(h)?Math.round(h)+'%':'--'); setWidth('humidityBar',Number.isFinite(h)?h:0);
-      setText('envWind',Number.isFinite(w)?Math.round(w):'--'); setWidth('windBar',Number.isFinite(w)?Math.min(w,100):0);
-      setText('windDir','Direction: '+(Number.isFinite(wd)?Math.round(wd)+'° · '+degToCompass(wd):'--'));
-      setText('envTemp',Number.isFinite(t)?t.toFixed(1):'--'); setText('envTempText','Open-Meteo current atmospheric feed');
-      setText('envState','LIVE'); setText('envUpdated',c.time?'Updated '+c.time.replace('T',' '):'Updated live');
-      setText('radarSync','SYNC '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'}));
-      setText('envStatus',`Environmental feed online for ${weatherState.place}.`);
-    }catch(_){ setText('envState','OFFLINE'); setText('envUpdated','Live environmental feed unavailable'); setText('envStatus','Environmental feed unavailable. The rest of the interface remains operational.'); }
-  }
-  const bangladeshLat=23.8103, bangladeshLon=90.4125;
-
-  function haversineKm(lat1,lon1,lat2,lon2){ const R=6371, toRad=x=>x*Math.PI/180, dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1); const a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2; return 2*R*Math.asin(Math.sqrt(a)); }
-  // Broad Asia polygon for a presentation/monitoring view. Events are classified by coordinates, not by name text.
-  // Presentation-focused geographic envelope for Asia. This intentionally uses a generous
-  // latitude/longitude rule rather than claiming an authoritative political boundary.
-  function isInAsia(lat,lon){
-    if(!Number.isFinite(lat)||!Number.isFinite(lon)) return false;
-    const eurasia = lat>=-10 && lat<=82 && lon>=25 && lon<=180;
-    const southeast = lat>=-11 && lat<=28 && lon>=92 && lon<=141;
-    const japanArc = lat>=24 && lat<=46 && lon>=129 && lon<=146;
-    return eurasia || southeast || japanArc;
-  }
-  function formatAgo(ms){ const min=Math.max(0,Math.round(ms/60000)); return min<1?'just now':min+' min ago'; }
-  const NOTIFY_KEY='igersEarthquakeNotifications';
-  const seenKey='igersSeenEarthquakeIds';
-  const notifyPanel=$('quakeNotifyPanel'), notifyButton=$('enableQuakeNotifications'), notifyStatus=$('notifyStatus'), notifyThreshold=$('notifyThreshold'), testNotifyButton=$('testQuakeNotification');
-  const quakeFeedState=$('quakeFeedState'), quakeLastSync=$('quakeLastSync');
-  let quakeInitialized=false, quakePollingTimer=null, quakeLastSource='--', quakeLastFeedAgeMs=null;
-  function setQuakeFeedHealth(kind,text){if(!quakeFeedState)return;quakeFeedState.textContent='● '+text;quakeFeedState.className='quake-feed-state '+kind;}
-
-  const USGS='https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson';
-  const EMSC_BASE='https://www.seismicportal.eu/fdsnws/event/1/query?format=json&limit=100&orderby=time&minmagnitude=2.5';
-  function getNotifySettings(){try{return JSON.parse(localStorage.getItem(NOTIFY_KEY)||'null')||{enabled:false,threshold:'4.5'};}catch(_){return {enabled:false,threshold:'4.5'};}}
-  function setNotifyStatus(text,on=false,error=false){if(notifyStatus)notifyStatus.textContent=text;notifyPanel?.classList.toggle('is-on',on);notifyPanel?.classList.toggle('is-error',error);}
-  function notificationSupported(){return 'Notification' in window;}
-  function setQuakeFeedState(ok,text){if(quakeFeedState){quakeFeedState.textContent='● '+text;quakeFeedState.classList.toggle('offline',!ok);}}
-  function markQuakeSync(){if(quakeLastSync)quakeLastSync.textContent='Last sync: '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
-  async function testQuakeNotification(){if(!notificationSupported()){setNotifyStatus('Browser notifications are not supported',false,true);return;}try{if(Notification.permission!=='granted'&&await Notification.requestPermission()!=='granted')return setNotifyStatus('Permission not granted',false,true);const reg='serviceWorker' in navigator?await navigator.serviceWorker.ready:null;if(reg)await reg.showNotification('IGERS earthquake alert test',{body:'Alert channel is working. No real earthquake is being reported.',tag:'igers-test',icon:'icon.svg',badge:'icon.svg',data:{url:location.href}});else new Notification('IGERS earthquake alert test',{body:'Alert channel is working.'});}catch(_){setNotifyStatus('Test notification failed',false,true);}}
-  async function requestQuakeNotifications(){if(!notificationSupported())return setNotifyStatus('Browser notifications are not supported',false,true);try{const permission=await Notification.requestPermission();if(permission==='granted'){const settings={enabled:true,threshold:notifyThreshold?.value||'4.5'};localStorage.setItem(NOTIFY_KEY,JSON.stringify(settings));setNotifyStatus('Alerts enabled · '+(settings.threshold==='significant'?'Significant':'M'+settings.threshold+'+ · Asia'),true);if('serviceWorker' in navigator)await navigator.serviceWorker.register('sw.js');}else setNotifyStatus('Permission not granted',false,true);}catch(_){setNotifyStatus('Could not enable notifications',false,true);}}
-  function updateNotifyUI(){const x=getNotifySettings();if(notifyThreshold)notifyThreshold.value=x.threshold||'4.5';if(x.enabled&&notificationSupported()&&Notification.permission==='granted')setNotifyStatus('Alerts enabled · '+(x.threshold==='significant'?'Significant':'M'+x.threshold+'+ · Asia'),true);else setNotifyStatus('Notifications are off');}
-  notifyButton?.addEventListener('click',requestQuakeNotifications);testNotifyButton?.addEventListener('click',testQuakeNotification);notifyThreshold?.addEventListener('change',()=>{try{const x=getNotifySettings();x.threshold=notifyThreshold.value;localStorage.setItem(NOTIFY_KEY,JSON.stringify(x));}catch(_){}updateNotifyUI();});updateNotifyUI();
-  async function fireEarthquakeNotification(event){const x=getNotifySettings();if(!x.enabled||!notificationSupported()||Notification.permission!=='granted')return;const p=event.properties||{},m=Number(p.mag);const g=event.geometry?.coordinates||[],lat=Number(g[1]),lon=Number(g[0]),dist=haversineKm(bangladeshLat,bangladeshLon,lat,lon);const threshold=x.threshold==='significant'?(p.alert||m>=6):Number.isFinite(m)&&m>=Number(x.threshold);if(!threshold)return;const id=event.id||event._id||((p.code||p.place||'quake')+'-'+(p.time||''));let seen=[];try{seen=JSON.parse(localStorage.getItem(seenKey)||'[]');}catch(_){}if(seen.includes(id))return;seen=[id,...seen].slice(0,200);try{localStorage.setItem(seenKey,JSON.stringify(seen));}catch(_){}const title='Earthquake alert · M'+(Number.isFinite(m)?m.toFixed(1):'?');const body=(p.place||'Unknown location')+' · '+Math.round(dist)+' km from Dhaka';try{if(navigator.serviceWorker?.controller){const reg=await navigator.serviceWorker.ready;await reg.showNotification(title,{body,tag:'quake-'+id,renotify:true,icon:'icon.svg',badge:'icon.svg',data:{url:p.url||location.href}});}else new Notification(title,{body});}catch(_){} }
-  function normalizeUSGS(data){return (data.features||[]).map(f=>{f._source='USGS';return f;});}
-  function toEpoch(v){if(Number.isFinite(Number(v)))return Number(v);const n=Date.parse(v);return Number.isFinite(n)?n:NaN;}
-  function normalizeEMSC(data){const rows=Array.isArray(data)?data:(data?.features||data?.events||[]);return rows.map((e,i)=>{const o=e.properties||e;const g=e.geometry?.coordinates||[o.longitude,o.latitude,o.depth];const tm=toEpoch(o.time||o.origin_time||o.originTime);return {type:'Feature',id:'emsc-'+(e.id||o.id||i),_source:'EMSC',properties:{mag:Number(o.mag??o.magnitude),place:o.place||o.flynn_region||o.region||'EMSC event',time:tm,updated:toEpoch(o.updated||o.time),url:o.url||o.event_url},geometry:{type:'Point',coordinates:[Number(g[0]),Number(g[1]),Number(g[2]||0)]}};}).filter(f=>Number.isFinite(f.properties.mag)&&Number.isFinite(f.properties.time));}
-  async function fetchJSON(url,timeoutMs=10000){const c=new AbortController(),t=setTimeout(()=>c.abort(),timeoutMs);try{const r=await fetch(url,{cache:'no-store',signal:c.signal,headers:{Accept:'application/json'}});if(!r.ok)throw Error('feed '+r.status);return await r.json();}finally{clearTimeout(t);}}
-  async function loadEarthquakes(){
-    const alert=$('quakeAlert');
-    const startTime=new Date(Date.now()-2*60*60*1000).toISOString();
-    const emscUrl=EMSC_BASE+'&starttime='+encodeURIComponent(startTime);
-    const results=await Promise.allSettled([fetchJSON(USGS),fetchJSON(emscUrl)]);
-    let events=[];let sources=[];let sourceAges=[];
-    if(results[0].status==='fulfilled'){
-      events.push(...normalizeUSGS(results[0].value));sources.push('USGS');
-      const generated=Number(results[0].value?.metadata?.generated); if(Number.isFinite(generated)) sourceAges.push(Math.max(0,Date.now()-generated));
-    }
-    if(results[1].status==='fulfilled'){events.push(...normalizeEMSC(results[1].value));sources.push('EMSC');}
-    const unique=new Map();
-    for(const f of events){const g=f.geometry?.coordinates||[],lat=Number(g[1]),lon=Number(g[0]),m=Number(f.properties?.mag),tm=Number(f.properties?.time);if(!Number.isFinite(lat)||!Number.isFinite(lon)||!Number.isFinite(m)||!Number.isFinite(tm)||!isInAsia(lat,lon))continue;const key=f.id||((Math.round(lat*20)/20)+'|'+(Math.round(lon*20)/20)+'|'+Math.round(tm/60000));if(!unique.has(key)||Number(unique.get(key).properties?.updated||0)<Number(f.properties?.updated||0))unique.set(key,f);}
-    const relevant=[...unique.values()].sort((a,b)=>Number(b.properties?.time)-Number(a.properties?.time)).slice(0,8);
-    if(sources.length){
-      markQuakeSync(); quakeLastSource=sources.join(' + '); quakeLastFeedAgeMs=sourceAges.length?Math.min(...sourceAges):null;
-      if(quakeLastFeedAgeMs==null || quakeLastFeedAgeMs<=180000) setQuakeFeedHealth('live','LIVE · '+quakeLastSource+' · freshness verified');
-      else if(quakeLastFeedAgeMs<=600000) setQuakeFeedHealth('degraded','DEGRADED · '+quakeLastSource+' · source timestamp '+formatAgo(quakeLastFeedAgeMs));
-      else setQuakeFeedHealth('stale','STALE · '+quakeLastSource+' · source timestamp '+formatAgo(quakeLastFeedAgeMs));
-    }
-    else{setQuakeFeedHealth('offline','OFFLINE · all seismic feeds unavailable');setText('quakeMain','Earthquake feeds temporarily unavailable.');setText('quakeMeta','Automatic retry is active; no alert is inferred while feeds are offline.');return;}
-    if(!quakeInitialized){quakeInitialized=true;try{localStorage.setItem(seenKey,JSON.stringify(relevant.map(f=>f.id).filter(Boolean).slice(0,200)));}catch(_){} } else relevant.forEach(f=>fireEarthquakeNotification(f));
-    if(!relevant.length){alert?.classList.add('clear');alert?.classList.remove('attention');setText('quakeMain','No recent qualifying earthquake event in the monitored Asia view.');setText('quakeMeta',''+quakeLastSource+' checked successfully · source freshness is shown by the status indicator.');}
-    else{const top=relevant[0],p=top.properties||{},g=top.geometry?.coordinates||[],mag=Number(p.mag),dist=haversineKm(bangladeshLat,bangladeshLon,Number(g[1]),Number(g[0]));alert?.classList.toggle('attention',mag>=5);alert?.classList.toggle('clear',mag<5);setText('quakeMain','M'+(Number.isFinite(mag)?mag.toFixed(1):'?')+' · '+(p.place||'Unknown location'));setText('quakeMeta','Approx. '+Math.round(dist)+' km from Dhaka · '+formatAgo(Date.now()-Number(p.time||Date.now()))+' · '+(top._source||'multi-source')+' seismic feed');setText('quakeTime',p.time?new Date(Number(p.time)).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'--');const ql=$('quakeList');if(ql){ql.textContent='';relevant.forEach(f=>{const pr=f.properties||{},gg=f.geometry?.coordinates||[],m=Number(pr.mag),di=haversineKm(bangladeshLat,bangladeshLon,Number(gg[1]),Number(gg[0]));const row=document.createElement('div');row.className='eq-item';const a=document.createElement('span');a.className='eq-mag';a.textContent='M'+(Number.isFinite(m)?m.toFixed(1):'?');const b=document.createElement('span');b.className='eq-place';b.textContent=(pr.place||'Unknown')+' · '+Math.round(di)+' km · '+(f._source||'feed');row.append(a,b);ql.appendChild(row);});}}
-  }
-  loadEnvironment(); setInterval(loadEnvironment,60000);
-  $('useMyLocation')?.addEventListener('click',()=>requestBrowserLocation(true));
-  updateLocationDisplay();
-  // Non-blocking automatic location attempt; denial safely keeps the Dhaka fallback.
-  requestBrowserLocation(false);
-  const scheduleQuakePoll=()=>{ clearTimeout(quakePollingTimer); const delay=document.visibilityState==='visible'?30000:90000; quakePollingTimer=setTimeout(async()=>{await loadEarthquakes(); scheduleQuakePoll();},delay); };
-  loadEarthquakes().finally(scheduleQuakePoll);
-  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'){loadEarthquakes().finally(scheduleQuakePoll);} else scheduleQuakePoll(); });
-
-
-
-  // Live air traffic layer. The primary visual map is the maintained Airplanes.live live map.
-  // The page also keeps a lightweight API feed for counts, list and selected-aircraft details.
-  let airTimer=null, airLastPayload=[], selectedAircraft=null;
-  const AIR_LAT=23.8103, AIR_LON=90.4125, AIR_RADIUS_NM=250;
-  const airEl=id=>document.getElementById(id);
-
-  // Defensive/public-data airspace anomaly notice layer. This never overrides the existing Air Traffic module.
-  (function initAirspaceSafety(){
-    const card=airEl('airspaceNoticeCard'), sev=airEl('airspaceSeverity'), icon=airEl('airspaceIcon'), title=airEl('airspaceNoticeTitle'), text=airEl('airspaceNoticeText');
-    const targets=airEl('airspaceTargets'), unknown=airEl('airspaceUnknown'), sync=airEl('airspaceSync'), log=airEl('airspaceEventLog'), status=airEl('airspaceAlertStatus'), enable=airEl('enableAirspaceAlerts'), test=airEl('testAirspaceAlert');
-    if(!card||!sev||!title||!text)return;
-    const PREF='igersAirspaceNoticePrefsV1', SEEN='igersAirspaceNoticeSeenV1';
-    const BD={minLat:20.5,maxLat:26.7,minLon:88.0,maxLon:92.7};
-    let notices=[];
-    function prefs(){try{return JSON.parse(localStorage.getItem(PREF)||'null')||{enabled:false};}catch(_){return{enabled:false};}}
-    function saveSeen(id){try{const x=JSON.parse(localStorage.getItem(SEEN)||'[]');const n=[id,...(Array.isArray(x)?x:[])].slice(0,100);localStorage.setItem(SEEN,JSON.stringify(n));return !x.includes(id);}catch(_){return true;}}
-    function inBD(a){return Number.isFinite(a.lat)&&Number.isFinite(a.lon)&&a.lat>=BD.minLat&&a.lat<=BD.maxLat&&a.lon>=BD.minLon&&a.lon<=BD.maxLon;}
-    function assess(a){
-      if(!inBD(a))return null;
-      const unverified=!a.callsign||a.callsign==='Unknown'||!a.reg;
-      const fast=Number.isFinite(a.speed)&&a.speed>=750;
-      const veryHigh=Number.isFinite(a.alt)&&a.alt>=60000;
-      const emergency=['7700','7600','7500'].includes(String(a.squawk||''));
-      const elevatedUnverified=unverified&&veryHigh&&Number.isFinite(a.speed)&&a.speed>=350;
-      if(emergency) return {level:'watch',label:'TRANSPONDER NOTICE',score:3,reason:'Aircraft is broadcasting a public emergency transponder code '+a.squawk};
-      if(fast&&veryHigh)return {level:'danger',label:'UNVERIFIED OUTLIER',score:4,reason:'Reported speed and altitude are both outside the monitor\'s normal public-ADS-B envelope'};
-      if(fast)return {level:'anomaly',label:'SPEED OUTLIER',score:3,reason:'Reported ground speed is unusually high for this public-data monitor'};
-      if(elevatedUnverified)return {level:'anomaly',label:'UNVERIFIED HIGH-ALTITUDE TARGET',score:2,reason:'Target has limited public identity data and an elevated flight state'};
-      return null;
-    }
-    function setLevel(level,label){sev.className='airspace-severity '+(level==='danger'?'danger':level==='anomaly'?'anomaly':level==='watch'?'watch':'');sev.textContent=label;icon.className='airspace-icon '+(level==='danger'?'danger':level==='anomaly'||level==='watch'?'warn':'');icon.textContent=level==='danger'?'!':level==='anomaly'?'?':'✓';}
-    function renderNotice(result){
-      if(!result){setLevel('normal','NORMAL');title.textContent='No current airspace anomaly';text.textContent='No defined public-data anomaly heuristic is currently active inside the approximate Bangladesh monitoring view.';return;}
-      setLevel(result.level,result.label);title.textContent=result.level==='danger'?'Danger air-device notice · unverified':'Airspace anomaly notice · unverified';text.textContent=result.reason+'. This is a public ADS-B heuristic and is not confirmation of a hostile or hypersonic device.';
-    }
-    async function browserNotice(result){
-      const p=prefs(); if(!p.enabled||!('Notification' in window)||Notification.permission!=='granted')return;
-      const id=(result.a?.hex||'unknown')+'-'+result.level+'-'+Math.round(Date.now()/60000); if(!saveSeen(id))return;
-      try{if(navigator.serviceWorker?.controller){const reg=await navigator.serviceWorker.ready;await reg.showNotification(result.level==='danger'?'IGERS · Danger Air Device Notice':'IGERS · Airspace Anomaly Notice',{body:'Unverified public ADS-B anomaly: '+result.reason,tag:'airspace-'+result.level,renotify:true,icon:'icon.svg',badge:'icon.svg'});}else new Notification(result.level==='danger'?'IGERS · Danger Air Device Notice':'IGERS · Airspace Anomaly Notice',{body:'Unverified public ADS-B anomaly: '+result.reason});}catch(_){}
-    }
-    function logNotice(result){const now=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});notices=[{level:result.level,label:result.label,reason:result.reason,time:now,hex:result.a?.hex||'unknown'},...notices].slice(0,8); if(log)log.innerHTML=notices.map(n=>`<div class="airspace-event"><b>${n.label} · ${n.hex}</b><span>${n.reason} · ${n.time}</span></div>`).join('');}
-    function setStatus(msg,kind=''){status.textContent=msg;status.className='airspace-alert-status '+kind;}
-    async function enableAlerts(){if(!('Notification' in window)){setStatus('Browser notifications are not supported.', 'error');return;}try{const p=await Notification.requestPermission();if(p==='granted'){try{localStorage.setItem(PREF,JSON.stringify({enabled:true}));}catch(_){}setStatus('Browser notices enabled · unverified anomaly alerts only','on');}else setStatus('Permission not granted. Existing air-traffic monitoring is unchanged.','error');}catch(_){setStatus('Could not enable browser notices.','error');}}
-    async function testAlert(){const result={level:'danger',label:'DANGER NOTICE',reason:'Developer test only — no real threat is being reported.',a:{hex:'DEMO'}};renderNotice(result);logNotice(result);if('Notification' in window){try{if(Notification.permission!=='granted'&&await Notification.requestPermission()!=='granted')return setStatus('Test notice requires browser permission.','error');await browserNotice(result);setStatus('Test notice sent · developer/demo mode','on');}catch(_){setStatus('Test notice failed.','error');}}}
-    enable?.addEventListener('click',enableAlerts);test?.addEventListener('click',testAlert);
-    const origLoad=window.__igersAirspaceWrappedLoad;
-    async function evaluate(list){
-      if(!Array.isArray(list))return;const bd=list.filter(inBD), findings=bd.map(a=>({a,...(assess(a)||{})})).filter(x=>x.level);targets.textContent=String(bd.length);unknown.textContent=String(findings.length);sync.textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-      findings.sort((a,b)=>b.score-a.score);const top=findings[0];renderNotice(top||null);if(top){logNotice(top);await browserNotice(top);}
-    }
-    window.__igersAirspaceEvaluate=evaluate;
-    const old=window.showAircraft; if(typeof old==='function')window.showAircraft=old;
-    setLevel('normal','NORMAL');
-    setStatus(prefs().enabled?'Browser notices enabled · unverified anomaly alerts only':'Browser notices are off · developer/demo monitoring mode',prefs().enabled?'on':'');
-  })();
-
-  // Bangabandhu-1 public orbital-data connection monitor.
-  // CelesTrak GP data is requested at a low cadence in line with its usage guidance.
-  (function initSatelliteConnection(){
-    const badge=airEl('satLiveBadge'), badgeText=airEl('satLiveText'), conn=airEl('satConnectionText'), state=airEl('satDataState'), last=airEl('satLastSync'), latency=airEl('satLatency'), epochCap=airEl('satEpochCaption'), incl=airEl('satInclination'), mm=airEl('satMeanMotion'), age=airEl('satAge'), refresh=airEl('satRefresh'), health=airEl('satHealthNote');
-    if(!badge||!badgeText||!refresh)return;
-    const URL='https://celestrak.org/NORAD/elements/gp.php?CATNR=43463&FORMAT=JSON';
-    let lastEpoch=null;
-    function setLive(kind,text){badge.className='sat-live '+kind;badgeText.textContent=text;conn.textContent=kind==='live'?'Connected to CelesTrak GP data':kind==='stale'?'Connected · orbital elements are older than the current freshness window': 'CelesTrak connection unavailable';state.textContent=kind==='live'?'CURRENT · public orbital elements':kind==='stale'?'STALE · public orbital elements':'OFFLINE · using last known display values';}
-    function formatAge(iso){if(!iso)return '--';const t=Date.parse(iso);if(!Number.isFinite(t))return '--';const s=Math.max(0,(Date.now()-t)/1000);return s<90?Math.round(s)+' s old':Math.round(s/60)+' min old';}
-    async function fetchSat(){
-      const started=performance.now();
-      try{
-        const r=await fetch(URL,{cache:'no-store'});
-        if(!r.ok) throw new Error('HTTP '+r.status);
-        const d=await r.json();
-        const o=Array.isArray(d)?d[0]:d;
-        if(!o) throw new Error('No orbital data');
-        const iso=o.EPOCH||o.epoch||null; lastEpoch=iso;
-        const ms=Math.round(performance.now()-started); latency.textContent=ms+' ms'; last.textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-        epochCap.textContent='Element epoch: '+(iso?new Date(iso).toLocaleString('en-GB',{dateStyle:'short',timeStyle:'short'}):'--');
-        incl.textContent=(o.INCLINATION??o.inclination??'--')+'°';
-        mm.textContent=(o.MEAN_MOTION??o.meanMotion??'--')+' rev/day';
-        age.textContent=formatAge(iso);
-        const elementAgeMs=iso&&Number.isFinite(Date.parse(iso))?Math.max(0,Date.now()-Date.parse(iso)):Infinity;
-        const satKind=elementAgeMs<=3*60*60*1000?'live':elementAgeMs<=12*60*60*1000?'stale':'stale';
-        setLive(satKind,satKind==='live'?'CURRENT GP DATA':'STALE GP DATA');
-        health.textContent=satKind==='live'?'Public CelesTrak orbital elements are within the expected refresh window. Actual spacecraft telemetry/control is not exposed by this connection.':'The public orbital-element dataset was reached, but its element epoch is older than the expected refresh window. Actual spacecraft telemetry/control is not exposed by this connection.';
-      }catch(err){
-        const ms=Math.round(performance.now()-started); latency.textContent=ms+' ms';setLive('offline','OFFLINE');health.textContent='Public orbital-data connection could not be reached. Existing Air Traffic, Weather and Safety modules are independent and remain unchanged.';
-      }
-    }
-    refresh.addEventListener('click',fetchSat);
-    fetchSat();
-    const timer=()=>setTimeout(async()=>{await fetchSat();timer();},7200000);
-    timer();
-    setInterval(()=>{if(lastEpoch){age.textContent=formatAge(lastEpoch);}},1000);
-  })();
-  // Feed the isolated safety layer from the existing Air Traffic payload without replacing it.
-  function setAirState(kind,text){const el=airEl('airFeedState'); if(el){el.textContent='● '+text;el.className='air-live '+kind;}}
-  function classifyAirFreshness(ageSeconds){if(!Number.isFinite(ageSeconds))return ['degraded','CONNECTED · no position timestamp']; if(ageSeconds<=45)return ['live','LIVE · newest position '+Math.round(ageSeconds)+'s old']; if(ageSeconds<=120)return ['degraded','DEGRADED · newest position '+Math.round(ageSeconds)+'s old']; return ['stale','STALE · newest position '+Math.round(ageSeconds/60)+'m old'];}
-  function fmtAir(v){return Number.isFinite(Number(v))?Number(v):null;}
-  function airRowData(a){
-    const callsign=(a.flight||a.callsign||'').trim()||'Unknown';
-    return {hex:a.hex||'',callsign,lat:fmtAir(a.lat),lon:fmtAir(a.lon),alt:fmtAir(a.alt_baro),speed:fmtAir(a.gs),track:fmtAir(a.track),reg:a.r||'',type:a.t||'',category:a.category||'',squawk:a.squawk||'',seen:a.seen_pos,baroRate:fmtAir(a.baro_rate)};
-  }
-  function showAircraft(a){
-    selectedAircraft=a; const title=airEl('airSelectedTitle'),meta=airEl('airSelectedMeta'),grid=airEl('airDetailGrid'); if(!title||!meta||!grid)return;
-    title.textContent=a.callsign||a.hex||'Unknown aircraft';
-    meta.textContent=[a.reg||a.hex||'No registration',a.type||'Type unavailable',a.category||'ADS-B target'].join(' · ');
-    const items=[['Altitude',a.alt==null?'--':Math.round(a.alt).toLocaleString()+' ft'],['Ground speed',a.speed==null?'--':Math.round(a.speed)+' kt'],['Track',a.track==null?'--':Math.round(a.track)+'°'],['Position',(a.lat==null||a.lon==null)?'--':a.lat.toFixed(3)+', '+a.lon.toFixed(3)]];
-    grid.innerHTML=items.map(x=>`<div><b>${x[1]}</b><span>${x[0]}</span></div>`).join('');
-    renderAirList(airLastPayload);
-  }
-  function renderAirList(list){
-    const box=airEl('airList'); if(!box)return; box.innerHTML='';
-    const top=list.filter(x=>x.lat!=null&&x.lon!=null).slice(0,24);
-    if(!top.length){box.innerHTML='<div class="mini">No aircraft with position in the current provider response.</div>';return;}
-    top.forEach(a=>{const row=document.createElement('div');row.className='air-row'+(selectedAircraft?.hex===a.hex?' air-selected':'');
-      row.innerHTML=`<div><div class="air-callsign">${a.callsign||a.hex||'Unknown'}</div><div class="air-meta">${a.reg||'Registration n/a'} · ${a.type||'Type n/a'}</div></div><div class="air-alt">${a.alt==null?'--':(Math.round(a.alt/100)*100).toLocaleString()} ft</div>`;
-      row.onclick=()=>showAircraft(a); box.appendChild(row);
-    });
-  }
-  function setMapFallback(show){const f=airEl('airMapFallback'); if(f)f.hidden=!show;}
-  async function loadAirTraffic(){
-    try{
-      const url=`https://api.airplanes.live/v2/point/${AIR_LAT}/${AIR_LON}/${AIR_RADIUS_NM}`;
-      const controller=new AbortController(); const timeout=setTimeout(()=>controller.abort(),10000); let r;
-      try{r=await fetch(url,{cache:'no-store',signal:controller.signal,headers:{'Accept':'application/json'}});}finally{clearTimeout(timeout);}
-      if(!r.ok) throw new Error('aircraft feed failed');
-      const data=await r.json();
-      const list=(data.ac||[]).map(airRowData).filter(a=>a.lat!=null&&a.lon!=null); airLastPayload=list; if(window.__igersAirspaceEvaluate) window.__igersAirspaceEvaluate(list);
-      let newestAge=null; list.forEach(a=>{if(Number.isFinite(Number(a.seen))) newestAge=newestAge==null?Number(a.seen):Math.min(newestAge,Number(a.seen));});
-      airEl('airCount').textContent=String(data.total ?? list.length);
-      airEl('airPositionCount').textContent=String(list.length);
-      airEl('airAge').textContent=newestAge==null?'--':(newestAge<60?Math.round(newestAge)+'s':Math.round(newestAge/60)+'m');
-      airEl('airLastSync').textContent='Last sync: '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-      const airHealth=classifyAirFreshness(newestAge); setAirState(airHealth[0],airHealth[1]+' · Airplanes.live');
-      setMapFallback(false);
-      if(selectedAircraft){const fresh=list.find(x=>x.hex===selectedAircraft.hex); if(fresh) showAircraft(fresh); else selectedAircraft=null;}
-      renderAirList(list);
-    }catch(_){
-      setAirState('offline','OFFLINE · aircraft data feed unavailable');
-      airEl('airLastSync').textContent='Feed retry: '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-      setMapFallback(false);
-      if(!airLastPayload.length) renderAirList([]);
-    }
-  }
-  function scheduleAirPoll(){clearTimeout(airTimer); airTimer=setTimeout(async()=>{await loadAirTraffic();scheduleAirPoll();},document.visibilityState==='visible'?20000:60000);}
-  const liveFrame=airEl('airLiveFrame');
-  if(liveFrame){liveFrame.addEventListener('load',()=>setMapFallback(false)); liveFrame.addEventListener('error',()=>setMapFallback(true));}
-
-  // Developer/demo visitor feedback module: local browser storage only.
-  (function initFeedbackModule(){
-    const form=$('feedbackForm'), email=$('feedbackEmail'), message=$('feedbackMessage'), status=$('feedbackStatus'), list=$('feedbackList'), clearBtn=$('feedbackClear'), count=$('feedbackCount'), charCount=$('feedbackCharCount');
-    if(!form||!email||!message||!status||!list||!clearBtn) return;
-    const KEY='igersDeveloperFeedbackV1';
-    const read=()=>{try{const v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v:[];}catch(_){return[];}};
-    const write=(items)=>{try{localStorage.setItem(KEY,JSON.stringify(items.slice(0,50)));return true;}catch(_){return false;}};
-    const esc=(value)=>String(value).replace(/[&<>''"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\'':'&#39;','"':'&quot;'}[ch]));
-    const format=(stamp)=>{try{return new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short'}).format(new Date(stamp));}catch(_){return new Date(stamp).toLocaleString();}};
-    function render(){
-      const items=read();
-      if(count) count.textContent=items.length+' entr'+(items.length===1?'y':'ies');
-      if(!items.length){list.innerHTML='<div class="feedback-empty"><div class="empty-orb">✦</div><strong>No demo messages yet</strong><span>Your first local entry will appear here for interface testing.</span></div>';return;}
-      list.innerHTML=items.map(item=>`<article class="feedback-item"><div class="feedback-meta"><div class="feedback-email"><span class="email-dot">@</span><strong>${esc(item.email)}</strong></div><span>${esc(format(item.createdAt))}</span></div><p>${esc(item.message)}</p></article>`).join('');
-    }
-    function syncCharCount(){if(charCount) charCount.textContent=String(message.value.length);}
-    message.addEventListener('input',syncCharCount);
-    form.addEventListener('submit',(e)=>{e.preventDefault(); status.textContent=''; status.className='feedback-status'; const em=email.value.trim(), msg=message.value.trim(); if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){status.textContent='Please enter a valid email address.';status.classList.add('err');email.focus();return;} if(!msg){status.textContent='Please write a comment or customer-care message.';status.classList.add('err');message.focus();return;} const ok=write([{email:em,message:msg,createdAt:new Date().toISOString()},...read()]); if(!ok){status.textContent='Local storage is unavailable in this browser.';status.classList.add('err');return;} form.reset();syncCharCount();status.textContent='Message saved in developer demo mode.';status.classList.add('ok');render();});
-    clearBtn.addEventListener('click',()=>{form.reset();syncCharCount();status.textContent='';status.className='feedback-status';email.focus();});
-    syncCharCount();
-    render();
-  })();
-
-  loadAirTraffic().finally(scheduleAirPoll);
-  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){loadAirTraffic().finally(scheduleAirPoll);}else scheduleAirPoll();});
-  loadWeather();
-})();
-
-  // Satellite & disaster intelligence hub: location/navigation UI only; no existing module is replaced.
-  (function initSatelliteIntel(){
-    const sync=$('satUiSync'), clock=$('satSourceClock'), locText=$('satLocationText'), use=$('satUseLocation'), osm=$('satOsmLink');
-    if(!sync||!locText)return;
-    const fallback={lat:23.8103,lon:90.4125,name:'Dhaka, Bangladesh'};
-    function setClock(){const now=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});sync.textContent=now;clock.textContent='Source clock: '+now;}
-    function setLocation(lat,lon,name){locText.textContent=name||`${Number(lat).toFixed(4)}°N, ${Number(lon).toFixed(4)}°E`;if(osm)osm.href=`https://www.openstreetmap.org/#map=7/${Number(lat).toFixed(4)}/${Number(lon).toFixed(4)}`;try{localStorage.setItem('igersSatLocation',JSON.stringify({lat,lon,name:locText.textContent}));}catch(_){} }
-    try{const saved=JSON.parse(localStorage.getItem('igersSatLocation')||'null');if(saved?.lat&&saved?.lon)setLocation(saved.lat,saved.lon,saved.name);}catch(_){}
-    use?.addEventListener('click',()=>{if(!navigator.geolocation){setLocation(fallback.lat,fallback.lon,fallback.name);return;} navigator.geolocation.getCurrentPosition(p=>setLocation(p.coords.latitude,p.coords.longitude,'Current browser location'),()=>setLocation(fallback.lat,fallback.lon,fallback.name),{enableHighAccuracy:false,timeout:7000,maximumAge:300000});});
-    setClock();setInterval(setClock,1000);
-  })();
-
-  (function initNASA(){
-    const state=$('nasaState'), status=$('nasaStatus');
-    const fallback={lat:23.8103,lon:90.4125};
-    const latInput=$('nasaLat'), lonInput=$('nasaLon'), gibsImage=$('nasaGibsImage'), gibsState=$('nasaGibsState'), gibsLoading=$('nasaGibsLoading'), viewport=$('nasaViewportLabel');
-    function ymd(d){return d.toISOString().slice(0,10).replaceAll('-','');}
-    function lastAvailableEnd(){const d=new Date(); d.setUTCDate(d.getUTCDate()-4); return d;}
-    function setState(label,online){if(state){state.innerHTML=`<span class="pulse"></span>${label}`;}}
-    function getCoords(){
-      const lat=Number(latInput?.value), lon=Number(lonInput?.value);
-      return Number.isFinite(lat)&&Number.isFinite(lon)&&Math.abs(lat)<=90&&Math.abs(lon)<=180?{lat,lon}:{...fallback};
-    }
-    function setGibsState(kind,text){if(gibsState){gibsState.textContent=text;gibsState.className='nasa-chip '+kind;} const ns=$('nasaState'); if(ns){ns.innerHTML=`<span class="pulse"></span>${kind==='live'?'LIVE · NASA GIBS NRT':kind==='degraded'?'DEGRADED · NASA GIBS':'OFFLINE · NASA GIBS'}`; ns.className='eyebrow '+kind;}}
-    function updateWorldview(){
-      const {lat,lon}=getCoords();
-      const padLat=2.85, padLon=2.35;
-      const west=lon-padLon, south=lat-padLat, east=lon+padLon, north=lat+padLat;
-      const now=new Date(); const d=now.toISOString().slice(0,10);
-      const bbox=[west,south,east,north].join(',');
-      const url='https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=VIIRS_SNPP_CorrectedReflectance_TrueColor&STYLES=&FORMAT=image/jpeg&SRS=EPSG:4326&WIDTH=1200&HEIGHT=520&BBOX='+encodeURIComponent(bbox)+'&TIME='+encodeURIComponent(d);
-      if(viewport) viewport.textContent=`${lat.toFixed(4)}°N ${lon.toFixed(4)}°E`;
-      if(gibsLoading) gibsLoading.textContent='Connecting to NASA GIBS near-real-time imagery…';
-      setGibsState('connecting','CONNECTING');
-      if(gibsImage){gibsImage.onload=()=>{if(gibsLoading)gibsLoading.textContent='NASA GIBS imagery connected · near-real-time public satellite layer';setGibsState('live','LIVE · GIBS NRT');if(status)status.textContent='NASA GIBS imagery loaded for '+lat.toFixed(4)+'°N, '+lon.toFixed(4)+'°E.';};gibsImage.onerror=()=>{if(gibsLoading)gibsLoading.textContent='NASA GIBS image temporarily unavailable. Use Open Worldview for the full interactive viewer.';setGibsState('offline','OFFLINE · GIBS');};gibsImage.src=url;}
-      try{localStorage.setItem('igersNASAView',JSON.stringify({lat,lon}));}catch(_){ }
-      updateGPM();
-    }
-    function updateGPM(){
-      const {lat,lon}=getCoords();
-      const span=4.0;
-      const bbox=`${(lon-span).toFixed(4)},${(lat-span).toFixed(4)},${(lon+span).toFixed(4)},${(lat+span).toFixed(4)}`;
-      const img=`https://gis.earthdata.nasa.gov/portal/rest/services/GESDISC/GPM_3IMERGHHE/ImageServer/export?bbox=${encodeURIComponent(bbox)}&bboxSR=4326&size=900,420&imageSR=4326&format=png&transparent=true&f=image`;
-      let el=$('nasaGpmImage');
-      if(!el){
-        const host=document.querySelector('#nasaGpmStatus');
-        if(host){el=document.createElement('img');el.id='nasaGpmImage';el.alt='NASA GPM precipitation map';el.style.cssText='width:100%;height:180px;object-fit:cover;border-radius:12px;margin-top:10px;border:1px solid var(--line);background:#061017';host.parentElement.insertBefore(el,host.nextSibling);}
-      }
-      if(el){el.onload=()=>{if($('nasaGpmStatus'))$('nasaGpmStatus').textContent='NASA GPM precipitation image loaded for the selected location.'};el.onerror=()=>{if($('nasaGpmStatus'))$('nasaGpmStatus').textContent='NASA GPM image is temporarily unavailable; source link remains available.'};el.src=img;}
-    }
-    async function loadNASA(){
-      const {lat,lon}=getCoords();
-      const end=lastAvailableEnd(); const start=new Date(end); start.setUTCDate(start.getUTCDate()-7);
-      const u='https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,RH2M,WS2M,PRECTOTCORR&community=RE&longitude='+lon+'&latitude='+lat+'&start='+ymd(start)+'&end='+ymd(end)+'&format=JSON';
-      try{
-        setState('CONNECTING',false); if(status) status.textContent='Requesting latest available NASA POWER record…';
-        const r=await fetch(u,{cache:'no-store'}); if(!r.ok) throw new Error('NASA POWER request failed');
-        const d=await r.json(); const p=d.properties?.parameter||{}; const dates=Object.keys(p.T2M||{}).sort(); const date=dates.at(-1); if(!date) throw new Error('No NASA POWER records');
-        const n=(k)=>Number(p[k]?.[date]);
-        setText('nasaTemp',Number.isFinite(n('T2M'))?n('T2M').toFixed(1)+' °C':'-- °C');
-        setText('nasaRh',Number.isFinite(n('RH2M'))?n('RH2M').toFixed(1)+' %':'-- %');
-        setText('nasaWind',Number.isFinite(n('WS2M'))?n('WS2M').toFixed(1)+' m/s':'-- m/s');
-        setText('nasaRain',Number.isFinite(n('PRECTOTCORR'))?n('PRECTOTCORR').toFixed(1)+' mm/day':'-- mm/day');
-        setText('nasaDate','Latest record: '+date.slice(0,4)+'-'+date.slice(4,6)+'-'+date.slice(6,8));
-        setText('nasaUpdated','Source: NASA POWER · latest available');
-        setState('DATA AVAILABLE',true); if(status) status.textContent=`NASA POWER data loaded for ${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E.`;
-      }catch(e){
-        setState('DEGRADED',false); if(status) status.textContent='NASA POWER is temporarily unavailable from this browser. NASA GIBS imagery and the rest of the application are independent.';
-      }
-    }
-    $('nasaRefresh')?.addEventListener('click',loadNASA);
-    $('nasaGoLocation')?.addEventListener('click',()=>{updateWorldview();loadNASA();});
-    $('nasaGpmRefresh')?.addEventListener('click',updateGPM);
-    $('nasaUseLocation')?.addEventListener('click',()=>{
-      if(!navigator.geolocation){updateWorldview();loadNASA();return;}
-      navigator.geolocation.getCurrentPosition(p=>{latInput.value=p.coords.latitude.toFixed(4);lonInput.value=p.coords.longitude.toFixed(4);updateWorldview();loadNASA();},()=>{updateWorldview();loadNASA();},{enableHighAccuracy:false,timeout:7000,maximumAge:300000});
-    });
-    try{const saved=JSON.parse(localStorage.getItem('igersNASAView')||'null');if(saved?.lat&&saved?.lon){latInput.value=saved.lat;lonInput.value=saved.lon;}}catch(_){ }
-    updateWorldview(); loadNASA(); setInterval(loadNASA,3600000);
-  })();
-
-</script>
-<script src="igers-live-enhancer.js" defer></script>
-<script src="voicemail.js" defer></script>
+<div class="overlay" id="overlay"></div>
+<aside class="drawer cart-drawer" id="cartDrawer" aria-label="Shopping cart"><div class="drawer-head"><h3>Your cart</h3><button class="close-btn" data-close="cartDrawer">×</button></div><div id="cartItems" class="cart-items"></div><div class="cart-total"><span>Total</span><strong id="cartTotal">৳0</strong></div><button class="btn btn-dark full" id="checkoutBtn">Continue to checkout</button></aside>
+<aside class="drawer rescue-drawer" id="rescueDrawer" aria-label="Animal rescue report"><div class="drawer-head"><h3>Rescue report</h3><button class="close-btn" data-close="rescueDrawer">×</button></div><form id="rescueForm" class="drawer-form"><label>Animal type<select id="animalType"><option>Cat</option><option>Dog</option><option>Bird</option></select></label><label>Location<input id="animalLocation" placeholder="Area / landmark" required></label><label>What did you see?<textarea id="animalNotes" rows="4" placeholder="Injured, trapped, stray, needs food, etc."></textarea></label><label>Photo / video evidence<input id="animalMedia" type="file" accept="image/*,video/*"></label><button class="btn btn-dark full">Submit report</button><p class="form-note">Demo mode: report is stored in this browser for the session.</p></form></aside>
+<aside class="drawer map-drawer" id="mapDrawer" aria-label="Rescue map"><div class="drawer-head"><h3>Rescue map</h3><button class="close-btn" data-close="mapDrawer">×</button></div><div class="map-box"><div class="map-lines"></div><div class="pin pin-a">🐱</div><div class="pin pin-b">🐶</div><div class="pin pin-c">🐦</div><div class="map-label">Demo local rescue area</div></div><p class="form-note">Map preview is a safe demo. Connect a real map and verified operator workflow before deployment.</p></aside>
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
 </body>
 </html>
