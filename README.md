@@ -1,20 +1,24 @@
-# Pantry Website
+# IGERS-BD-01 Magazine Integration | Developer Package
 
-A GitHub Pages-ready static Pantry web app with an Italian-inspired visual identity and a warm cat/dog/bird hero scene built entirely with HTML/CSS/SVG. No image files or build step are required.
+This package integrates the Library magazine into the existing IGERS POWERCORE static website without external viewer dependencies.
 
-## Included
-- Premium Italian-inspired Pantry branding and custom SVG logo
-- Animated cat, dog and bird hero background, drawn in CSS
-- Responsive navigation for desktop and mobile
-- Category filters, search, sorting and product cards
-- Cart with quantity controls and browser persistence when localStorage is available
-- Graceful fallback when browser storage is restricted
-- Rescue Desk for cat, dog and bird reports
-- Photo/video file picker in the rescue form
-- Demo rescue map panel
+## Contents
+#magazine/index.html: responsive magazine page
+#magazine/styles.css: responsive styling
+#magazine/IGERS-BD-01-Professional-Engineering-Magazine.pdf: 70-page A4 magazine
+#integration/magazine-section.html: homepage card
+#integration/magazine.css: homepage card styling
 
-## GitHub Pages
-Upload `index.html`, `styles.css`, `app.js`, and `README.md` to the repository root, then enable GitHub Pages from the repository settings.
+## Deploy
+Copy the `magazine/` folder into the existing repository root. The public page becomes `/IGERS-POWERCORE/magazine/`.
 
-## Important
-The checkout and rescue workflows are front-end demo flows. A production deployment should connect them to a secure backend, real payment provider, verified map/geolocation service, notification channel, authentication, and a proper operator/rescue workflow.
+Add the markup from `integration/magazine-section.html` to the existing homepage and its CSS to the existing stylesheet. Do not replace the existing index or application files.
+
+## Source identity
+Project: IGERS-BD-01
+Author / Inventor: Abdullah Al Rafi [BD]
+Publication: 09 September 2026
+Edition: 2026 Professional Thesis & Engineering Concept Edition
+
+## QA
+The PDF is bundled locally, so the viewer does not depend on an external document host. Browser-native PDF rendering provides zoom, page navigation and printing. A direct Open PDF and Download action are included for compatibility.

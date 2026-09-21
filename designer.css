@@ -1,0 +1,80 @@
+/* IGERS-BD-01 Designer Layer — non-destructive presentation upgrade */
+:root{
+  --design-cyan:#63e7ff;
+  --design-mint:#8ff7c9;
+  --design-blue:#6e9cff;
+  --design-gold:#ffd98a;
+  --design-surface:rgba(10,24,34,.72);
+  --design-surface-strong:rgba(8,20,30,.92);
+  --design-glass:rgba(255,255,255,.035);
+  --design-border:rgba(128,218,240,.16);
+  --design-border-strong:rgba(99,231,255,.34);
+  --design-shadow:0 24px 80px rgba(0,0,0,.28);
+}
+html{scroll-padding-top:92px}
+body{background:
+  radial-gradient(900px 480px at 12% -5%,rgba(45,138,175,.20),transparent 65%),
+  radial-gradient(700px 420px at 88% 18%,rgba(62,131,104,.12),transparent 70%),
+  linear-gradient(180deg,#03080d,#050c12 32%,#03080d 100%);}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.23;background-image:linear-gradient(rgba(99,231,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(99,231,255,.035) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,black,transparent 92%)}
+.nav{border-bottom-color:rgba(99,231,255,.14);box-shadow:0 10px 40px rgba(0,0,0,.18)}
+.navin{position:relative}
+.brand{display:inline-flex;flex-direction:column;line-height:1.05;gap:3px}
+.brand:after{content:"FIELD · ENERGY · DATA · RESILIENCE";font-size:8px;font-weight:700;letter-spacing:.16em;color:rgba(143,247,201,.62);margin-top:2px}
+.navlinks{max-width:min(860px,72vw);overflow:auto;scrollbar-width:none;padding-bottom:2px}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{padding:7px 8px;border-radius:9px;transition:background .2s ease,color .2s ease,transform .2s ease}
+.navlinks a:hover{background:rgba(99,231,255,.08);transform:translateY(-1px)}
+.navlinks a.active{color:#effcff;background:linear-gradient(135deg,rgba(99,231,255,.14),rgba(143,247,201,.06));border:1px solid rgba(99,231,255,.18)}
+.designer-menu{display:none;border:1px solid var(--design-border);background:rgba(3,12,18,.84);color:var(--text);width:40px;height:40px;border-radius:11px;cursor:pointer;font-size:19px}
+.designer-dock{position:fixed;top:82px;left:50%;transform:translateX(-50%);z-index:45;display:flex;align-items:center;gap:10px;padding:7px 9px;border:1px solid var(--design-border);border-radius:999px;background:rgba(3,12,18,.74);backdrop-filter:blur(16px);box-shadow:0 16px 44px rgba(0,0,0,.22);color:#b8d8e2;font-size:10px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;pointer-events:none;opacity:.95}
+.designer-dock .dock-live{display:inline-flex;align-items:center;gap:6px;color:var(--design-mint);font-weight:800}
+.designer-dock .dot{width:7px;height:7px;border-radius:50%;background:var(--design-mint);box-shadow:0 0 18px rgba(143,247,201,.9)}
+.designer-dock .sep{width:1px;height:14px;background:rgba(255,255,255,.1)}
+.designer-status-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:20px}
+.designer-status-card{padding:13px 14px;border:1px solid var(--design-border);border-radius:14px;background:linear-gradient(145deg,rgba(15,31,41,.75),rgba(5,13,19,.9));box-shadow:0 14px 36px rgba(0,0,0,.15)}
+.designer-status-card .ds-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.designer-status-card .ds-label{font-size:9px;color:#7e9aa8;letter-spacing:.12em;text-transform:uppercase}
+.designer-status-card .ds-value{font-size:14px;font-weight:800;margin-top:3px}
+.designer-status-card .ds-state{font-size:9px;color:var(--design-mint);border:1px solid rgba(143,247,201,.18);padding:3px 6px;border-radius:999px;background:rgba(143,247,201,.05)}
+.hero{position:relative;padding-top:102px}
+.hero:before{content:"IGERS // 01";position:absolute;right:4%;top:34px;font-size:10px;letter-spacing:.26em;color:rgba(99,231,255,.35)}
+.hero-grid{gap:54px}
+.hero-visual{min-height:420px;background:
+  radial-gradient(circle at 32% 24%,rgba(99,231,255,.16),transparent 34%),
+  radial-gradient(circle at 72% 74%,rgba(143,247,201,.10),transparent 35%),
+  linear-gradient(145deg,rgba(15,48,64,.72),rgba(4,13,20,.92));
+  border-color:var(--design-border-strong);box-shadow:var(--design-shadow);}
+.hero-visual:after{content:"PUBLIC-DATA / CONCEPTUAL / NON-OPERATIONAL";position:absolute;right:16px;bottom:14px;font-size:8px;letter-spacing:.14em;color:rgba(183,211,223,.4)}
+.hub{border-color:rgba(99,231,255,.5);box-shadow:0 0 100px rgba(99,231,255,.14),inset 0 0 32px rgba(99,231,255,.05)}
+.hero .lead{max-width:720px}
+.hero .actions .btn{box-shadow:0 9px 30px rgba(0,0,0,.18)}
+.hero .actions .btn.primary{box-shadow:0 12px 34px rgba(99,231,255,.12)}
+.section-head{position:relative}
+.section-head:after{content:"";position:absolute;left:0;right:0;bottom:-14px;height:1px;background:linear-gradient(90deg,var(--design-border-strong),transparent 62%)}
+.card,.feedback-card,.clock-card{border-color:var(--design-border);background:linear-gradient(145deg,rgba(11,26,37,.82),rgba(5,13,19,.92));box-shadow:var(--design-shadow)}
+.card:hover,.feedback-card:hover,.clock-card:hover{border-color:rgba(99,231,255,.28);transform:translateY(-2px)}
+.card,.feedback-card,.clock-card{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.kicker{color:var(--design-cyan)}
+.eyebrow{border-color:rgba(99,231,255,.18);background:rgba(99,231,255,.03)}
+.live-panel,.environment-panel,.nasa-panel,.nasa-radar-panel,.sat-intel,.airspace-safety-section,.feedback-section{position:relative}
+.live-panel:before,.environment-panel:before,.nasa-panel:before,.nasa-radar-panel:before,.sat-intel:before,.airspace-safety-section:before,.feedback-section:before{content:"";position:absolute;inset:16px 0;border:1px solid rgba(99,231,255,.035);border-radius:32px;pointer-events:none}
+.weather-hour,.weather-card,.nasa-meta-card,.air-row,.eq-item{transition:border-color .18s ease,background .18s ease,transform .18s ease}
+.weather-hour:hover,.weather-card:hover,.nasa-meta-card:hover,.air-row:hover,.eq-item:hover{border-color:rgba(99,231,255,.3);background:rgba(99,231,255,.04);transform:translateY(-1px)}
+.nasa-radar-view,.airmap,.satellite-visual,.mapbox,.bridge,.road{box-shadow:inset 0 0 0 1px rgba(99,231,255,.03),0 16px 50px rgba(0,0,0,.18)}
+footer.footer{background:linear-gradient(180deg,transparent,rgba(6,15,22,.52));position:relative}
+.designer-footer-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:13px 15px;margin-top:18px;border:1px solid var(--design-border);border-radius:14px;background:rgba(2,9,14,.56);font-size:10px;color:#89a6b5}
+.designer-footer-bar strong{color:#d9f5fb}
+#designerBackTop{position:fixed;right:20px;bottom:20px;z-index:55;width:42px;height:42px;border-radius:12px;border:1px solid var(--design-border);background:rgba(5,15,22,.8);backdrop-filter:blur(10px);color:#dff9ff;cursor:pointer;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s;box-shadow:0 12px 34px rgba(0,0,0,.24)}
+#designerBackTop.is-visible{opacity:1;transform:translateY(0);pointer-events:auto}
+.designer-reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.designer-reveal.is-visible{opacity:1;transform:none}
+.designer-divider{height:1px;margin:4px 0 0;background:linear-gradient(90deg,transparent,rgba(99,231,255,.24),transparent)}
+.flag-designer{position:fixed;left:-54px;top:112px;width:180px;height:64px;z-index:20;opacity:.18;pointer-events:none;transform:rotate(-14deg);background-image:url('bangladesh-flag-overlay.svg');background-size:contain;background-repeat:no-repeat;background-position:center;filter:drop-shadow(0 0 18px rgba(99,231,255,.15)) saturate(1.45) brightness(1.22)}
+.hero-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.hero-meta span{font-size:10px;color:#99b6c3;border:1px solid var(--design-border);padding:6px 8px;border-radius:999px;background:rgba(255,255,255,.025)}
+.hero-meta span strong{color:#e6faff}
+@media(max-width:1100px){.navlinks{max-width:60vw}.designer-status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.designer-dock{display:none}}
+@media(max-width:820px){.navin{height:64px}.designer-menu{display:block}.navlinks{display:none;position:absolute;left:0;right:0;top:70px;max-width:none;padding:10px;background:rgba(3,11,17,.97);border:1px solid var(--design-border);border-radius:0 0 18px 18px;box-shadow:0 22px 50px rgba(0,0,0,.34)}.navlinks.is-open{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.navlinks a{padding:10px}.hero{padding-top:78px}.hero:before{display:none}.flag-designer{opacity:.12;left:-66px}}
+@media(max-width:650px){.designer-status-grid{grid-template-columns:1fr 1fr}.designer-status-card{padding:11px}.hero-meta{gap:6px}.designer-footer-bar{display:block}.designer-footer-bar span{display:block}.designer-footer-bar span+span{margin-top:7px}#designerBackTop{right:14px;bottom:14px}.hero-visual{min-height:340px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}.designer-reveal{opacity:1!important;transform:none!important}}
