@@ -1,5 +1,5 @@
 const CACHE='igers-live-monitor-v3';
-const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./designer.css','./upgrade-pro.css','./script.js','./designer.js','./upgrade-pro.js','./igers-live-enhancer.js'];
+const CORE=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./designer.css','./upgrade-pro.css','./script.js','./designer.js','./upgrade-pro.js','./igers-live-enhancer.js','./magazine/IGERS-BD-01_Professional_Engineering_Magazine.pdf'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).catch(()=>{}));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('igers-live-monitor-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',event=>{
