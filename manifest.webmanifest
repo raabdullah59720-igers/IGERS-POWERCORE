@@ -1,6 +1,6 @@
 {
-  "name": "IGERS-BD-01 Live Environmental & Air Traffic Monitor",
-  "short_name": "IGERS Live Monitor",
+  "name": "IGERS-BD-01 Engineering Intelligence Platform",
+  "short_name": "IGERS-BD-01",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#07111f",
