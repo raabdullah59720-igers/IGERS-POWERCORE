@@ -1,42 +1,26 @@
-# IGERS POWERCORE — ADDITIVE ENGINEERING MODULES
-Version: 2026-09-23
+# IGERS Live Flag Theme — ADD-ONLY Update
 
-This is an ADD-ONLY GitHub-ready upgrade package. It deliberately does not overwrite the existing IGERS app files.
+## Purpose
+Adds a subtle animated Bangladesh-flag visual theme behind the existing IGERS interface.
 
-## Included panels
-1. Energy Command Center
-2. Smart Road Energy Map
-3. Harvester Performance Lab
-4. Bridge & Flyover Energy
-5. Solar + Mechanical Hybrid
-6. Water Energy Recovery
-7. Traffic-to-Energy Analytics
-8. Noise & Vibration Reduction
-9. Infrastructure Digital Twin
-10. Asset Health & Predictive Maintenance
-11. Cost / ROI / Payback Simulator
-12. Environmental Impact
-13. Smart City Energy Network
-14. Prototype Simulation Lab
-15. Research & Thesis Lab
+## Preservation
+This package does NOT replace existing panels, modules, APIs, localStorage, routes, or application data. It creates one isolated layer with unique IDs/classes and pointer-events disabled. Remove this folder and its two HTML references to revert the visual update.
 
-## Installation into the existing GitHub Pages repository
-Copy the `igers-addon` folder into the root of the existing IGERS repository. Then add these two lines to the existing `index.html` immediately before `</head>`:
+## Install
+Copy `igers-live-flag/` into the existing IGERS app root and add before `</head>` in the existing `index.html`:
 
-<link rel="stylesheet" href="./igers-addon/igers-addon.css">
-<script src="./igers-addon/igers-addon.js" defer></script>
+```html
+<link rel="stylesheet" href="./igers-live-flag/igers-live-flag.css">
+<script src="./igers-live-flag/igers-live-flag.js" defer></script>
+```
 
-Commit and push. Existing files remain untouched except for those two additive references.
-
-## Compatibility design
-- No framework dependency.
-- No existing IDs/classes are reused intentionally.
-- CSS is scoped under `#igers-additive-modules-root`.
-- JavaScript has a guarded namespace flag.
-- No existing DOM node is replaced.
-- No existing localStorage key or API is modified.
-- Removing the `igers-addon` folder and the two references restores the prior app.
-- Panels are explicitly marked conceptual/scenario-based until verified live sources are connected.
+## Checks performed
+- JavaScript syntax check: PASS
+- CSS/JS isolation checks: PASS
+- No `fetch()` or `localStorage` usage in addon JS: PASS
+- Duplicate-load guard present: PASS
+- Reduced-motion support present: PASS
+- ZIP integrity test: PASS
 
 ## Important
-This package is source-independent because the current GitHub source ZIP was not available in the working files. It is therefore an additive module pack, not a rebuilt copy of the full existing website.
+A full regression run of the complete existing IGERS website requires the current full website source. This addon has been tested in isolation and is intentionally non-destructive.
