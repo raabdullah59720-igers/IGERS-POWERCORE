@@ -50,37 +50,3 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire,{once:true});else wire();
 })();
-
-/* IGERS-BD-01 v2 additive upgrade controllers */
-(function(){
-  'use strict';
-  const $=id=>document.getElementById(id);
-  function num(id, fallback){const n=Number($(id)?.value);return Number.isFinite(n)?n:fallback;}
-  function updateStorage(){
-    const cap=Math.max(1,num('igxCap',100)), soc=Math.min(100,Math.max(0,num('igxSoc',62))), load=Math.max(.1,num('igxLoad',10));
-    const stored=cap*soc/100, backup=stored/load;
-    if($('igxStoragePct'))$('igxStoragePct').textContent=soc.toFixed(0)+'%';
-    if($('igxStorageFill'))$('igxStorageFill').style.width=soc+'%';
-    if($('igxStorageKwh'))$('igxStorageKwh').textContent=`${stored.toFixed(1)} kWh of ${cap.toFixed(1)} kWh model capacity`;
-    if($('igxLoadRate'))$('igxLoadRate').textContent=load.toFixed(1)+' kW';
-    if($('igxBackup'))$('igxBackup').textContent=backup.toFixed(1)+' h';
-    if($('igxChargeRate'))$('igxChargeRate').textContent=Math.max(1,load*2.5).toFixed(1)+' kW';
-  }
-  function qa(){
-    const tests=[
-      ['Core home','#home'],['Energy module','#energy'],['Environment monitor','#environment'],['Weather','#weather'],['Time engine','#time'],['Air traffic','#airtraffic'],['Satellite intelligence','#satelliteIntel'],['NASA data','#nasaPanel'],['Command Center','#igxCommand'],['Engineering Lab','#igxLab'],['Magazine panel','#igxMagazine'],['Storage panel','#igxStorage'],['Architecture panel','#igxArchitecture'],['Deployment Hub','#igxDeployment'],['System QA','#igxQA']
-    ];
-    const box=$('igxStatusGrid'); if(!box)return;
-    box.innerHTML=''; let ok=0;
-    tests.forEach(([name,sel])=>{const present=!!document.querySelector(sel);if(present)ok++;const a=document.createElement('article');a.className='igx-status-item';a.innerHTML=`<strong>${name}</strong><span>${present?'READY · detected':'MISSING · review package'}</span>`;box.appendChild(a);});
-    const magazinePdf='./magazine/IGERS-BD-01_Professional_Engineering_Magazine.pdf';
-    fetch(magazinePdf,{method:'HEAD',cache:'no-store'}).then(r=>{const a=document.createElement('article');a.className='igx-status-item';a.innerHTML=`<strong>Magazine PDF asset</strong><span>${r.ok?'READY · file reachable':'MISSING · add magazine PDF'}</span>`;box.appendChild(a); if(r.ok)ok++; const total=tests.length+1; if($('igxQABadge')){$('igxQABadge').innerHTML=`<i></i>${ok===total?'ALL CHECKS READY':ok+'/'+total+' CHECKS READY'}`;}}).catch(()=>{const a=document.createElement('article');a.className='igx-status-item';a.innerHTML='<strong>Magazine PDF asset</strong><span>CHECK · browser blocked local HEAD request</span>';box.appendChild(a);if($('igxQABadge'))$('igxQABadge').innerHTML='<i></i>LOCAL ASSET CHECK NEEDED';});
-  }
-  function boot(){
-    $('igxStorageRun')?.addEventListener('click',updateStorage);
-    ['igxCap','igxSoc','igxLoad'].forEach(id=>$(id)?.addEventListener('input',updateStorage));
-    $('igxQARun')?.addEventListener('click',qa); $('igxQAClear')?.addEventListener('click',()=>{if($('igxStatusGrid'))$('igxStatusGrid').innerHTML='';if($('igxQABadge'))$('igxQABadge').innerHTML='<i></i>READY TO SCAN';});
-    updateStorage();
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
