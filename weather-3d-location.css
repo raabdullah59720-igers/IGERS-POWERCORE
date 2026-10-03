@@ -1,0 +1,2 @@
+/* Dedicated cascade guard for the location + 3D weather module. */
+.weather-3d-wrap{contain:layout paint style}.weather-3d-stage{will-change:transform}.location-status.location-system-on{color:#9df3c0}.location-status.location-system-warn{color:#ffd88d}.location-status.location-system-off{color:#ffaaa4}
