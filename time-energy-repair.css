@@ -1,0 +1,7 @@
+/* IGERS emergency visibility safeguards */
+#time .clock{display:block!important;visibility:visible!important;opacity:1!important;min-height:1.2em}
+#time .clock-card,#time .live-panel{visibility:visible!important;opacity:1!important}
+#energyLiveUpdate{display:block!important;visibility:visible!important;opacity:1!important}
+#energyLiveUpdate[hidden]{display:block!important}
+#energyLiveBadge{visibility:visible!important}
+#sysEnergyState{font-variant-numeric:tabular-nums}
