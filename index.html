@@ -416,6 +416,25 @@ section{padding:72px 0}
         <div class="ig3d-label">DRAG TO ROTATE · ENGINEERING VISUALIZATION · NO PHYSICAL CONTROL</div>
         <div class="ig3d-controls"><button id="ig3dYaw" type="button">ROTATE 45°</button><button id="ig3dReset" type="button">RESET VIEW</button></div>
       </div>
+      <div class="ig3d-satellite-lab" id="igxSatelliteLab">
+        <div class="satlab-hud"><span>ORBITAL ENGINEERING MODEL</span><b id="satlabState">SATELLITE READY</b></div>
+        <div class="satlab-space">
+          <div class="satlab-stars"></div>
+          <div class="satlab-earth"><div class="satlab-cloud c1"></div><div class="satlab-cloud c2"></div><div class="satlab-cloud c3"></div><span>EARTH</span></div>
+          <div class="satlab-orbit orbit-a"></div><div class="satlab-orbit orbit-b"></div>
+          <div class="satlab-sat" id="satlabModel">
+            <div class="satlab-body"><span>IGERS-BD-01</span><i></i></div>
+            <div class="satlab-panel satlab-left"><div></div><div></div><div></div><div></div></div>
+            <div class="satlab-panel satlab-right"><div></div><div></div><div></div><div></div></div>
+            <div class="satlab-boom"></div><div class="satlab-dish"><i></i></div>
+            <div class="satlab-antenna a1"></div><div class="satlab-antenna a2"></div>
+          </div>
+          <div class="satlab-link sl1"></div><div class="satlab-link sl2"></div>
+          <div class="satlab-tag tag-earth">EARTH OBSERVATION</div><div class="satlab-tag tag-link">DATA LINK</div><div class="satlab-tag tag-power">SOLAR POWER</div>
+        </div>
+        <div class="satlab-controls"><button id="satlabRotate" type="button">ROTATE MODEL</button><button id="satlabPanels" type="button">DEPLOY PANELS</button><button id="satlabOrbit" type="button">ORBIT ANIMATION</button><button id="satlabReset" type="button">RESET</button></div>
+        <div class="satlab-readouts"><span><b id="satlabAltitude">LEO / CONCEPT</b><small>ORBIT CLASS</small></span><span><b id="satlabPower">SOLAR ARRAY</b><small>POWER SYSTEM</small></span><span><b id="satlabLink">PUBLIC DATA</b><small>DATA MODE</small></span><span><b id="satlabMode">3D MODEL</b><small>DISPLAY MODE</small></span></div>
+      </div>
       <aside class="ig3d-stack">
         <article class="ig3d-card"><h3>System layers</h3><p>Select a visual layer and rotate the model. Existing live/public-data panels remain independent.</p><div class="ig3d-toggle"><button class="active" data-layer="SYSTEM" type="button">SYSTEM</button><button data-layer="SATELLITE" type="button">SATELLITE</button><button data-layer="GROUND" type="button">GROUND</button><button data-layer="AIR" type="button">AIR</button><button data-layer="TOWER" type="button">TOWER</button><button data-layer="ENERGY" type="button">ENERGY</button></div></article>
         <article class="ig3d-card"><h3>Connection matrix</h3><div class="ig3d-metric"><span>Satellite observation</span><b>PUBLIC DATA</b></div><div class="ig3d-metric"><span>Air traffic</span><b>ADS-B</b></div><div class="ig3d-metric"><span>Ground scanner</span><b>VISUAL / MODEL</b></div><div class="ig3d-metric"><span>Mobile towers</span><b>MONITORING</b></div><div class="ig3d-metric"><span>Energy nodes</span><b>ENGINEERING MODEL</b></div></article>
