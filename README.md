@@ -1,24 +1,26 @@
-# IGERS-BD-01 Magazine Integration | Developer Package
+# IGERS POWERCORE — Observed Live-App Update 2026.10.06
 
-This package integrates the Library magazine into the existing IGERS POWERCORE static website without external viewer dependencies.
+This build was reconstructed from the publicly observable live IGERS site structure and expanded into one upload-ready static GitHub Pages app.
 
-## Contents
-#magazine/index.html: responsive magazine page
-#magazine/styles.css: responsive styling
-#magazine/IGERS-BD-01-Professional-Engineering-Magazine.pdf: 70-page A4 magazine
-#integration/magazine-section.html: homepage card
-#integration/magazine.css: homepage card styling
+## Upload
+Upload the contents of this folder to the repository root that serves GitHub Pages. `index.html` is the entry point.
 
-## Deploy
-Copy the `magazine/` folder into the existing repository root. The public page becomes `/IGERS-POWERCORE/magazine/`.
+## Main modules
+- IGERS concept / energy-source map / unified energy journey
+- Environment: Open-Meteo weather + air quality, USGS earthquakes
+- 3D-style weather visualizer
+- Sentinel Grid
+- Bangladesh-focused deployment
+- Live time engine
+- Public ADS-B air-traffic panel using Airplanes.live
+- Airspace anomaly / unverified public-data notice (non-offensive, non-targeting)
+- Border Resilience public-data monitor with map, earthquake/hazard events, search controls
+- Bangabandhu-1 public orbital-element status through CelesTrak (NORAD 43463)
+- NASA GIBS public imagery status probe
+- Road, water-current, hydraulic-head, footstep and roadside-PV calculations
+- Z-calculating heartbeat
+- Embedded 44-page IGERS-BD-01 engineering journal / magazine
+- Local demo administrator UI and comments/customer-care storage
 
-Add the markup from `integration/magazine-section.html` to the existing homepage and its CSS to the existing stylesheet. Do not replace the existing index or application files.
-
-## Source identity
-Project: IGERS-BD-01
-Author / Inventor: Abdullah Al Rafi [BD]
-Publication: 09 September 2026
-Edition: 2026 Professional Thesis & Engineering Concept Edition
-
-## QA
-The PDF is bundled locally, so the viewer does not depend on an external document host. Browser-native PDF rendering provides zoom, page navigation and printing. A direct Open PDF and Download action are included for compatibility.
+## Important
+Public feeds are optional runtime inputs. If a provider cannot be reached from a visitor browser, the UI reports VERIFY / UNKNOWN rather than fabricating live data. The static frontend is not production-grade authentication and does not control physical hardware.
