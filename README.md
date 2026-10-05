@@ -1,26 +1,33 @@
-# IGERS POWERCORE — Observed Live-App Update 2026.10.06
-
-This build was reconstructed from the publicly observable live IGERS site structure and expanded into one upload-ready static GitHub Pages app.
+# IGERS POWERCORE FINAL — FULL BUG-CHECKED BUILD 2026.10.06
 
 ## Upload
-Upload the contents of this folder to the repository root that serves GitHub Pages. `index.html` is the entry point.
+Extract this folder and upload its contents to the GitHub Pages repository root. Keep `index.html` at the repository root.
 
-## Main modules
-- IGERS concept / energy-source map / unified energy journey
-- Environment: Open-Meteo weather + air quality, USGS earthquakes
-- 3D-style weather visualizer
-- Sentinel Grid
-- Bangladesh-focused deployment
-- Live time engine
-- Public ADS-B air-traffic panel using Airplanes.live
-- Airspace anomaly / unverified public-data notice (non-offensive, non-targeting)
-- Border Resilience public-data monitor with map, earthquake/hazard events, search controls
-- Bangabandhu-1 public orbital-element status through CelesTrak (NORAD 43463)
-- NASA GIBS public imagery status probe
-- Road, water-current, hydraulic-head, footstep and roadside-PV calculations
-- Z-calculating heartbeat
-- Embedded 44-page IGERS-BD-01 engineering journal / magazine
-- Local demo administrator UI and comments/customer-care storage
+## Independent modules
+- Live Environment
+- Alert & Notification Center
+- Live Air Traffic + tap-to-view flight details
+- 3D Air Traffic Monitor
+- Dedicated Earthquake Monitor
+- Dedicated 3D Weather View
+- Anomaly Monitor + 3D Anomaly Field
+- Silo / Storage Health Monitor + 3D model
+- Satellite Connection (NASA GIBS public-service probe + public orbital elements)
+- Border Resilience Monitor
+- Energy Calculation Lab + Z-CALCULATING heartbeat
+- IGERS-BD-01 Engineering Journal / Magazine
+- Administrative 3D Control Center with local password gate and maintenance toggles
 
-## Important
-Public feeds are optional runtime inputs. If a provider cannot be reached from a visitor browser, the UI reports VERIFY / UNKNOWN rather than fabricating live data. The static frontend is not production-grade authentication and does not control physical hardware.
+## Live providers
+- Weather / precipitation: Open-Meteo
+- Air quality: Open-Meteo Air Quality
+- Earthquakes: USGS GeoJSON
+- Public ADS-B-derived traffic: Airplanes.live with ADSB.lol fallback
+- Earth observation: NASA GIBS public service
+- Public orbital elements: CelesTrak
+
+## Safety / honesty
+The public-data modules show LIVE only when the browser reaches the provider. Offline/restricted states become VERIFY/UNKNOWN. The Anomaly Monitor and Alert Center are conservative information tools; they do not determine hostile intent or official threat status. The Silo/Storage panel is an engineering UI/simulation unless connected to a real sensor/API. The Admin password controls this static frontend only; it is not production-grade server authentication and does not control physical equipment.
+
+## Alert System
+Alert Center can show in-app toasts and, with browser permission, browser notifications. Test alert is explicitly labeled as a local test and is not a real hazard.
