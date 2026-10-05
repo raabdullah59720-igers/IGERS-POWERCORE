@@ -15,7 +15,7 @@
   }
 
   function energyCalc(){
-    const flow=safe($('igxFlow')?.value), head=safe($('igxHead')?.value), eta=Math.min(1,Math.max(0,safe($('igxEff')?.value)/100)), units=Math.max(1,Math.floor(safe($('igxUnits')?.value,1))), hours=Math.max(0,safe($('igxHours')?.value,24));
+    const flow=safe($('igxFlow')?.value), head=safe($('igxHead')?.value), eta=Math.min(1,Math.max(0,safe($('igxEff')?.value)/100)), units=Math.max(0,Math.floor(safe($('igxUnits')?.value,0))), hours=Math.max(0,safe($('igxHours')?.value,24));
     const kw=1000*9.81*flow*head*eta*units/1000, kwh=kw*hours, monthly=kwh*30;
     $('igxPower').textContent=`${fmt(kw,2)} kW`; $('igxDaily').textContent=`${fmt(kwh,1)} kWh/day`; $('igxMonthly').textContent=`${fmt(monthly,0)} kWh/month`;
     $('igxMeter').style.width=Math.min(100,Math.max(3,kw/100))*1+'%'; addLog(`Energy model recalculated: ${fmt(kw,2)} kW estimated output.`);

@@ -68,7 +68,6 @@ section{padding:72px 0}
 <link rel="stylesheet" href="water-foot-live.css">
 <link rel="stylesheet" href="weather-3d-location.css">
 <link rel="stylesheet" href="igers-live-3d-operations-2026-10-05.css">
-<link rel="stylesheet" href="border-zone-monitor.css">
 </head>
 <body>
 <nav class="nav"><div class="wrap navin"><a href="#home" class="brand">IGERS-BD-01<small>INTEGRATED ENERGY RECOVERY &amp; STORAGE</small></a><div class="navlinks"><a href="#concept">Concept</a><a href="#energy">Energy</a><a href="#journey">Journey</a><a href="#environment">Environment</a><a href="#applications">Applications</a><a href="#sentinel">Sentinel Grid</a><a href="#deployment">Deployment</a><a href="#time">Live Time</a><a href="#systemControl">System Control</a><a href="#airtraffic">Air Traffic</a><a href="#airspaceSafety">Airspace Safety</a><a href="#weather">Weather</a><a href="#waterFootLive">Water / Foot Harvesting</a><a href="#feedback">Comments / Care</a><a href="#inventor">Inventor</a></div></div></nav>
@@ -541,13 +540,13 @@ section{padding:72px 0}
       try{r=await fetch(url,{cache:'no-store',signal:controller.signal,headers:{'Accept':'application/json'}});}finally{clearTimeout(timeout);}
       if(!r.ok) throw new Error('aircraft feed failed');
       const data=await r.json();
-      const list=(data.ac||[]).map(airRowData).filter(a=>a.lat!=null&&a.lon!=null); airLastPayload=list; window.__igersAirTrafficSnapshot=list.map(a=>({...a})); window.__igersAirTrafficSnapshotAt=Date.now(); if(window.__igersAirspaceEvaluate) window.__igersAirspaceEvaluate(list);
+      const list=(data.ac||[]).map(airRowData).filter(a=>a.lat!=null&&a.lon!=null); airLastPayload=list; window.__igersAirTrafficSnapshot=list.map(a=>({...a})); window.__igersAirTrafficSnapshotAt=Date.now(); window.__igersAirTrafficSnapshotAge=Number.POSITIVE_INFINITY; window.__igersAirTrafficTotal=Number(data.total ?? list.length); if(window.__igersAirspaceEvaluate) window.__igersAirspaceEvaluate(list);
       let newestAge=null; list.forEach(a=>{if(Number.isFinite(Number(a.seen))) newestAge=newestAge==null?Number(a.seen):Math.min(newestAge,Number(a.seen));});
       airEl('airCount').textContent=String(data.total ?? list.length);
       airEl('airPositionCount').textContent=String(list.length);
       airEl('airAge').textContent=newestAge==null?'--':(newestAge<60?Math.round(newestAge)+'s':Math.round(newestAge/60)+'m');
       airEl('airLastSync').textContent='Last sync: '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-      const airHealth=classifyAirFreshness(newestAge); setAirState(airHealth[0],airHealth[1]+' · Airplanes.live');
+      const airHealth=classifyAirFreshness(newestAge); window.__igersAirTrafficSnapshotAge=Number.isFinite(newestAge)?newestAge:Infinity; setAirState(airHealth[0],airHealth[1]+' · Airplanes.live');
       setMapFallback(false);
       if(selectedAircraft){const fresh=list.find(x=>x.hex===selectedAircraft.hex); if(fresh) showAircraft(fresh); else selectedAircraft=null;}
       renderAirList(list);
@@ -558,6 +557,7 @@ section{padding:72px 0}
       if(!airLastPayload.length) renderAirList([]);
     }
   }
+  window.__igersAirTrafficManualRefresh=()=>loadAirTraffic();
   function scheduleAirPoll(){clearTimeout(airTimer); airTimer=setTimeout(async()=>{await loadAirTraffic();scheduleAirPoll();},document.visibilityState==='visible'?20000:60000);}
   const liveFrame=airEl('airLiveFrame');
   if(liveFrame){liveFrame.addEventListener('load',()=>setMapFallback(false)); liveFrame.addEventListener('error',()=>setMapFallback(true));}
@@ -597,7 +597,8 @@ section{padding:72px 0}
 <script src="time-energy-repair.js"></script>
 <script src="water-foot-live.js"></script>
 <script src="weather-3d-location.js"></script>
+<link rel="stylesheet" href="border-zone-command.css">
 <script src="igers-live-3d-operations-2026-10-05.js"></script>
-<script src="border-zone-monitor.js"></script>
+<script src="border-zone-command.js"></script>
 </body>
 </html>

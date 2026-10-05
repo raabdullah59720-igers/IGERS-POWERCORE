@@ -22,5 +22,3 @@ A fresh npm install could not complete in this execution environment because reg
 
 NO-REGRESSION INTENT
 The new Comments / Customer Care UI is isolated to its own feedback section and CSS layer. Existing weather, live time, earthquake notification, air-traffic, legal pages, and other site systems were not intentionally modified by this upgrade.
-
-Created: border-zone-monitor.js, border-zone-monitor.css
