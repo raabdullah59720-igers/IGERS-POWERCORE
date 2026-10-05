@@ -24,6 +24,22 @@
   async function refreshHazards(){const btn=$('bdmonRefresh');btn&& (btn.disabled=true,btn.textContent='Checking…');try{const a=await Promise.allSettled([fetchJson(USGS),fetchJson(GDACS)]);state.quakes=a[0].status==='fulfilled'&&Array.isArray(a[0].value?.features)?a[0].value.features:[];const gv=a[1].status==='fulfilled'?a[1].value:null;state.gdacs=Array.isArray(gv)?gv:Array.isArray(gv?.features)?gv.features:Array.isArray(gv?.events)?gv.events:[];renderEvents();renderAlert();set('bdmonLastSync',new Date().toLocaleTimeString('en-GB'));cls('bdmonHazardState',a.some(x=>x.status==='fulfilled')?'live':'warn');set('bdmonHazardStateText',a.some(x=>x.status==='fulfilled')?'LIVE · PUBLIC HAZARD FEEDS':'DEGRADED · VERIFY');}catch(_){state.quakes=[];state.gdacs=[];renderEvents();renderAlert();cls('bdmonHazardState','warn');set('bdmonHazardStateText','DEGRADED');}finally{btn&&(btn.disabled=false,btn.textContent='Refresh live feeds');}}
   function syncAir(){const c=$('airCount')?.textContent||'--',age=$('airAge')?.textContent||'--';set('bdmonAirCount',c);set('bdmonAirAge',age);const s=($('airFeedState')?.textContent||'').toUpperCase();set('bdmonAirState',/LIVE/.test(s)?'LIVE ADS-B':'VERIFY / PROVIDER');}
   function mapOpen(){window.open(NAV,'_blank','noopener,noreferrer');}
-  function init(){if(!$('bdmon'))return;const btn=$('bdmonOpenMap');btn?.addEventListener('click',mapOpen);$('bdmonRefresh')?.addEventListener('click',refreshHazards);$('bdmonSatRefresh')?.addEventListener('click',loadSatellite);loadSatellite();refreshHazards();syncAir();setInterval(syncAir,5000);setInterval(refreshHazards,120000);setInterval(loadSatellite,3600000);set('bdmonClock','SYNC '+new Date().toLocaleTimeString('en-GB'));setInterval(()=>set('bdmonClock','SYNC '+new Date().toLocaleTimeString('en-GB')),1000);}
+  async function testAlert(){
+    const box=$('bdmonAlert');
+    if(box){box.className='card bdmon-alert danger';set('bdmonAlertLevel','TEST');set('bdmonAlertTitle','Alert channel test');set('bdmonAlertReason','Developer test only — no real danger is being reported.');set('bdmonAlertCount',String(state.quakes.length+state.gdacs.length));}
+    set('bdmonHazardStateText','ENGINE ON · TEST');cls('bdmonHazardState','live');
+    try{
+      if('Notification' in window){
+        let permission=Notification.permission;
+        if(permission!=='granted') permission=await Notification.requestPermission();
+        if(permission==='granted'){
+          const reg='serviceWorker' in navigator ? await navigator.serviceWorker.ready : null;
+          if(reg?.showNotification) await reg.showNotification('IGERS · Alert Channel Test',{body:'Alert engine is active. This is a developer test, not a real danger alert.',tag:'igers-bdmon-test',icon:'./icon-192.png',badge:'./icon-192.png',data:{url:'/IGERS-POWERCORE/'}});
+          else new Notification('IGERS · Alert Channel Test',{body:'Alert engine is active. This is a developer test, not a real danger alert.'});
+        }
+      }
+    }catch(_){ }
+  }
+  function init(){if(!$('bdmon'))return;const btn=$('bdmonOpenMap');btn?.addEventListener('click',mapOpen);$('bdmonRefresh')?.addEventListener('click',refreshHazards);$('bdmonTestAlert')?.addEventListener('click',testAlert);$('bdmonSatRefresh')?.addEventListener('click',loadSatellite);loadSatellite();refreshHazards();syncAir();setInterval(syncAir,5000);setInterval(refreshHazards,120000);setInterval(loadSatellite,3600000);set('bdmonClock','SYNC '+new Date().toLocaleTimeString('en-GB'));set('bdmonHazardStateText','ENGINE ON · MONITORING');cls('bdmonHazardState','live');setInterval(()=>set('bdmonClock','SYNC '+new Date().toLocaleTimeString('en-GB')),1000);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
