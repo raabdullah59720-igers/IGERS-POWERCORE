@@ -1,4 +1,4 @@
-const CACHE='igers-final-2026-10-06-air-v5';
+const CACHE='igers-final-2026-10-06-alert-v3';
 const CORE=['./','./index.html','./assets/cover.webp','./assets/IGERS-BD-01_Professional_Engineering_Magazine_Merged_3D.pdf'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

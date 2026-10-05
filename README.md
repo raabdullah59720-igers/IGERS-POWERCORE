@@ -1,20 +1,33 @@
-# IGERS POWERCORE — 3D NAVIGATION BUILD
+# IGERS POWERCORE FINAL — FULL BUG-CHECKED BUILD 2026.10.06
 
-This build adds a separate **3D Navigation & Direction Center** without replacing the existing Air Traffic, 3D Air Traffic, Earthquake, 3D Weather, Anomaly, Silo/Storage, Satellite, Border, Energy, Journal, Alert and Admin panels.
+## Upload
+Extract this folder and upload its contents to the GitHub Pages repository root. Keep `index.html` at the repository root.
 
-## Navigation panel
-- Origin / destination latitude & longitude inputs
-- Use browser location for origin
-- Click the map to set destination
-- Driving / walking / cycling mode
-- Public OSRM route attempt with turn-by-turn steps
-- Automatic direct-distance/bearing fallback when routing service is unavailable
-- 3D heading visualization and compass
-- Distance, bearing, ETA and route state
-- Swap origin/destination
+## Independent modules
+- Live Environment
+- Alert & Notification Center
+- Live Air Traffic + tap-to-view flight details
+- 3D Air Traffic Monitor
+- Dedicated Earthquake Monitor
+- Dedicated 3D Weather View
+- Anomaly Monitor + 3D Anomaly Field
+- Silo / Storage Health Monitor + 3D model
+- Satellite Connection (NASA GIBS public-service probe + public orbital elements)
+- Border Resilience Monitor
+- Energy Calculation Lab + Z-CALCULATING heartbeat
+- IGERS-BD-01 Engineering Journal / Magazine
+- Administrative 3D Control Center with local password gate and maintenance toggles
 
-## Maps
-OpenStreetMap standard tiles are used for the interactive map and include visible attribution. Use remains normal interactive viewing; no bulk/offline tile downloading is implemented.
+## Live providers
+- Weather / precipitation: Open-Meteo
+- Air quality: Open-Meteo Air Quality
+- Earthquakes: USGS GeoJSON
+- Public ADS-B-derived traffic: Airplanes.live with ADSB.lol fallback
+- Earth observation: NASA GIBS public service
+- Public orbital elements: CelesTrak
 
-## Deploy
-Extract this ZIP and replace the repository root files. Keep `index.html` at the root.
+## Safety / honesty
+The public-data modules show LIVE only when the browser reaches the provider. Offline/restricted states become VERIFY/UNKNOWN. The Anomaly Monitor and Alert Center are conservative information tools; they do not determine hostile intent or official threat status. The Silo/Storage panel is an engineering UI/simulation unless connected to a real sensor/API. The Admin password controls this static frontend only; it is not production-grade server authentication and does not control physical equipment.
+
+## Alert System
+Alert Center can show in-app toasts and, with browser permission, browser notifications. Test alert is explicitly labeled as a local test and is not a real hazard.
