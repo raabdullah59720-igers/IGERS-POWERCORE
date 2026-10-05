@@ -1,31 +1,20 @@
-# IGERS POWERCORE — FINAL AIR LIVE MULTI-SOURCE BUILD 2026.10.06
+# IGERS POWERCORE — 3D NAVIGATION BUILD
 
-Upload-ready GitHub Pages build.
+This build adds a separate **3D Navigation & Direction Center** without replacing the existing Air Traffic, 3D Air Traffic, Earthquake, 3D Weather, Anomaly, Silo/Storage, Satellite, Border, Energy, Journal, Alert and Admin panels.
 
-## Live Air Traffic
-The Live Air Traffic panel now uses three public ADS-B providers in automatic failover order:
-1. Airplanes.live — `https://api.airplanes.live/v2/point/{lat}/{lon}/{radius}`
-2. ADSB.lol — `https://api.adsb.lol/v2/point/{lat}/{lon}/{radius}`
-3. adsb.fi — `https://opendata.adsb.fi/api/v3/lat/{lat}/lon/{lon}/dist/{radius}`
+## Navigation panel
+- Origin / destination latitude & longitude inputs
+- Use browser location for origin
+- Click the map to set destination
+- Driving / walking / cycling mode
+- Public OSRM route attempt with turn-by-turn steps
+- Automatic direct-distance/bearing fallback when routing service is unavailable
+- 3D heading visualization and compass
+- Distance, bearing, ETA and route state
+- Swap origin/destination
 
-The panel shows:
-- LIVE / VERIFY provider status
-- active source name
-- aircraft count and position-bearing count
-- provider response state/last success
-- automatic 30-second refresh (when polling is enabled)
-- manual provider cycling
-- tap/click aircraft marker or list row for public flight details
-- 3D air-traffic view using the same live dataset
-- Air Alert integration for public emergency/squawk fields and unverified identity heuristics
+## Maps
+OpenStreetMap standard tiles are used for the interactive map and include visible attribution. Use remains normal interactive viewing; no bulk/offline tile downloading is implemented.
 
-The browser never fabricates aircraft when all providers are unavailable. It shows VERIFY instead.
-
-## Other modules retained
-Alert Center, earthquake monitor, 3D weather, anomaly monitor, silo/storage, satellite status, border monitor, energy calculations, Journal/Magazine and Admin 3D Control.
-
-## Upload
-Extract the folder and upload its contents to the GitHub Pages repository root. Keep `index.html` at repository root.
-
-## Important
-This uses public data sources. Provider availability, CORS policy, rate limits and coverage can change. The site is informational/resilience-oriented and not an official aviation-control, defence or emergency system.
+## Deploy
+Extract this ZIP and replace the repository root files. Keep `index.html` at the root.
