@@ -1,33 +1,31 @@
-# IGERS POWERCORE FINAL — FULL BUG-CHECKED BUILD 2026.10.06
+# IGERS POWERCORE — FINAL AIR LIVE MULTI-SOURCE BUILD 2026.10.06
+
+Upload-ready GitHub Pages build.
+
+## Live Air Traffic
+The Live Air Traffic panel now uses three public ADS-B providers in automatic failover order:
+1. Airplanes.live — `https://api.airplanes.live/v2/point/{lat}/{lon}/{radius}`
+2. ADSB.lol — `https://api.adsb.lol/v2/point/{lat}/{lon}/{radius}`
+3. adsb.fi — `https://opendata.adsb.fi/api/v3/lat/{lat}/lon/{lon}/dist/{radius}`
+
+The panel shows:
+- LIVE / VERIFY provider status
+- active source name
+- aircraft count and position-bearing count
+- provider response state/last success
+- automatic 30-second refresh (when polling is enabled)
+- manual provider cycling
+- tap/click aircraft marker or list row for public flight details
+- 3D air-traffic view using the same live dataset
+- Air Alert integration for public emergency/squawk fields and unverified identity heuristics
+
+The browser never fabricates aircraft when all providers are unavailable. It shows VERIFY instead.
+
+## Other modules retained
+Alert Center, earthquake monitor, 3D weather, anomaly monitor, silo/storage, satellite status, border monitor, energy calculations, Journal/Magazine and Admin 3D Control.
 
 ## Upload
-Extract this folder and upload its contents to the GitHub Pages repository root. Keep `index.html` at the repository root.
+Extract the folder and upload its contents to the GitHub Pages repository root. Keep `index.html` at repository root.
 
-## Independent modules
-- Live Environment
-- Alert & Notification Center
-- Live Air Traffic + tap-to-view flight details
-- 3D Air Traffic Monitor
-- Dedicated Earthquake Monitor
-- Dedicated 3D Weather View
-- Anomaly Monitor + 3D Anomaly Field
-- Silo / Storage Health Monitor + 3D model
-- Satellite Connection (NASA GIBS public-service probe + public orbital elements)
-- Border Resilience Monitor
-- Energy Calculation Lab + Z-CALCULATING heartbeat
-- IGERS-BD-01 Engineering Journal / Magazine
-- Administrative 3D Control Center with local password gate and maintenance toggles
-
-## Live providers
-- Weather / precipitation: Open-Meteo
-- Air quality: Open-Meteo Air Quality
-- Earthquakes: USGS GeoJSON
-- Public ADS-B-derived traffic: Airplanes.live with ADSB.lol fallback
-- Earth observation: NASA GIBS public service
-- Public orbital elements: CelesTrak
-
-## Safety / honesty
-The public-data modules show LIVE only when the browser reaches the provider. Offline/restricted states become VERIFY/UNKNOWN. The Anomaly Monitor and Alert Center are conservative information tools; they do not determine hostile intent or official threat status. The Silo/Storage panel is an engineering UI/simulation unless connected to a real sensor/API. The Admin password controls this static frontend only; it is not production-grade server authentication and does not control physical equipment.
-
-## Alert System
-Alert Center can show in-app toasts and, with browser permission, browser notifications. Test alert is explicitly labeled as a local test and is not a real hazard.
+## Important
+This uses public data sources. Provider availability, CORS policy, rate limits and coverage can change. The site is informational/resilience-oriented and not an official aviation-control, defence or emergency system.

@@ -1,26 +1,19 @@
-# IGERS POWERCORE — FINAL QA REPORT — 2026-10-06
+# QA — IGERS POWERCORE AIR LIVE MULTI-SOURCE BUILD
 
-## Static QA
-- JavaScript syntax: PASS (all inline script blocks).
-- Duplicate HTML IDs: NONE.
-- Missing `$()` DOM references: NONE after final patch.
-- Required 3D renderer functions restored: `prepCanvas`, `loop`, `weather3DUpdate`, `air3DUpdate`, `siloUpdate`, `satellite`.
-- Required 3D canvases present: Air Traffic, Weather, Anomaly, Silo, Admin.
-- Journal cover and 44-page PDF are physically included in `assets/`.
-- Service-worker cache bumped to final v3.
+## Static verification
+- `index.html` JavaScript syntax check: PASS.
+- Declared DOM IDs: 196.
+- `$()` / `getElementById()` references resolved: no missing IDs.
+- Multi-source endpoints present: Airplanes.live, ADSB.lol, adsb.fi.
+- LIVE/VERIFY source-health UI present.
+- 30-second automatic traffic refresh present; manual source cycling present.
+- Flight marker/list detail interaction retained.
+- Air Alert integration retained.
+- 3D Air Traffic canvas retained.
+- Magazine PDF and cover assets present.
+- Service-worker cache bumped to `igers-final-2026-10-06-air-v5`.
+- Local HTTP server returned `200` for `index.html`.
+- ZIP integrity tested after packaging.
 
-## Interactive UI QA (Playwright, mocked external providers)
-- All 13 main sections rendered in DOM.
-- 5 required 3D canvases initialized with non-zero dimensions.
-- Alert Test button produced visible in-app toast.
-- Alert toggle changed ON → OFF → ON correctly.
-- Admin password `IGERS-2026` unlocked the maintenance console.
-- Flight-detail renderer displayed callsign, registration, ICAO hex, altitude, ground speed, track, vertical rate, squawk, latitude, longitude, category and provider.
-- Silo recalculation responded to user input and produced a maintenance state/notice.
-- Page errors after the final runtime patch: NONE in the mocked-provider browser test.
-
-## External-provider limitation
-The sandbox cannot certify live production responses from every public provider because external network access and local HTTP browser navigation are restricted here. The application therefore intentionally uses LIVE/VERIFY/UNKNOWN states rather than fabricating provider output.
-
-## Visual QA
-A full-page Playwright render was captured after the final renderer repair. The 3D Air Traffic, 3D Weather, 3D Anomaly, 3D Silo and Administrative 3D canvases rendered as visible interactive graphics.
+## Live-network limitation
+The build container cannot resolve the external ADS-B provider DNS endpoints, so live provider payloads could not be fetched from this execution environment. The app therefore explicitly falls back across the three configured providers and shows VERIFY when all are unavailable.
