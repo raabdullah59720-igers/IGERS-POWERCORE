@@ -1,0 +1,12 @@
+<!-- 1) Add this where you want the separate Journal/Magazine panel to appear. -->
+<div id="igers-journal-panel"></div>
+
+<!-- 2) Load the module. Adjust the asset path to match your app. -->
+<link rel="stylesheet" href="journal/assets/igers-journal.css">
+<script src="journal/assets/igers-journal.js"></script>
+<script>
+  IGERSJournalPanel.mount('#igers-journal-panel', {
+    pdfUrl: 'journal/assets/IGERS-BD-01_Professional_Engineering_Magazine_Merged_3D.pdf',
+    coverUrl: 'journal/assets/cover.webp'
+  });
+</script>
