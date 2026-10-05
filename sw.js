@@ -1,4 +1,4 @@
-const CACHE='igers-live-monitor-2026.10.06-3d-pwa.1';
+const CACHE='igers-live-monitor-2026.10.06-3d-pwa.2';
 const CORE=[
   './','./index.html','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png',
   './designer.css','./upgrade-pro.css','./script.js','./designer.js','./upgrade-pro.js','./igers-live-enhancer.js',

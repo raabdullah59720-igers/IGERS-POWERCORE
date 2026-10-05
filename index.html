@@ -948,5 +948,44 @@ section{padding:72px 0}
   if('serviceWorker' in navigator && location.protocol==='https:') window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{}));
 })();
 </script>
+
+<script>
+(function(){
+  'use strict';
+  const aliases={
+    satellite:'satelliteIntel',
+    satelliteintel:'satelliteIntel',
+    satelliteIntel:'satelliteIntel',
+    satintel:'satelliteIntel',
+    danger:'bdmon',
+    alerts:'bdmon',
+    towers:'mobileTowerControl',
+    tower:'mobileTowerControl',
+    monitor:'igxCommand'
+  };
+  function targetId(){
+    const raw=(location.hash||'').replace(/^#/,'').trim();
+    if(!raw) return null;
+    return aliases[raw]||aliases[raw.toLowerCase()]||raw;
+  }
+  function jump(attempt=0){
+    const id=targetId();
+    if(!id) return;
+    const el=document.getElementById(id);
+    if(!el){ if(attempt<20) setTimeout(()=>jump(attempt+1),100); return; }
+    el.classList.add('deep-link-target','is-visible');
+    el.querySelectorAll('.designer-reveal').forEach(node=>node.classList.add('is-visible'));
+    setTimeout(()=>{
+      try{ el.scrollIntoView({behavior:attempt===0?'auto':'smooth',block:'start'}); }
+      catch(_){ el.scrollIntoView(); }
+      setTimeout(()=>el.classList.remove('deep-link-target'),1800);
+    },attempt<2?80:20);
+  }
+  function onReady(){ jump(0); setTimeout(()=>jump(2),450); setTimeout(()=>jump(5),1200); }
+  window.addEventListener('hashchange',()=>jump(0));
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',onReady,{once:true}); else onReady();
+  window.addEventListener('load',()=>jump(0),{once:true});
+})();
+</script>
 </body>
 </html>
