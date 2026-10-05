@@ -68,6 +68,7 @@ section{padding:72px 0}
 <link rel="stylesheet" href="water-foot-live.css">
 <link rel="stylesheet" href="weather-3d-location.css">
 <link rel="stylesheet" href="igers-live-3d-operations-2026-10-05.css">
+<link rel="stylesheet" href="border-zone-monitor.css">
 </head>
 <body>
 <nav class="nav"><div class="wrap navin"><a href="#home" class="brand">IGERS-BD-01<small>INTEGRATED ENERGY RECOVERY &amp; STORAGE</small></a><div class="navlinks"><a href="#concept">Concept</a><a href="#energy">Energy</a><a href="#journey">Journey</a><a href="#environment">Environment</a><a href="#applications">Applications</a><a href="#sentinel">Sentinel Grid</a><a href="#deployment">Deployment</a><a href="#time">Live Time</a><a href="#systemControl">System Control</a><a href="#airtraffic">Air Traffic</a><a href="#airspaceSafety">Airspace Safety</a><a href="#weather">Weather</a><a href="#waterFootLive">Water / Foot Harvesting</a><a href="#feedback">Comments / Care</a><a href="#inventor">Inventor</a></div></div></nav>
@@ -540,7 +541,7 @@ section{padding:72px 0}
       try{r=await fetch(url,{cache:'no-store',signal:controller.signal,headers:{'Accept':'application/json'}});}finally{clearTimeout(timeout);}
       if(!r.ok) throw new Error('aircraft feed failed');
       const data=await r.json();
-      const list=(data.ac||[]).map(airRowData).filter(a=>a.lat!=null&&a.lon!=null); airLastPayload=list; if(window.__igersAirspaceEvaluate) window.__igersAirspaceEvaluate(list);
+      const list=(data.ac||[]).map(airRowData).filter(a=>a.lat!=null&&a.lon!=null); airLastPayload=list; window.__igersAirTrafficSnapshot=list.map(a=>({...a})); window.__igersAirTrafficSnapshotAt=Date.now(); if(window.__igersAirspaceEvaluate) window.__igersAirspaceEvaluate(list);
       let newestAge=null; list.forEach(a=>{if(Number.isFinite(Number(a.seen))) newestAge=newestAge==null?Number(a.seen):Math.min(newestAge,Number(a.seen));});
       airEl('airCount').textContent=String(data.total ?? list.length);
       airEl('airPositionCount').textContent=String(list.length);
@@ -597,5 +598,6 @@ section{padding:72px 0}
 <script src="water-foot-live.js"></script>
 <script src="weather-3d-location.js"></script>
 <script src="igers-live-3d-operations-2026-10-05.js"></script>
+<script src="border-zone-monitor.js"></script>
 </body>
 </html>
