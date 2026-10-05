@@ -154,4 +154,7 @@
   loadEarthquakes(); setInterval(loadEarthquakes,60000);
 
   loadWeather();
+  const magFrame=$('igxMagazineFrame'), magFull=$('igxMagFullscreen');
+  if(magFull && magFrame){ magFull.addEventListener('click',()=>{ const target=magFrame.parentElement; if(target?.requestFullscreen) target.requestFullscreen().catch(()=>{}); else magFrame.focus(); }); }
+
 })();

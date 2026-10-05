@@ -1,7 +1,7 @@
 # IGERS GitHub Final Check — 2026-09-22
 
 - Repository root contains index.html: YES
-- CNAME: igersbdr.com
+- CNAME: the custom domain
 - .nojekyll: YES
 - Missing local HTML references: 0
 - Missing asset references: 1

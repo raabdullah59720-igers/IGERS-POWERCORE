@@ -19,7 +19,7 @@ Vercel will build with `npm run build` and publish `dist/`.
 
 After deployment, add:
 
-`igersbdr.com`
+`the custom domain`
 
 in Vercel → Project → Settings → Domains.
 

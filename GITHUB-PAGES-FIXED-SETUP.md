@@ -7,8 +7,8 @@ This package is prepared for direct GitHub Pages project hosting.
 - `.nojekyll` is included.
 - All website assets are kept with relative paths so the project works under:
   `https://raabdullah59720-igers.github.io/IGERS-POWERCORE/`
-- The previous `CNAME` file for `igersbdr.com` has intentionally been removed from this GitHub-safe release. This avoids a broken/misconfigured custom-domain setup from interfering with the normal GitHub Pages URL.
-- If `igersbdr.com` is later configured correctly in GitHub Pages + DNS, a `CNAME` file containing only `igersbdr.com` can be restored.
+- The previous `CNAME` file for the custom domain has intentionally been removed from this GitHub-safe release. This avoids a broken/misconfigured custom-domain setup from interfering with the normal GitHub Pages URL.
+- If the custom domain is later configured correctly in GitHub Pages + DNS, a `CNAME` file containing only the custom domain can be restored.
 
 ## Upload
 Upload the CONTENTS of this folder to the root of the `IGERS-POWERCORE` repository, not the outer ZIP folder.

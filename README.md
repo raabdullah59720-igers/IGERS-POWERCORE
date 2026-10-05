@@ -1,32 +1,24 @@
-# IGERS Journal + Border Public-Data Status Panel
+# IGERS-BD-01 Magazine Integration | Developer Package
 
-This package preserves the existing IGERS-BD-01 Engineering Journal/Magazine reader and adds a **separate Border Resilience Public-Data Status** panel.
+This package integrates the Library magazine into the existing IGERS POWERCORE static website without external viewer dependencies.
 
-## Added panel
-- NASA GIBS NRT imagery reachability check (public Earth-observation service)
-- SatNOGS public satellite-catalog connectivity check
-- GDACS public disaster/hazard feed connectivity and recent-event list
-- Live clock and 60-second status refresh
-- Conservative **UNKNOWN / UNVERIFIED NOTICE** state when a public feed is unavailable or a higher-severity public disaster alert is seen
-- External verification links to NASA Worldview, SatNOGS, and GDACS
-- No military activity detection, targeting, interception, or classified-source access
+## Contents
+#magazine/index.html: responsive magazine page
+#magazine/styles.css: responsive styling
+#magazine/IGERS-BD-01-Professional-Engineering-Magazine.pdf: 70-page A4 magazine
+#integration/magazine-section.html: homepage card
+#integration/magazine.css: homepage card styling
 
-## Important
-GitHub Pages/browser CORS or network policy can prevent a live public API from being read. In that case the UI correctly shows RESTRICTED/VERIFY instead of pretending the feed is live.
+## Deploy
+Copy the `magazine/` folder into the existing repository root. The public page becomes `/IGERS-POWERCORE/magazine/`.
 
-## Integration
-Use `border-status-integration-snippet.html` with the existing web app's asset paths.
-The original journal panel files remain unchanged except for the new panel being mounted alongside them.
+Add the markup from `integration/magazine-section.html` to the existing homepage and its CSS to the existing stylesheet. Do not replace the existing index or application files.
 
+## Source identity
+Project: IGERS-BD-01
+Author / Inventor: Abdullah Al Rafi [BD]
+Publication: 09 September 2026
+Edition: 2026 Professional Thesis & Engineering Concept Edition
 
-## QA / hardening pass
-- Verified all packaged local assets are reachable from the standalone `index.html` path.
-- JavaScript syntax checked for both panel modules.
-- Fixed the SatNOGS status update bug that previously targeted a metric element instead of the actual status row.
-- Added defensive DOM handling to the shared status renderer.
-- Added a manual **Refresh status** control and prevented overlapping refresh requests.
-- Preserved conservative behavior when browser CORS/network access prevents public-feed verification.
-- Added `noopener noreferrer` to external verification links.
-- PDF integrity checked: 44 pages, no embedded JavaScript, not encrypted, no parser-reported suspects.
-- No `eval()`, `new Function()`, or `document.write()` usage found in the JavaScript modules.
-- The live public-data endpoints still depend on the visitor's browser/network and may legitimately report RESTRICTED/VERIFY when external access is unavailable.
+## QA
+The PDF is bundled locally, so the viewer does not depend on an external document host. Browser-native PDF rendering provides zoom, page navigation and printing. A direct Open PDF and Download action are included for compatibility.

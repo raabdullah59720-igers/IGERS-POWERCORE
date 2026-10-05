@@ -33,7 +33,7 @@ Then open `http://127.0.0.1:4173/`.
 ## Static hosting
 The production output is written to `dist/`. Upload the **contents of `dist/`** to a static hosting service. No GitHub repository is required for the static files themselves.
 
-Connect the custom domain `igersbdr.com` at the hosting provider using that provider's DNS instructions.
+Connect the custom domain `the custom domain` at the hosting provider using that provider's DNS instructions.
 
 ## Important data note
 The dashboard uses public external data services. A live indicator means the browser reached the relevant public feed; it is not a guarantee that every upstream service is continuously available.
