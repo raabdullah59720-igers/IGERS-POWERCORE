@@ -35,6 +35,8 @@
     if(env && p===env)return true;
     return p==='MIM2005';
   }
+  // Shared in-page admin verifier for additive panels. GitHub Pages frontend auth is not production security.
+  window.__IGERS_ADMIN_AUTH__ = tryAdminPassword;
   function syncAdminUI(){
     document.querySelectorAll('[data-als-admin-only]').forEach(el=>el.classList.toggle('als-hidden',!state.admin));
     const lock=$('alsAdminLock'); if(lock)lock.classList.toggle('als-hidden',state.admin);
