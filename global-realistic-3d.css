@@ -1,0 +1,9 @@
+/* IGERS POWERCORE — Global Realistic 3D Scene */
+.global-3d-canvas{position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0;pointer-events:none;opacity:.88;mix-blend-mode:screen}
+body>nav,body>main,body>section,body>footer,body>div:not(#global3DCanvas),body>header{position:relative;z-index:1}
+body[data-theme="day"] .global-3d-canvas{opacity:.28;mix-blend-mode:multiply}
+body{perspective:1400px}
+.hero,.section,.analytics,.ia-section{transform-style:preserve-3d}
+.hero-grid,.grid,.cards,.ia-grid{transform-style:preserve-3d}
+.card,.clock-card,.energy-live-card,.system-control-card,.als-card,.bdm-card,.ia-card{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+@media(prefers-reduced-motion:reduce){.global-3d-canvas{display:none}}

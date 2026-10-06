@@ -50,3 +50,11 @@ body[data-theme="day"] .ia-kpi,body[data-theme="day"] .ia-health{background:#f7f
 body[data-theme="day"] .ia-chart{background:linear-gradient(180deg,rgba(0,127,156,.05),rgba(0,127,156,.015))}
 @media(max-width:1000px){.ia-grid{grid-template-columns:1fr}.ia-kpis{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.theme-control{font-size:10px;padding:7px 8px}.ia-head{align-items:flex-start;flex-direction:column}.ia-kpis{grid-template-columns:1fr 1fr}.ia-health-grid{grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* GitHub Pages-safe theme + premium visual baseline */
+html,body{min-height:100%;background:#04080c!important}
+body[data-theme="night"]{background:radial-gradient(circle at 18% -8%,#123044 0,#071019 38%,#04080c 100%)!important;color:#eef8fc!important}
+.theme-control{position:fixed;right:18px;top:82px;z-index:1200}
+.nav{padding-right:92px}
+@media(max-width:900px){.theme-control{right:12px;top:76px}.nav{padding-right:110px}.navlinks{padding-right:56px}}
+body[data-theme="day"]{background:radial-gradient(circle at 15% 0%,#ffffff 0,#eef5f8 46%,#e6eef2 100%)!important}

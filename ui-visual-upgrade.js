@@ -16,13 +16,13 @@
     }
     const meta=document.querySelector('meta[name="theme-color"]');
     if(meta) meta.content=t==='day'?'#eef4f7':'#07111f';
-    try{ if(persist) localStorage.setItem('igers-theme',t); }catch(_){ }
+    try{ if(persist) localStorage.setItem('igers-theme-v2',t); }catch(_){ }
     window.dispatchEvent(new CustomEvent('igers:themechange',{detail:{theme:t}}));
   }
 
   function initTheme(){
-    let saved=null;try{saved=localStorage.getItem('igers-theme')}catch(_){ }
-    if(!saved) saved=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'day':'night';
+    let saved=null;try{saved=localStorage.getItem('igers-theme-v2')}catch(_){ }
+    if(!saved) saved='night';
     setTheme(saved,false);
     const btn=$('themeToggle');
     if(btn) btn.addEventListener('click',()=>setTheme(document.body.dataset.theme==='day'?'night':'day'));
