@@ -67,47 +67,30 @@
     const map={0:['Clear sky','☀️'],1:['Mainly clear','🌤️'],2:['Partly cloudy','⛅'],3:['Overcast','☁️'],45:['Fog','🌫️'],48:['Rime fog','🌫️'],51:['Light drizzle','🌦️'],53:['Drizzle','🌦️'],55:['Heavy drizzle','🌧️'],61:['Light rain','🌦️'],63:['Rain','🌧️'],65:['Heavy rain','🌧️'],71:['Light snow','🌨️'],73:['Snow','🌨️'],75:['Heavy snow','❄️'],80:['Rain showers','🌦️'],81:['Showers','🌧️'],82:['Heavy showers','⛈️'],95:['Thunderstorm','⛈️'],96:['Thunderstorm + hail','⛈️'],99:['Thunderstorm + hail','⛈️']};
     return map[code] || ['Weather update','🌤️'];
   }
-  const weatherState={lat:23.8103,lon:90.4125,place:'Dhaka, Bangladesh'};
-  function weatherHourLabel(iso){try{return new Date(iso).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}catch(_){return '--';}}
-  function nextRainEstimate(times, probs, codes, currentIndex){
-    for(let i=Math.max(0,currentIndex);i<Math.min(times.length,currentIndex+24);i++){
-      const p=Number(probs?.[i]||0), c=Number(codes?.[i]);
-      const raining=[51,53,55,61,63,65,80,81,82,95,96,99].includes(c);
-      if(p>=45 || (p>=30 && raining)) return {time:times[i],prob:p};
-    }
-    return null;
-  }
-  function renderHourlyWeather(data){
-    const box=$('weatherHourly'); if(!box||!data?.hourly)return;
-    const h=data.hourly, n=Math.min(8,h.time?.length||0); let html='';
-    for(let i=0;i<n;i++){
-      const code=Number(h.weather_code?.[i]); const desc=weatherText(code); const prob=Math.round(Number(h.precipitation_probability?.[i]||0));
-      html += `<div class="weather-hour"><span>${weatherHourLabel(h.time[i])}</span><b>${desc[1]}</b><strong>${prob}%</strong><small>${desc[0]}</small></div>`;
-    }
-    box.innerHTML=html;
-  }
   async function loadWeather(){
-    try{
-      const q=new URLSearchParams({latitude:String(weatherState.lat),longitude:String(weatherState.lon),current:'temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,weather_code,precipitation,rain,showers',hourly:'temperature_2m,precipitation_probability,precipitation,rain,showers,weather_code,wind_speed_10m',forecast_days:'2',timezone:'Asia/Dhaka'});
-      const response=await fetch('https://api.open-meteo.com/v1/forecast?'+q.toString(),{cache:'no-store'});
+    try {
+      const url='https://api.open-meteo.com/v1/forecast?latitude=23.8103&longitude=90.4125&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=Asia%2FDhaka';
+      const response=await fetch(url,{cache:'no-store'});
       if(!response.ok) throw new Error('Weather request failed');
-      const data=await response.json(), current=data.current||{}, hourly=data.hourly||{};
+      const data=await response.json();
+      const current=data.current || {};
       const desc=weatherText(current.weather_code);
-      const t=Number(current.temperature_2m);
-      setText('weatherText',desc[0]); setText('weatherIcon',desc[1]); setText('temp',Number.isFinite(t)?Math.round(t)+'°':'--°');
-      setText('wind',Number.isFinite(Number(current.wind_speed_10m))?Math.round(Number(current.wind_speed_10m))+' km/h':'--');
-      setText('humidity',Number.isFinite(Number(current.relative_humidity_2m))?Math.round(Number(current.relative_humidity_2m))+'%':'--');
-      const nowIdx=0; const probs=hourly.precipitation_probability||[]; const codes=hourly.weather_code||[]; const next=nextRainEstimate(hourly.time||[],probs,codes,nowIdx);
-      const nowProb=Number(probs[0]??0); setText('rainProb',Math.round(nowProb)+'%');
-      setText('nextRain',next?(Math.round(next.prob)+'% · '+weatherHourLabel(next.time)):'No significant rain signal in next 24h');
-      renderHourlyWeather(data);
-      setText('weatherUpdated',current.time?new Date(current.time).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'Live');
-      setText('weatherStatus',`${weatherState.place} · live forecast refreshed · rain timing is an hourly forecast estimate, not a guarantee.`);
-    }catch(e){
-      setText('weatherText','Weather unavailable'); setText('weatherIcon','☁️'); setText('weatherStatus','Weather is temporarily unavailable. Time and all other website sections remain functional.');
+      setText('temp', Math.round(Number(current.temperature_2m))+'°C');
+      setText('weatherText', desc[0]);
+      setText('weatherIcon', desc[1]);
+      setText('wind', Math.round(Number(current.wind_speed_10m))+' km/h');
+      setText('humidity', Math.round(Number(current.relative_humidity_2m))+'%');
+      setText('weatherUpdated', current.time ? new Date(current.time).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}) : 'Live');
+      setText('weatherStatus','Live Dhaka weather loaded. The weather panel can fail independently without breaking the rest of the site.');
+    } catch (_) {
+      setText('weatherText','Weather unavailable');
+      setText('weatherIcon','☁️');
+      setText('weatherStatus','Weather is temporarily unavailable. Time and all other website sections remain functional.');
     }
   }
 
+  function setWidth(id, pct){ const el=$(id); if(el) el.style.width=Math.max(0,Math.min(100,pct))+'%'; }
+  function degToCompass(deg){ if(!Number.isFinite(deg)) return '--'; const dirs=['N','NE','E','SE','S','SW','W','NW']; return dirs[Math.round(deg/45)%8]; }
   async function loadEnvironment(){
     try{
       const url='https://api.open-meteo.com/v1/forecast?latitude=23.8103&longitude=90.4125&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,weather_code&timezone=Asia%2FDhaka';
@@ -152,65 +135,6 @@
   }
   loadEnvironment(); setInterval(loadEnvironment,60000);
   loadEarthquakes(); setInterval(loadEarthquakes,60000);
-
-
-
-  // Integrated communications + field-energy intelligence layer.
-  (function initIGERSOperationsLayer(){
-    const byId=id=>document.getElementById(id);
-    const state={
-      gateway:{status:'gateway-required',last:null,latency:null},
-      harvesters:[
-        {key:'road',name:'ROAD',unit:'kWh/day',value:0.82,base:0.62,scale:88},
-        {key:'border',name:'BORDER',unit:'kWh/day',value:0.41,base:0.34,scale:62},
-        {key:'naval',name:'NAVAL',unit:'kWh/day',value:0.57,base:0.46,scale:74},
-        {key:'bridge',name:'BRIDGE',unit:'kWh/day',value:0.96,base:0.71,scale:94},
-        {key:'dam',name:'DAM',unit:'kWh/day',value:1.28,base:0.92,scale:100}
-      ]
-    };
-    const esc=v=>String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    function renderHarvesters(){
-      const box=byId('harvesterGrid'); if(!box) return;
-      box.innerHTML=state.harvesters.map(h=>`<div class="harvester"><div class="hicon">${h.key==='road'?'↕':h.key==='border'?'◉':h.key==='naval'?'≈':h.key==='bridge'?'⇅':'▥'}</div><h4>${h.name}</h4><p>Prototype electrical harvester output</p><div class="harvest-value">${h.value.toFixed(2)}</div><div class="harvest-unit">${h.unit} · <span class="harvest-state">SIMULATED</span></div><div class="hbar"><span style="width:${Math.min(100,Math.max(8,h.scale))}%"></span></div></div>`).join('');
-    }
-    function renderMaintenance(){
-      const box=byId('maintenanceList'); if(!box) return;
-      const rows=[
-        ['Road / compression module','Cycle count within prototype envelope','ok','MONITOR'],
-        ['Bridge harvester','Structural inspection due before field pilot','warn','INSPECT'],
-        ['Naval node','Corrosion / seal inspection schedule','warn','SERVICE'],
-        ['Dam energy module','Hydraulic safety interlock state','ok','NORMAL'],
-        ['Border node','Power + communications self-test','ok','NORMAL']
-      ];
-      box.innerHTML=rows.map(r=>`<div class="maint-row"><div class="maint-icon">⚙</div><div><strong>${esc(r[0])}</strong><small>${esc(r[1])}</small></div><span class="maint-state ${r[2]}">${r[3]}</span></div>`).join('');
-    }
-    function updateOverall(status,text){const el=byId('commOverallStatus');if(!el)return;el.className='status-chip '+(status==='offline'?'offline':status==='warn'?'warn':'');el.querySelector('span').textContent=text;}
-    function renderClockAge(){
-      const age=byId('telemetryAge'); if(age){age.textContent=state.gateway.last?Math.max(0,Math.round((Date.now()-state.gateway.last)/1000))+'s':'--';}
-    }
-    function gatewayTest(){
-      const s=byId('commTestStatus'), sat=byId('satBridgeStatus');
-      const start=performance.now();
-      if(s){s.innerHTML='<b>Gateway test:</b> frontend integrity check running…';}
-      setTimeout(()=>{
-        const ms=Math.round(performance.now()-start); state.gateway.latency=ms;
-        byId('netLatency').textContent=ms+' ms';
-        if(s){s.innerHTML='<b>Gateway state:</b> frontend path healthy. No authorised satellite/field telemetry endpoint is configured in this package, so field data remains SIMULATED.';}
-        if(sat){sat.className='status-chip warn'; sat.querySelector('span').textContent='GATEWAY NOT CONNECTED';}
-        updateOverall('warn','APP ONLINE · FIELD GATEWAY PENDING');
-      },280);
-    }
-    byId('commTestBtn')?.addEventListener('click',gatewayTest);
-    renderHarvesters(); renderMaintenance(); gatewayTest();
-    setInterval(()=>{
-      state.harvesters.forEach(h=>{const drift=(Math.random()-.42)*0.08;h.value=Math.max(0.05,h.value+drift);h.scale=Math.max(12,Math.min(100,h.scale+(Math.random()-.5)*3));});
-      renderHarvesters(); renderClockAge();
-    },5000);
-    setInterval(()=>{
-      const n=byId('powerNodes'); if(n)n.textContent=String(state.harvesters.length);
-    },2000);
-    window.IGERS_OPERATIONS_LAYER={version:'2026.09.14-ops1',state};
-  })();
 
   loadWeather();
 })();

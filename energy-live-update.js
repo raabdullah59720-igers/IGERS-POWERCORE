@@ -30,5 +30,6 @@ $('energyReset')?.addEventListener('click',()=>{if(!needAdmin())return;if(confir
 $('energyRefresh')?.addEventListener('click',()=>calculate());
 }
 function init(){if(!$('energyLiveUpdate'))return;sync();bind();setInterval(()=>{if(state().on)calculate()},1000)}
+window.IGERS_ENERGY_REPAIR_HOOK=init;
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

@@ -1,0 +1,11 @@
+project: IGERS POWERCORE
+certification_date: 2026-10-06
+baseline: IGERS-POWERCORE-main.zip (Library) + latest accessible Oct-03 additive repair packages
+integrity: True
+js_syntax: PASS
+duplicate_ids: PASS
+local_asset_refs: PASS
+required_modules: PASS
+http_smoke: PASS (127.0.0.1 served index.html with HTTP 200)
+interactive_browser: NOT_FULLY_CERTIFIED (Chromium headless did not complete within sandbox timeout)
+notes: No existing base files were deleted; additive update layers were retained. Missing optional future/feedback references were restored as compatibility stubs so local-reference integrity is clean.
