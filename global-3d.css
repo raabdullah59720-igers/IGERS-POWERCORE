@@ -1,0 +1,8 @@
+/* IGERS POWERCORE — subtle site-wide 3D depth layer. Content and navigation remain unchanged. */
+:root{--igers-depth:0 20px 55px rgba(0,0,0,.24)}
+html{scroll-behavior:smooth}
+body{background-image:radial-gradient(circle at 15% 10%,rgba(85,221,255,.035),transparent 22%),radial-gradient(circle at 85% 30%,rgba(138,243,191,.025),transparent 24%)}
+.card,.bdm-card,.als-card,.sat-card{transform-style:preserve-3d;backface-visibility:hidden;box-shadow:var(--igers-depth),inset 0 1px 0 rgba(255,255,255,.025);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.card:hover,.bdm-card:hover,.als-card:hover,.sat-card:hover{transform:translateY(-2px) perspective(900px) rotateX(.35deg);box-shadow:0 28px 70px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.035)}
+.hero-visual,.hub,.orb,.als-canvas-wrap,.bdm-canvas,.bdm-radar-scope,.sat-visual{transform-style:preserve-3d}
+@media(prefers-reduced-motion:reduce){.card,.bdm-card,.als-card,.sat-card{transition:none}.card:hover,.bdm-card:hover,.als-card:hover,.sat-card:hover{transform:none}}

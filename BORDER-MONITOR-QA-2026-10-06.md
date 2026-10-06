@@ -14,7 +14,12 @@
 - All Border JS DOM references exist in HTML: PASS.
 - Border navigation link exists: PASS.
 - Dedicated Border 3D canvas exists: PASS.
+- Dedicated Border radar-style scanner canvas exists: PASS.
+- Radar scanner render path initializes without JavaScript errors: PASS.
 - Dedicated alert buttons and mesh indicator exist: PASS.
+- Salah / Qibla panel renders a non-empty prayer grid in offline/local-fallback mode: PASS.
+- Qibla bearing calculation populated in runtime smoke test: PASS.
+- Site-wide 3D depth stylesheet loads as a separate additive asset: PASS.
 - Bundled Bangladesh GeoJSON parses as a valid FeatureCollection: PASS.
 - Service-worker cache version remains v5.
 
@@ -35,3 +40,12 @@ Direct container HTTP calls to geoBoundaries and Airplanes.live returned HTTP 00
 - Network mesh: explicitly virtual/illustrative until an authorized telemetry API is provided.
 - The panel does not provide protected military radar access, weapon control, targeting, jamming, interception, or automated engagement.
 - Unknown/unverified public track status is not a hostile-activity determination.
+
+
+## Final module smoke test
+- Node VM mock-DOM/canvas execution: ERROR_COUNT=0.
+- Salah grid populated: Fajr, Dhuhr, Asr, Maghrib, Isha.
+- Qibla populated: 278° W for the Dhaka fallback coordinates.
+- Border public ADS-B bridge path: LIVE in mock provider.
+- Border track count: 2 in mock provider.
+- Border scanner status: LIVE · ADS-B scanner in mock provider.

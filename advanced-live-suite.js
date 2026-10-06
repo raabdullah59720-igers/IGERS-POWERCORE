@@ -266,13 +266,36 @@
     if(!('geolocation' in navigator)){if(status)status.textContent='Geolocation unavailable · Dhaka fallback';return {lat:23.8103,lon:90.4125,name:'Dhaka, Bangladesh'};}
     return new Promise(resolve=>navigator.geolocation.getCurrentPosition(p=>resolve({lat:p.coords.latitude,lon:p.coords.longitude,name:'Browser location'}),()=>resolve({lat:23.8103,lon:90.4125,name:'Dhaka fallback'}),{enableHighAccuracy:true,timeout:10000,maximumAge:300000}));
   }
+  // Local fallback prayer-time calculator (used when the public service is unavailable).
+  // This keeps Salah times visible offline using a standard solar-angle approach.
+  function prayerTimesLocal(lat,lon,date,method=1){
+    const deg2rad=x=>x*Math.PI/180,rad2deg=x=>x*180/Math.PI;
+    const jd=(()=>{let y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();if(m<=2){y--;m+=12;}const A=Math.floor(y/100),B=2-A+Math.floor(A/4);return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5;})();
+    const D=jd-2451545.0;
+    const g=357.529+0.98560028*D, q=280.459+0.98564736*D, L=(q+1.915*Math.sin(deg2rad(g))+0.020*Math.sin(deg2rad(2*g)))%360;
+    const e=23.439-0.00000036*D, ra=rad2deg(Math.atan2(Math.cos(deg2rad(e))*Math.sin(deg2rad(L)),Math.cos(deg2rad(L))))/15;
+    const eqt=q/15-ra; const decl=rad2deg(Math.asin(Math.sin(deg2rad(e))*Math.sin(deg2rad(L))));
+    const tz=6; const noon=12+tz-eqt-lon/15;
+    const angleSun=(angle,afterNoon)=>{const sa=deg2rad(angle),phi=deg2rad(lat),dec=deg2rad(decl);let c=(Math.sin(sa)-Math.sin(phi)*Math.sin(dec))/(Math.cos(phi)*Math.cos(dec));c=Math.max(-1,Math.min(1,c));const h=rad2deg(Math.acos(c))/15;return noon+(afterNoon?h:-h);};
+    const sunrise=angleSun(-0.8333,false),sunset=angleSun(-0.8333,true);
+    const fajr=angleSun(-(method===1?18:18),false), isha=angleSun(-(method===1?18:18),true);
+    const asrFactor=1; // Shafi reference default; dropdown remains for public API method.
+    const shadow=(()=>{const phi=deg2rad(lat),dec=deg2rad(decl),alt=Math.atan(1/(asrFactor+Math.tan(Math.abs(phi-dec))));let c=(Math.sin(alt)-Math.sin(phi)*Math.sin(dec))/(Math.cos(phi)*Math.cos(dec));c=Math.max(-1,Math.min(1,c));return rad2deg(Math.acos(c))/15;})();
+    const asr=noon+shadow;
+    const fmt=h=>{h=((h%24)+24)%24;const hr=Math.floor(h),mi=Math.round((h-hr)*60);const hh=String((hr+(mi===60?1:0))%24).padStart(2,'0'),mm=String(mi===60?0:mi).padStart(2,'0');return hh+':'+mm;};
+    return {Fajr:fmt(fajr),Sunrise:fmt(sunrise),Dhuhr:fmt(noon),Asr:fmt(asr),Sunset:fmt(sunset),Maghrib:fmt(sunset),Isha:fmt(isha),Imsak:fmt(fajr-0.17),Midnight:fmt((sunset+24+fajr)/2)};
+  }
+  function applyPrayerFallback(g){
+    state.prayers=prayerTimesLocal(g.lat,g.lon,new Date(),Number($('alsPrayerMethod')?.value||1));renderPrayers();setLive('alsPrayerLive','warn','LOCAL CALC · public service unavailable');setText('alsPrayerLast','Local calculation · '+nowTime());
+  }
+
   async function loadPrayerTimes(){
-    const g=state.geo||await resolveGeo();state.geo=g;const b=qiblaBearing(g.lat,g.lon);state.qibla=b;setText('alsQibla',Math.round(b)+'° '+compass8(b));setText('alsGeo',''+g.name+' · '+g.lat.toFixed(4)+', '+g.lon.toFixed(4));setText('alsGeoStatus','Location: '+g.name);renderQibla3D();
+    const g=state.geo||await resolveGeo();state.geo=g;const b=qiblaBearing(g.lat,g.lon);state.qibla=b;setText('alsQibla',Math.round(b)+'° '+compass8(b));setText('alsGeo',''+g.name+' · '+g.lat.toFixed(4)+', '+g.lon.toFixed(4));setText('alsGeoStatus','Location: '+g.name);renderQibla3D();applyPrayerFallback(g);
     const method=Number($('alsPrayerMethod')?.value||1),date=new Date(),dd=String(date.getDate()).padStart(2,'0'),mm=String(date.getMonth()+1).padStart(2,'0'),yyyy=date.getFullYear();
     try{
       const url='https://api.aladhan.com/v1/timings/'+dd+'-'+mm+'-'+yyyy+'?latitude='+encodeURIComponent(g.lat)+'&longitude='+encodeURIComponent(g.lon)+'&method='+method+'&timezonestring=Asia/Dhaka&iso8601=true';
       const d=await fetchJson(url);state.prayers=d.data?.timings||{};renderPrayers();setLive('alsPrayerLive','','LIVE · AlAdhan prayer service');setText('alsPrayerLast','Prayer sync · '+nowTime());
-    }catch(_){setLive('alsPrayerLive','offline','OFFLINE · verify prayer service');setText('alsPrayerLast','Prayer retry · '+nowTime());}
+    }catch(_){applyPrayerFallback(g);}
   }
   function compass8(d){return ['N','NE','E','SE','S','SW','W','NW'][Math.round((((d%360)+360)%360)/45)%8];}
   function cleanPrayerTime(v){return String(v||'').match(/^\d{2}:\d{2}/)?.[0]||null;}

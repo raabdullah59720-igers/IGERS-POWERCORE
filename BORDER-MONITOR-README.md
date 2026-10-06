@@ -16,3 +16,13 @@ The border gateway nodes are explicitly virtual/illustrative. They are not real 
 
 ## Safety
 The panel is read-only and defensive. It provides detection/verification/status visualization and alerts only. It does not perform weapon control, automated engagement, jamming, interception, targeting, or tactical command.
+
+
+## Dedicated Radar-Style Scanner
+The Border panel now contains a separate scanner card with its own 3D-style sweep canvas, track counters, feed-age indicator and read-only public ADS-B track list. It is a radar-style visualization, not a military/primary radar feed.
+
+## Salah / Qibla reliability
+The Salah panel now renders a local solar-angle fallback immediately and then replaces it with the public AlAdhan result when reachable. This prevents a blank prayer grid when the external service is unavailable. AlAdhan documents the daily timings endpoints and calculation methods; the panel defaults to the Karachi/South-Asia reference method and clearly labels fallback mode when needed.
+
+## Site-wide 3D presentation
+A lightweight `global-3d.css` layer adds subtle perspective/depth, lighting and elevation effects to existing cards and visual containers without changing the existing information architecture or removing earlier features.
