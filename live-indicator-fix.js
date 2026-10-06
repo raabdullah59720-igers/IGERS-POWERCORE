@@ -10,7 +10,7 @@
   function timeWatch(){
     const status=$('timeStatus'); if(!status)return;
     const led=status.querySelector('.live-dot'); if(led){led.setAttribute('aria-label','Live time indicator');}
-    const state=$('liveState'); if(state){state.textContent='LIVE';state.dataset.verifiedAt=stamp();}const sys=$('sysTimeState');if(sys)sys.textContent='LIVE';
+    const state=$('liveState'); if(state){state.textContent='LIVE';state.dataset.verifiedAt=stamp();}
   }
   function weatherWatch(){
     const section=document.querySelector('#weather .section-head');
@@ -34,15 +34,15 @@
       if(age<=180)setBadge('weatherLiveIndicator','', 'WEATHER LIVE · '+Math.max(0,Math.round(age))+'s');
       else if(age<=900)setBadge('weatherLiveIndicator','degraded','WEATHER DELAYED · '+Math.round(age/60)+'m');
       else setBadge('weatherLiveIndicator','stale','WEATHER STALE · '+Math.round(age/60)+'m');
-      const ws=$('weatherStatus');if(ws&&ws.textContent.includes('temporarily unavailable'))ws.textContent='Weather endpoint reachable · live current-data timestamp verified.';const sys=$('sysWeatherState');if(sys)sys.textContent='LIVE · WEATHER';
-    }catch(_){setBadge('weatherLiveIndicator','offline','WEATHER OFFLINE · RETRYING');const sys=$('sysWeatherState');if(sys)sys.textContent='OFFLINE · WEATHER';}
+      const ws=$('weatherStatus');if(ws&&ws.textContent.includes('temporarily unavailable'))ws.textContent='Weather endpoint reachable · live current-data timestamp verified.';
+    }catch(_){setBadge('weatherLiveIndicator','offline','WEATHER OFFLINE · RETRYING');}
     finally{weatherBusy=false;}
   }
   function airWatch(){
     cleanAirBullet();
     const e=$('airFeedState');if(!e)return;
     const b=e.classList.contains('offline')?'offline':e.classList.contains('stale')?'stale':e.classList.contains('degraded')?'degraded':'live';
-    e.dataset.liveState=b;const sys=$('sysAirState');if(sys)sys.textContent=(b==='live'?'LIVE · AIR':b.toUpperCase()+' · AIR');
+    e.dataset.liveState=b;
   }
   function init(){
     weatherWatch();timeWatch();airWatch();verifyWeather();

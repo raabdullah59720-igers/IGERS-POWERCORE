@@ -153,8 +153,64 @@
   loadEnvironment(); setInterval(loadEnvironment,60000);
   loadEarthquakes(); setInterval(loadEarthquakes,60000);
 
-  loadWeather();
-  const magFrame=$('igxMagazineFrame'), magFull=$('igxMagFullscreen');
-  if(magFull && magFrame){ magFull.addEventListener('click',()=>{ const target=magFrame.parentElement; if(target?.requestFullscreen) target.requestFullscreen().catch(()=>{}); else magFrame.focus(); }); }
 
+
+  // Integrated communications + field-energy intelligence layer.
+  (function initIGERSOperationsLayer(){
+    const byId=id=>document.getElementById(id);
+    const state={
+      gateway:{status:'gateway-required',last:null,latency:null},
+      harvesters:[
+        {key:'road',name:'ROAD',unit:'kWh/day',value:0.82,base:0.62,scale:88},
+        {key:'border',name:'BORDER',unit:'kWh/day',value:0.41,base:0.34,scale:62},
+        {key:'naval',name:'NAVAL',unit:'kWh/day',value:0.57,base:0.46,scale:74},
+        {key:'bridge',name:'BRIDGE',unit:'kWh/day',value:0.96,base:0.71,scale:94},
+        {key:'dam',name:'DAM',unit:'kWh/day',value:1.28,base:0.92,scale:100}
+      ]
+    };
+    const esc=v=>String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    function renderHarvesters(){
+      const box=byId('harvesterGrid'); if(!box) return;
+      box.innerHTML=state.harvesters.map(h=>`<div class="harvester"><div class="hicon">${h.key==='road'?'↕':h.key==='border'?'◉':h.key==='naval'?'≈':h.key==='bridge'?'⇅':'▥'}</div><h4>${h.name}</h4><p>Prototype electrical harvester output</p><div class="harvest-value">${h.value.toFixed(2)}</div><div class="harvest-unit">${h.unit} · <span class="harvest-state">SIMULATED</span></div><div class="hbar"><span style="width:${Math.min(100,Math.max(8,h.scale))}%"></span></div></div>`).join('');
+    }
+    function renderMaintenance(){
+      const box=byId('maintenanceList'); if(!box) return;
+      const rows=[
+        ['Road / compression module','Cycle count within prototype envelope','ok','MONITOR'],
+        ['Bridge harvester','Structural inspection due before field pilot','warn','INSPECT'],
+        ['Naval node','Corrosion / seal inspection schedule','warn','SERVICE'],
+        ['Dam energy module','Hydraulic safety interlock state','ok','NORMAL'],
+        ['Border node','Power + communications self-test','ok','NORMAL']
+      ];
+      box.innerHTML=rows.map(r=>`<div class="maint-row"><div class="maint-icon">⚙</div><div><strong>${esc(r[0])}</strong><small>${esc(r[1])}</small></div><span class="maint-state ${r[2]}">${r[3]}</span></div>`).join('');
+    }
+    function updateOverall(status,text){const el=byId('commOverallStatus');if(!el)return;el.className='status-chip '+(status==='offline'?'offline':status==='warn'?'warn':'');el.querySelector('span').textContent=text;}
+    function renderClockAge(){
+      const age=byId('telemetryAge'); if(age){age.textContent=state.gateway.last?Math.max(0,Math.round((Date.now()-state.gateway.last)/1000))+'s':'--';}
+    }
+    function gatewayTest(){
+      const s=byId('commTestStatus'), sat=byId('satBridgeStatus');
+      const start=performance.now();
+      if(s){s.innerHTML='<b>Gateway test:</b> frontend integrity check running…';}
+      setTimeout(()=>{
+        const ms=Math.round(performance.now()-start); state.gateway.latency=ms;
+        byId('netLatency').textContent=ms+' ms';
+        if(s){s.innerHTML='<b>Gateway state:</b> frontend path healthy. No authorised satellite/field telemetry endpoint is configured in this package, so field data remains SIMULATED.';}
+        if(sat){sat.className='status-chip warn'; sat.querySelector('span').textContent='GATEWAY NOT CONNECTED';}
+        updateOverall('warn','APP ONLINE · FIELD GATEWAY PENDING');
+      },280);
+    }
+    byId('commTestBtn')?.addEventListener('click',gatewayTest);
+    renderHarvesters(); renderMaintenance(); gatewayTest();
+    setInterval(()=>{
+      state.harvesters.forEach(h=>{const drift=(Math.random()-.42)*0.08;h.value=Math.max(0.05,h.value+drift);h.scale=Math.max(12,Math.min(100,h.scale+(Math.random()-.5)*3));});
+      renderHarvesters(); renderClockAge();
+    },5000);
+    setInterval(()=>{
+      const n=byId('powerNodes'); if(n)n.textContent=String(state.harvesters.length);
+    },2000);
+    window.IGERS_OPERATIONS_LAYER={version:'2026.09.14-ops1',state};
+  })();
+
+  loadWeather();
 })();

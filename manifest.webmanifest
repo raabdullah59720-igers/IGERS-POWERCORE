@@ -1,80 +1,17 @@
 {
-  "id": "/IGERS-POWERCORE/",
-  "name": "IGERS-BD-01 Engineering Intelligence Platform",
-  "short_name": "IGERS-BD-01",
-  "start_url": "/IGERS-POWERCORE/",
-  "scope": "/IGERS-POWERCORE/",
+  "name": "IGERS-BD-01 Live Environmental & Air Traffic Monitor",
+  "short_name": "IGERS Live Monitor",
+  "start_url": "./",
   "display": "standalone",
-  "display_override": [
-    "window-controls-overlay",
-    "standalone",
-    "browser"
-  ],
-  "orientation": "any",
   "background_color": "#07111f",
   "theme_color": "#07111f",
-  "description": "IGERS-BD-01 live engineering, satellite, public hazard, tower and air-traffic monitoring interface.",
-  "categories": [
-    "business",
-    "productivity",
-    "utilities"
-  ],
+  "description": "IGERS-BD-01 live environmental, weather, earthquake and ADS-B-derived air-traffic monitoring interface.",
   "icons": [
     {
-      "src": "/IGERS-POWERCORE/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/IGERS-POWERCORE/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/IGERS-POWERCORE/icon.svg",
+      "src": "icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "3D Engineering",
-      "short_name": "3D",
-      "url": "/IGERS-POWERCORE/#igx3d",
-      "icons": [
-        {
-          "src": "/IGERS-POWERCORE/icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Danger Monitor",
-      "short_name": "Alerts",
-      "url": "/IGERS-POWERCORE/#bdSatelliteThreatMonitor",
-      "icons": [
-        {
-          "src": "/IGERS-POWERCORE/icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Tower Control",
-      "short_name": "Towers",
-      "url": "/IGERS-POWERCORE/#mobileTowerControl",
-      "icons": [
-        {
-          "src": "/IGERS-POWERCORE/icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
+      "purpose": "any maskable"
     }
   ]
 }

@@ -1,33 +1,24 @@
-# IGERS POWERCORE FINAL — FULL BUG-CHECKED BUILD 2026.10.06
+# IGERS-BD-01 Magazine Integration | Developer Package
 
-## Upload
-Extract this folder and upload its contents to the GitHub Pages repository root. Keep `index.html` at the repository root.
+This package integrates the Library magazine into the existing IGERS POWERCORE static website without external viewer dependencies.
 
-## Independent modules
-- Live Environment
-- Alert & Notification Center
-- Live Air Traffic + tap-to-view flight details
-- 3D Air Traffic Monitor
-- Dedicated Earthquake Monitor
-- Dedicated 3D Weather View
-- Anomaly Monitor + 3D Anomaly Field
-- Silo / Storage Health Monitor + 3D model
-- Satellite Connection (NASA GIBS public-service probe + public orbital elements)
-- Border Resilience Monitor
-- Energy Calculation Lab + Z-CALCULATING heartbeat
-- IGERS-BD-01 Engineering Journal / Magazine
-- Administrative 3D Control Center with local password gate and maintenance toggles
+## Contents
+#magazine/index.html: responsive magazine page
+#magazine/styles.css: responsive styling
+#magazine/IGERS-BD-01-Professional-Engineering-Magazine.pdf: 70-page A4 magazine
+#integration/magazine-section.html: homepage card
+#integration/magazine.css: homepage card styling
 
-## Live providers
-- Weather / precipitation: Open-Meteo
-- Air quality: Open-Meteo Air Quality
-- Earthquakes: USGS GeoJSON
-- Public ADS-B-derived traffic: Airplanes.live with ADSB.lol fallback
-- Earth observation: NASA GIBS public service
-- Public orbital elements: CelesTrak
+## Deploy
+Copy the `magazine/` folder into the existing repository root. The public page becomes `/IGERS-POWERCORE/magazine/`.
 
-## Safety / honesty
-The public-data modules show LIVE only when the browser reaches the provider. Offline/restricted states become VERIFY/UNKNOWN. The Anomaly Monitor and Alert Center are conservative information tools; they do not determine hostile intent or official threat status. The Silo/Storage panel is an engineering UI/simulation unless connected to a real sensor/API. The Admin password controls this static frontend only; it is not production-grade server authentication and does not control physical equipment.
+Add the markup from `integration/magazine-section.html` to the existing homepage and its CSS to the existing stylesheet. Do not replace the existing index or application files.
 
-## Alert System
-Alert Center can show in-app toasts and, with browser permission, browser notifications. Test alert is explicitly labeled as a local test and is not a real hazard.
+## Source identity
+Project: IGERS-BD-01
+Author / Inventor: Abdullah Al Rafi [BD]
+Publication: 09 September 2026
+Edition: 2026 Professional Thesis & Engineering Concept Edition
+
+## QA
+The PDF is bundled locally, so the viewer does not depend on an external document host. Browser-native PDF rendering provides zoom, page navigation and printing. A direct Open PDF and Download action are included for compatibility.

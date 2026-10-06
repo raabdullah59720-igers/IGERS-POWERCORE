@@ -1,0 +1,57 @@
+/* IGERS-BD-01 — Next-Gen Engineering Simulation Command Center */
+:root{--nx-cyan:#58ddff;--nx-green:#79f3b5;--nx-gold:#ffd27a;--nx-red:#ff7f91;--nx-panel:#07131b;--nx-panel2:#0a1d28;--nx-line:#234c5d}
+#engineeringLab{position:relative;overflow:hidden}
+.nx-shell{display:grid;gap:16px}
+.nx-command{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}
+.nx-panel{background:linear-gradient(145deg,rgba(9,28,39,.96),rgba(4,11,17,.98));border:1px solid rgba(88,221,255,.18);border-radius:22px;padding:18px;box-shadow:0 18px 55px rgba(0,0,0,.22);position:relative;overflow:hidden}
+.nx-panel:before{content:"";position:absolute;inset:-35%;background:radial-gradient(circle at 20% 20%,rgba(88,221,255,.08),transparent 28%),radial-gradient(circle at 80% 70%,rgba(121,243,181,.06),transparent 25%);pointer-events:none}
+.nx-panel>*{position:relative;z-index:1}
+.nx-head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:13px}
+.nx-kicker{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#79a0b0}
+.nx-title{font-size:18px;font-weight:900;letter-spacing:.02em;margin-top:3px}
+.nx-sub{font-size:11px;color:#7f99a6;margin-top:3px}
+.nx-badges{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.nx-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid rgba(88,221,255,.2);border-radius:999px;background:rgba(255,255,255,.02);font-size:9px;font-weight:900;letter-spacing:.08em;color:#9cc1cc}
+.nx-badge .led{width:7px;height:7px;border-radius:50%;background:var(--nx-green);box-shadow:0 0 12px var(--nx-green);animation:nxPulse 1.5s infinite}
+.nx-badge.warn{color:var(--nx-gold)}.nx-badge.warn .led{background:var(--nx-gold);box-shadow:0 0 12px var(--nx-gold)}
+.nx-badge.off{color:var(--nx-red)}.nx-badge.off .led{background:var(--nx-red);box-shadow:none;animation:none}
+.nx-navrail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.nx-navbtn,.nx-modelbtn,.nx-action{border:1px solid rgba(88,221,255,.16);background:#06131a;color:#dff8ff;border-radius:12px;padding:10px 11px;font:inherit;font-size:10px;font-weight:850;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:.18s ease}
+.nx-navbtn:hover,.nx-modelbtn:hover,.nx-action:hover{transform:translateY(-1px);border-color:rgba(88,221,255,.48);box-shadow:0 10px 25px rgba(0,0,0,.18)}
+.nx-navbtn.active,.nx-modelbtn.active,.nx-action.primary{background:linear-gradient(135deg,#0d3c4d,#0b2834);border-color:rgba(88,221,255,.44);color:#9cecff}
+.nx-model-layout{display:grid;grid-template-columns:.72fr 1.28fr;gap:16px;margin-top:16px}
+.nx-model-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;max-height:490px;overflow:auto;padding-right:2px}
+.nx-modelbtn{text-align:left;padding:12px}
+.nx-modelbtn b{display:block;font-size:11px;color:#f1fbff}
+.nx-modelbtn span{display:block;margin-top:3px;font-size:9px;color:#7895a1;text-transform:none;letter-spacing:0}
+.nx-view{min-height:490px;display:grid;grid-template-rows:auto 1fr auto;gap:10px}
+.nx-viewport{position:relative;min-height:385px;border-radius:19px;border:1px solid #1c4657;background:radial-gradient(circle at 50% 25%,#0e2d3a,#040b11 64%);overflow:hidden}
+#nx3dCanvas{width:100%;height:100%;display:block}
+.nx-crosshair{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:22px;height:22px;pointer-events:none;border:1px solid rgba(88,221,255,.18);border-radius:50%}
+.nx-crosshair:before,.nx-crosshair:after{content:"";position:absolute;background:rgba(88,221,255,.18)}.nx-crosshair:before{left:50%;top:-8px;width:1px;height:38px}.nx-crosshair:after{left:-8px;top:50%;width:38px;height:1px}
+.nx-model-overlay{position:absolute;left:12px;top:12px;padding:8px 10px;border:1px solid rgba(88,221,255,.16);border-radius:11px;background:rgba(3,10,15,.74);backdrop-filter:blur(7px);font-size:10px}
+.nx-overlay-name{font-weight:900;color:#ecfbff}.nx-overlay-state{margin-top:2px;color:#7ca0ae}
+.nx-input-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.nx-field{padding:10px;border:1px solid #173b49;border-radius:12px;background:#06131a}
+.nx-field label{display:block;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#7897a4;margin-bottom:5px}
+.nx-field input,.nx-field select{width:100%;border:1px solid #224b5a;border-radius:9px;background:#051018;color:#ecfbff;padding:8px 9px;font:700 12px system-ui,sans-serif}
+.nx-field input:focus,.nx-field select:focus{outline:none;border-color:var(--nx-cyan);box-shadow:0 0 0 2px rgba(88,221,255,.08)}
+.nx-results{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:10px}
+.nx-result{padding:12px;border:1px solid #1b4250;border-radius:12px;background:#071820}
+.nx-result strong{display:block;font-size:18px;line-height:1.15;color:var(--nx-green);font-variant-numeric:tabular-nums}
+.nx-result span{display:block;margin-top:3px;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#74909c}
+.nx-equation{margin-top:10px;padding:10px 12px;border:1px dashed #285463;border-radius:12px;color:#acc7d1;font:600 11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}
+.nx-architecture{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;align-items:center}
+.nx-stage{padding:11px 8px;text-align:center;border:1px solid #173c4a;border-radius:12px;background:#06131a;font-size:9px;font-weight:900;color:#d8f1f7}
+.nx-arrow{text-align:center;color:var(--nx-cyan);font-weight:900}
+.nx-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.nx-stat{padding:13px;border:1px solid #1a404e;border-radius:13px;background:#071820}
+.nx-stat b{display:block;font-size:18px;color:#e8faff;font-variant-numeric:tabular-nums}.nx-stat span{display:block;font-size:9px;margin-top:2px;color:#7894a0;letter-spacing:.08em;text-transform:uppercase}
+.nx-calc-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.nx-list{display:grid;gap:8px}.nx-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid #173c4a;border-radius:12px;background:#06131a}.nx-row b{font-size:10px}.nx-row small{display:block;color:#758f9c;margin-top:2px}.nx-row strong{font-size:11px;color:var(--nx-green)}
+.nx-admin{display:grid;gap:10px}.nx-admin-actions{display:flex;gap:8px;flex-wrap:wrap}.nx-note{font-size:10px;color:#6e8a97;line-height:1.5}
+.nx-scroll-top{position:fixed;right:20px;bottom:18px;z-index:70;display:none;width:42px;height:42px;border-radius:50%;border:1px solid rgba(88,221,255,.35);background:rgba(3,12,18,.9);color:#bdefff;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.nx-scroll-top.show{display:block}
+@keyframes nxPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.78)}}
+@media(max-width:1050px){.nx-command,.nx-model-layout,.nx-calc-layout{grid-template-columns:1fr}.nx-navrail{grid-template-columns:repeat(3,1fr)}.nx-model-grid{max-height:none}.nx-results{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.nx-navrail{grid-template-columns:1fr 1fr}.nx-model-grid,.nx-input-grid,.nx-results,.nx-stats{grid-template-columns:1fr}.nx-architecture{grid-template-columns:1fr}.nx-arrow{display:none}.nx-head{display:block}.nx-badges{justify-content:flex-start;margin-top:10px}.nx-viewport{min-height:360px}}
