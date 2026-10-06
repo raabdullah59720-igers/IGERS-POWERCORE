@@ -1,42 +1,30 @@
-# IGERS POWERCORE — FINAL QA REPORT — 2026-10-06
+# IGERS POWERCORE — FINAL HARDENED QA — 2026-10-06
 
 ## Static QA
-- ZIP extraction: PASS
-- JavaScript syntax: PASS (all 8 JS files)
-- HTML duplicate IDs: 0
-- Missing local HTML references: 0
-- Bangladesh fallback GeoJSON parse: PASS
-- Required Border canvases: PASS (bdmBorder3D, bdmRadar3D)
-- Required Salah/Qibla elements: PASS (alsPrayerGrid, alsQibla3D, alsQibla)
-- Existing Air Traffic/Seismic/Marine/Energy/Emergency panels remain in index.html.
+- JavaScript syntax: PASS — 0 errors across all project JS files.
+- Duplicate HTML IDs: 0.
+- Local stylesheet dependencies are inlined into `index.html` for GitHub Pages deployment robustness.
+- Service-worker revision: `igers-powercore-v11`.
+- Development-only `jscheck/` folder and build helper removed from deployment package.
+- Bangladesh fallback GeoJSON present.
+- Existing major sections retained, including Air Traffic, Airspace Safety, Border Monitor, 3D Early Warning, 3D Traffic, Seismic 3D, Marine 3D, IGERS 3D Lab, Tower Mesh, Salah/Qibla, Emergency, Weather and Data Analysis.
 
-## Web-server QA
-- Local HTTP server served `index.html`: HTTP 200
-- Border JS/CSS: HTTP 200
-- Bangladesh fallback GeoJSON: HTTP 200
-- manifest.webmanifest: HTTP 200
-- sw.js: HTTP 200
-- privacy.html / terms.html / copyright.html: HTTP 200
+## Browser runtime smoke QA
+Executed against the actual `index.html` in headless Chromium using the real browser DOM and canvas runtime.
+- Default theme: `night`.
+- Digital 3D Weather canvas initialized with non-zero dimensions.
+- 3D Air/Ground/Maritime early-warning scope initialized.
+- 3D Bangladesh Border monitor initialized.
+- 3D radar-style scanner initialized.
+- 3D Qibla canvas initialized.
+- Salah grid populated with 5 prayer entries.
+- Qibla result populated: 278° W (Dhaka fallback test location).
+- Administrator controls start locked.
+- No JavaScript `pageerror` exceptions.
+- No application console errors during the successful runtime boot; public network requests were isolated in the test harness and their forced aborts are not application errors.
 
-## Module smoke QA
-- Advanced suite exports initialized: PASS
-- Border monitor export initialized: PASS
-- Local Salah calculation produced Fajr/Dhuhr/Asr/Maghrib/Isha values: PASS
-- Qibla bearing populated for Dhaka fallback: PASS (278 degrees / W)
-
-## Browser automation limitation
-Chromium in this execution environment blocks `file://`, `data:` and `127.0.0.1` navigation with an organization policy page. Therefore full graphical browser click/render certification cannot be performed here even though the web server and application assets respond correctly over HTTP.
-
-## Live-provider note
-External live providers may be unavailable from the execution sandbox. The application is configured to show LIVE/VERIFY/OFFLINE states rather than inventing live values.
-
-## Browser DOM runtime smoke QA
-- Chromium execution of the bundled HTML + local JavaScript modules: PASS
-- Page errors: 0
-- Console errors/warnings: 0
-- Day/Night toggle: PASS
-- Border 3D canvas: initialized
-- Border Radar 3D canvas: initialized
-- Salah prayer grid: populated
-- Qibla indicator: populated (278° W for Dhaka fallback)
-- Data Analysis panel: rendered
+## Security boundary
+- Administrator controls are configuration/monitoring controls only.
+- No weapon firing, interceptor launch, target assignment, military fire-control, jamming, or remote weapons control is included.
+- GitHub Pages frontend authentication remains UI-level; production-grade secrets must live server-side.
+- Coverage rings in the early-warning panel are explicitly labeled as visualization-only.
