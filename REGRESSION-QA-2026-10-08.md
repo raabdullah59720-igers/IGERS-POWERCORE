@@ -36,3 +36,10 @@ The container could serve every module over HTTP, but the large page did not rel
 - Live counts are only marked live when supplied by a public/authorized feed.
 - Reference/estimated values remain explicitly labeled.
 - ADS-B data is read-only visualization; no weapon/target control is implemented.
+
+
+## Hotfix — 2026-10-08 06:12 UTC
+- **FIXED:** `field-connectivity-hardening.js` was present in the ZIP but absent from the runtime `<script>` list.
+- **FIXED:** `vehicle-movement-monitor.js` was present in the ZIP but absent from the runtime `<script>` list.
+- **FIXED:** script load order now initializes the dependency/event producers before the aggregate Live Data/3D/Flow Center.
+- **FIXED:** service-worker cache version advanced to `v18` so GitHub Pages receives the corrected script graph after deployment.
