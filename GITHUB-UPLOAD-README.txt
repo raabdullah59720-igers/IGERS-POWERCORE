@@ -1,9 +1,7 @@
-IGERS POWERCORE — GitHub Pages Upload Package
+IGERS POWERCORE — FINAL BUGFIXED GITHUB PAGES PACKAGE
 
-This is the compact web-runtime package. It contains only files required by the current index.html runtime plus .nojekyll and LICENSE.
+Extract this ZIP and upload the CONTENTS to the repository root. Keep index.html at the root.
 
-GitHub browser upload supports up to 100 files at once. This package is intentionally below that limit.
+This compact deployment includes the restored 3D Air Traffic, Vehicle Movement, Field Link, National Toll Plaza/individual 3D models, hourly seismographs, Chrome/PWA install/download handling, and the pre-existing app panels.
 
-Deploy: upload/extract the CONTENTS OF THIS FOLDER to the repository root (where index.html is at the root), then enable GitHub Pages from the repository branch/root.
-
-Do not upload the outer ZIP itself as the website. Extract it first, then upload the files/folder contents.
+Live CCTV/toll/vehicle/ADS-B data requires a public or operator-authorized endpoint; unavailable feeds are not represented as live.

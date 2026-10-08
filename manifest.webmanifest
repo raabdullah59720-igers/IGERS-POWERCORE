@@ -1,9 +1,19 @@
 {
+  "id":"./",
   "name":"IGERS POWERCORE Technologies Ltd.",
   "short_name":"IGERS POWERCORE",
+  "description":"IGERS-BD-01 engineering, monitoring and resilience dashboard.",
   "start_url":"./index.html",
+  "scope":"./",
   "display":"standalone",
+  "display_override":["window-controls-overlay","standalone","minimal-ui"],
+  "orientation":"any",
   "background_color":"#050b10",
   "theme_color":"#07131b",
-  "icons":[{"src":"./icon.svg","sizes":"128x128","type":"image/svg+xml"}]
+  "prefer_related_applications":false,
+  "icons":[
+    {"src":"./icon-192.png","sizes":"192x192","type":"image/png"},
+    {"src":"./icon-512.png","sizes":"512x512","type":"image/png"},
+    {"src":"./icon.svg","sizes":"128x128","type":"image/svg+xml"}
+  ]
 }
