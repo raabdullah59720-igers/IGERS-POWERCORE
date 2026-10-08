@@ -1,0 +1,18 @@
+IGERS POWERCORE — PROFESSIONAL BANGLADESH AIR TRAFFIC LIVE MODE
+
+1) GitHub Pages mode
+   Upload the ZIP normally. The panel uses public/authorized live providers.
+
+2) Python relay mode (recommended when browser CORS/network rules interfere)
+   Windows: double-click RUN-AIR-TRAFFIC-LIVE.bat
+   Or: python airtraffic_live_relay.py
+   Then open: http://127.0.0.1:8765/
+
+3) What the Python relay does
+   - Fetches public Airplanes.live ADS-B data server-side.
+   - Uses the API's maximum 250 nautical-mile point radius around Dhaka.
+   - Filters positions to the Bangladesh geographic footprint.
+   - Exposes normalized JSON at /api/airtraffic.
+   - Does not control aircraft, ATC, radar, weapons, or restricted systems.
+
+4) No third-party Python packages are required. It uses Python standard library only.
