@@ -4,7 +4,12 @@
 (function(){
   'use strict';
   const $=id=>document.getElementById(id);
-  const state={boundary:null,riverBoundary:null,boundarySource:'NONE',boundaryLoad:'VERIFY',air:[],nodes:[],rotation:.18,tilt:.24,zoom:1,alert:null,lastSync:null,feed:'VERIFY',requestPending:false,layers:{outline:true,rivers:true,air:true,nodes:true,radar:true}};
+  const state={boundary:null,riverBoundary:null,boundarySource:'NONE',boundaryLoad:'VERIFY',air:[],nodes:[],rotation:.18,tilt:.24,zoom:1,mapZoom:7,mapCenter:{lat:23.8103,lon:90.4125},mapTileReady:false,currentTileStats:{visible:0,loaded:0,failed:0},animationStarted:false,drag:null,suppressClickUntil:0,alert:null,lastSync:null,feed:'VERIFY',requestPending:false,layers:{outline:true,rivers:true,air:true,nodes:true,radar:true}};
+  // Optional override may be set before this script: window.IGERS_MAP_TILE_URL.
+  const TILE_URL=window.IGERS_MAP_TILE_URL||'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+  const TILE_SIZE=256, tileCache=new Map(), MAX_TILE_CACHE=220;
+  const clampMapZoom=z=>clamp(Math.round(z),5,12);
+  const RADAR_CENTER={lat:23.8103,lon:90.4125};
   const SRC_REMOTE='https://github.com/wmgeolab/geoBoundaries/raw/9469f09592ced973a3448cf66b6100b741b64c0d/releaseData/gbOpen/BGD/ADM0/geoBoundaries-BGD-ADM0_simplified.geojson';
   const SRC_META='https://www.geoboundaries.org/api/current/gbOpen/BGD/ADM0/';
   const FALLBACK='data/bangladesh-boundary-fallback.geojson';
@@ -17,6 +22,53 @@
   const setLive=(id,kind,text)=>{const e=$(id);if(!e)return;e.className='bdm-live'+(kind?' '+kind:'');e.innerHTML='<i></i>'+esc(text);};
   const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
   function sizeCanvas(c){if(!c)return null;const r=c.getBoundingClientRect(),d=window.devicePixelRatio||1,w=Math.max(280,r.width),h=Math.max(240,r.height);const cw=Math.floor(w*d),ch=Math.floor(h*d);if(c.width!==cw||c.height!==ch){c.width=cw;c.height=ch;}const ctx=c.getContext('2d');ctx.setTransform(d,0,0,d,0,0);return{ctx,w,h,d};}
+  function lonLatToWorld(lon,lat,z){
+    const size=TILE_SIZE*Math.pow(2,z),safeLat=clamp(lat,-85.05112878,85.05112878),sin=Math.sin(rad(safeLat));
+    return [(lon+180)/360*size,(.5-Math.log((1+sin)/(1-sin))/(4*Math.PI))*size];
+  }
+  function worldToLonLat(x,y,z){
+    const size=TILE_SIZE*Math.pow(2,z),lon=x/size*360-180,n=Math.PI-2*Math.PI*y/size;
+    return {lon:((lon+540)%360)-180,lat:180/Math.PI*Math.atan(Math.sinh(n))};
+  }
+  function mapPoint(lon,lat,w,h){
+    const p=lonLatToWorld(lon,lat,state.mapZoom),c=lonLatToWorld(state.mapCenter.lon,state.mapCenter.lat,state.mapZoom);
+    return [w/2+p[0]-c[0],h/2+p[1]-c[1]];
+  }
+  function setBasemapStatus(text,kind='warn'){
+    const el=$('bdmBasemapState');if(!el)return;el.textContent=text;el.dataset.state=kind;
+  }
+  function updateTileStatus(){
+    const st=state.currentTileStats;
+    if(st.loaded)setBasemapStatus(st.failed?'ONLINE MAP · '+st.loaded+' TILES READY / '+st.failed+' FAILED':'ONLINE MAP · CONNECTED','ok');
+    else if(st.visible&&st.failed>=st.visible)setBasemapStatus('MAP TILES UNAVAILABLE · FALLBACK VIEW','offline');
+    else setBasemapStatus('ONLINE MAP · LOADING TILES','warn');
+  }
+  function getTile(z,x,y){
+    const n=Math.pow(2,z);if(y<0||y>=n)return null;
+    const xx=((x%n)+n)%n,key=z+'/'+xx+'/'+y;
+    if(tileCache.has(key))return tileCache.get(key);
+    const tile={image:new Image(),loaded:false,failed:false,attempts:0,url:TILE_URL.replace('{z}',z).replace('{x}',xx).replace('{y}',y)};tileCache.set(key,tile);
+    tile.image.decoding='async';
+    tile.image.onload=()=>{tile.loaded=true;tile.failed=false;state.mapTileReady=true;updateTileStatus();};
+    tile.image.onerror=()=>{tile.failed=true;updateTileStatus();if(tile.attempts<2){tile.attempts++;setTimeout(()=>{if(!tile.loaded&&tileCache.get(key)===tile)tile.image.src=tile.url;},1000*tile.attempts);}};
+    tile.image.src=tile.url;
+    // Bound the in-memory image cache during long pan/zoom sessions.
+    while(tileCache.size>MAX_TILE_CACHE){const first=tileCache.keys().next().value;if(first===key)break;tileCache.delete(first);}
+    return tile;
+  }
+  function drawOnlineTiles(ctx,w,h){
+    ctx.fillStyle='#101d24';ctx.fillRect(0,0,w,h);
+    const c=lonLatToWorld(state.mapCenter.lon,state.mapCenter.lat,state.mapZoom),left=c[0]-w/2,top=c[1]-h/2;
+    const x0=Math.floor(left/TILE_SIZE),x1=Math.floor((left+w)/TILE_SIZE),y0=Math.floor(top/TILE_SIZE),y1=Math.floor((top+h)/TILE_SIZE);
+    let visible=0,loaded=0,failed=0;
+    for(let ty=y0;ty<=y1;ty++)for(let tx=x0;tx<=x1;tx++){
+      const tile=getTile(state.mapZoom,tx,ty);if(!tile)continue;visible++;if(tile.failed)failed++;
+      const sx=tx*TILE_SIZE-left,sy=ty*TILE_SIZE-top;
+      if(tile.loaded){try{ctx.drawImage(tile.image,sx,sy,TILE_SIZE,TILE_SIZE);loaded++;}catch(_){}}
+      else {ctx.fillStyle=((tx+ty)&1)?'rgba(13,34,43,.72)':'rgba(15,40,48,.72)';ctx.fillRect(sx,sy,TILE_SIZE,TILE_SIZE);}
+    }
+    state.currentTileStats={visible,loaded,failed};updateTileStatus();return {visible,loaded,failed};
+  }
   async function json(url,timeout=15000){const ac=new AbortController(),to=setTimeout(()=>ac.abort(),timeout);try{const r=await fetch(url,{cache:'no-store',signal:ac.signal,headers:{Accept:'application/json'}});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}finally{clearTimeout(to);}}
   async function loadBoundary(){
     setLive('bdmGeoLive','warn','LOADING · bundled Bangladesh outline');
@@ -89,9 +141,53 @@
     pts.slice(0,14).forEach(a=>{const row=document.createElement('div');row.className='bdm-radar-track';const ident=(a.callsign||a.reg||a.hex||'UNKNOWN').trim();const unknown=!a.callsign||!a.reg||a.callsign==='Unknown';row.innerHTML='<div><b>'+esc(ident)+'</b><span>'+esc((Number.isFinite(a.alt)?Math.round(a.alt).toLocaleString()+' ft':'alt n/a')+' · '+(Number.isFinite(a.speed)?Math.round(a.speed)+' kt':'speed n/a'))+'</span></div><em>'+esc(unknown?'UNVERIFIED':'TRACK')+'</em>';box.appendChild(row);});
   }
 
-  function renderBorder3D(){
-    const c=$('bdmBorder3D'),s=sizeCanvas(c);if(!s)return;const {ctx,w,h}=s;ctx.clearRect(0,0,w,h);ctx.fillStyle='#03090d';ctx.fillRect(0,0,w,h);const grd=ctx.createRadialGradient(w*.52,h*.45,10,w*.52,h*.45,Math.min(w,h)*.58);grd.addColorStop(0,'rgba(85,221,255,.08)');grd.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=grd;ctx.fillRect(0,0,w,h);renderRadar(ctx,w,h);drawGeoGrid(ctx,w,h);drawBoundary(ctx,w,h);drawRivers(ctx,w,h);renderNodes(ctx,w,h);renderTargets(ctx,w,h);renderRadarTracks();setText('bdmRadarVisible',String(state.air.filter(pointInApproxBD).length));setText('bdmRadarUnknown',String(state.air.filter(a=>pointInApproxBD(a)&&(!a.callsign||!a.reg||a.callsign==='Unknown')).length));ctx.fillStyle='rgba(234,248,255,.8)';ctx.font='10px system-ui';ctx.fillText('BANGLADESH · DEFENSIVE EARLY-WARNING VIEW',14,h-20);state.rotation+=0.0008;requestAnimationFrame(renderBorder3D);
+  function drawLegacyBorder(ctx,w,h){
+    ctx.clearRect(0,0,w,h);ctx.fillStyle='#03090d';ctx.fillRect(0,0,w,h);
+    const grd=ctx.createRadialGradient(w*.52,h*.45,10,w*.52,h*.45,Math.min(w,h)*.58);grd.addColorStop(0,'rgba(85,221,255,.08)');grd.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=grd;ctx.fillRect(0,0,w,h);
+    renderRadar(ctx,w,h);drawGeoGrid(ctx,w,h);drawBoundary(ctx,w,h);drawRivers(ctx,w,h);renderNodes(ctx,w,h);renderTargets(ctx,w,h);
+    ctx.fillStyle='rgba(234,248,255,.88)';ctx.font='10px system-ui';ctx.fillText('BANGLADESH · LOCAL GEOGRAPHIC FALLBACK',14,h-20);state.rotation+=.0008;
   }
+  function drawMapGrid(ctx,w,h){
+    if(!state.layers.outline)return;ctx.save();ctx.strokeStyle='rgba(48,225,213,.4)';ctx.fillStyle='rgba(4,23,30,.72)';ctx.lineWidth=.7;ctx.setLineDash([3,5]);
+    for(let lat=21;lat<=26;lat+=1){const a=mapPoint(state.mapCenter.lon,lat,w,h);ctx.beginPath();ctx.moveTo(0,a[1]);ctx.lineTo(w,a[1]);ctx.stroke();}
+    for(let lon=88;lon<=93;lon+=1){const a=mapPoint(lon,state.mapCenter.lat,w,h);ctx.beginPath();ctx.moveTo(a[0],0);ctx.lineTo(a[0],h);ctx.stroke();}
+    ctx.setLineDash([]);ctx.font='10px system-ui';ctx.fillStyle='rgba(6,22,29,.78)';
+    for(let lat=21;lat<=26;lat+=1){const p=mapPoint(state.mapCenter.lon,lat,w,h);if(p[1]>12&&p[1]<h-12){ctx.fillRect(4,p[1]-8,34,14);ctx.fillStyle='#bfe8e4';ctx.fillText(lat+'°N',7,p[1]+2);ctx.fillStyle='rgba(6,22,29,.78)';}}
+    ctx.restore();
+  }
+  function drawMapBoundary(ctx,w,h){
+    if(!state.layers.outline)return;const rings=allRings();if(!rings.length)return;ctx.save();ctx.lineJoin='round';ctx.lineWidth=1.6;ctx.strokeStyle='#55f0c5';ctx.shadowColor='#25ddc6';ctx.shadowBlur=7;
+    rings.forEach(r=>{ctx.beginPath();let started=false;for(const p of r){const q=mapPoint(Number(p[0]),Number(p[1]),w,h);if(!Number.isFinite(q[0])||!Number.isFinite(q[1]))continue;if(!started){ctx.moveTo(q[0],q[1]);started=true;}else ctx.lineTo(q[0],q[1]);}if(started){ctx.closePath();ctx.fillStyle='rgba(13,115,91,.2)';ctx.fill();ctx.stroke();}});ctx.restore();
+  }
+  function drawMapRivers(ctx,w,h){
+    if(!state.layers.rivers)return;ctx.save();ctx.strokeStyle='rgba(64,197,242,.9)';ctx.lineWidth=1.35;ctx.shadowColor='rgba(41,187,244,.45)';ctx.shadowBlur=4;
+    allRivers().forEach(r=>{ctx.beginPath();let started=false;for(const p of r){const q=mapPoint(Number(p[0]),Number(p[1]),w,h);if(!started){ctx.moveTo(q[0],q[1]);started=true;}else ctx.lineTo(q[0],q[1]);}ctx.stroke();});ctx.restore();
+  }
+  function radarPoint(angle,km){const lat=RADAR_CENTER.lat+Math.cos(angle)*km/111.32,lon=RADAR_CENTER.lon+Math.sin(angle)*km/(111.32*Math.cos(rad(RADAR_CENTER.lat)));return [lon,lat];}
+  function drawMapRadar(ctx,w,h){
+    if(!state.layers.radar)return;const center=mapPoint(RADAR_CENTER.lon,RADAR_CENTER.lat,w,h),radii=[70,140,210];ctx.save();ctx.lineWidth=1;
+    radii.forEach((km,i)=>{ctx.beginPath();for(let d=0;d<=360;d+=4){const pp=radarPoint(rad(d),km),xy=mapPoint(pp[0],pp[1],w,h);if(d===0)ctx.moveTo(xy[0],xy[1]);else ctx.lineTo(xy[0],xy[1]);}ctx.closePath();ctx.strokeStyle='rgba(66,236,214,'+(i===2?.23:.34)+')';ctx.setLineDash(i===1?[4,5]:[]);ctx.stroke();});ctx.setLineDash([]);
+    const angle=(performance.now()/1500)%(Math.PI*2),range=220;ctx.beginPath();ctx.moveTo(center[0],center[1]);for(let d=0;d<=32;d++){const a=angle-d*.018,pp=radarPoint(a,range),xy=mapPoint(pp[0],pp[1],w,h);ctx.lineTo(xy[0],xy[1]);}ctx.closePath();ctx.fillStyle='rgba(41,226,211,.13)';ctx.fill();
+    const end=radarPoint(angle,range),endXY=mapPoint(end[0],end[1],w,h),grad=ctx.createLinearGradient(center[0],center[1],endXY[0],endXY[1]);grad.addColorStop(0,'rgba(60,240,219,.12)');grad.addColorStop(1,'rgba(93,255,218,.98)');ctx.strokeStyle=grad;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(center[0],center[1]);ctx.lineTo(endXY[0],endXY[1]);ctx.stroke();
+    ctx.fillStyle='#dcfff9';ctx.shadowColor='#37f2d8';ctx.shadowBlur=10;ctx.beginPath();ctx.arc(center[0],center[1],3.2,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.font='9px system-ui';ctx.fillStyle='#e9fffb';ctx.fillText('RADAR SWEEP · SIMULATED',center[0]+8,center[1]-9);ctx.restore();
+  }
+  function drawMapNodes(ctx,w,h){
+    if(!state.layers.nodes)return;state.nodes.forEach((n,i)=>{const p=mapPoint(n.lon,n.lat,w,h),c=n.status==='ONLINE'?'#8af3bf':n.status==='DEGRADED'?'#ffd37a':'#ff7777',pulse=.5+.5*Math.sin(performance.now()/550+i);ctx.save();ctx.strokeStyle=c;ctx.globalAlpha=.18+.25*pulse;ctx.beginPath();ctx.arc(p[0],p[1],7+4*pulse,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;ctx.fillStyle=c;ctx.shadowColor=c;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(p[0],p[1],3,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;if(state.mapZoom>=8){ctx.font='9px system-ui';ctx.fillStyle='#e8fbfa';ctx.fillText(n.id,p[0]+5,p[1]-5);}ctx.restore();});
+  }
+  function drawMapAircraft(ctx,w,h){
+    if(!state.layers.air)return;state.air.filter(pointInApproxBD).forEach(a=>{const p=mapPoint(a.lon,a.lat,w,h),unknown=!a.callsign||!a.reg||a.callsign==='Unknown',col=unknown?'#ffd37a':'#55ddff';ctx.save();ctx.translate(p[0],p[1]);ctx.rotate(rad(Number.isFinite(Number(a.track))?Number(a.track):0));ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=10;ctx.beginPath();ctx.moveTo(0,-7);ctx.lineTo(4.3,5);ctx.lineTo(0,3);ctx.lineTo(-4.3,5);ctx.closePath();ctx.fill();ctx.shadowBlur=0;ctx.restore();if(state.mapZoom>=7){ctx.font='9px system-ui';ctx.fillStyle='#f0fbff';ctx.fillText((unknown?'UNVERIFIED':a.callsign||a.hex||'AIRCRAFT').slice(0,12),p[0]+6,p[1]-6);}});
+  }
+  function renderOnlineMap(ctx,w,h){
+    const stats=drawOnlineTiles(ctx,w,h);state.mapTileReady=stats.loaded>0;
+    if(!stats.loaded){drawLegacyBorder(ctx,w,h);return;}
+    drawMapGrid(ctx,w,h);drawMapBoundary(ctx,w,h);drawMapRivers(ctx,w,h);drawMapRadar(ctx,w,h);drawMapNodes(ctx,w,h);drawMapAircraft(ctx,w,h);
+    ctx.save();ctx.fillStyle='rgba(4,17,22,.78)';ctx.fillRect(8,h-28,250,19);ctx.fillStyle='#eafff8';ctx.font='10px system-ui';ctx.fillText('BANGLADESH · ONLINE MAP · PUBLIC DATA',14,h-15);ctx.restore();
+  }
+  function renderBorder3D(){
+    const c=$('bdmBorder3D'),s=sizeCanvas(c);if(!s)return;const {ctx,w,h}=s;renderOnlineMap(ctx,w,h);
+  }
+  function animationTick(){renderBorder3D();requestAnimationFrame(animationTick);}
+  function startAnimation(){if(state.animationStarted)return;state.animationStarted=true;requestAnimationFrame(animationTick);}
   function renderAlert(){const e=$('bdmAlert');if(!e)return;if(!state.alert){e.className='bdm-alert ok';e.textContent='No unverified public-data track currently detected inside the approximate Bangladesh monitoring view.';return;}e.className='bdm-alert warn';e.innerHTML='<b>UNVERIFIED TRACK NOTICE</b> · '+esc(state.alert.count)+' public-data track(s) lack sufficient identity fields. This is not evidence of hostile activity; operator verification is required.';}
   function renderZoneList(){const box=$('bdmZoneList');if(!box)return;box.innerHTML=state.nodes.map(n=>'<div class="bdm-zone"><div><b>'+esc(n.id)+' · Virtual border gateway</b><span>Illustrative coverage node · not an actual operator tower location</span></div><em>'+esc(n.status)+' · '+n.coverage+' km</em></div>').join('');}
   function renderAll(){seedNodes();renderZoneList();renderBorder3D();setText('bdmNodeCount',String(state.nodes.length));setText('bdmNetworkHealth',nodeHealth());setText('bdmLastSync',state.lastSync?now():'--');}
@@ -127,6 +223,7 @@
     setText('bdmUnknownCount',String(unknown));
     setText('bdmLastSync',state.lastSync?state.lastSync.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'--');
     setText('bdmRadarAge',Number.isFinite(ageSeconds)?ageLabel(ageSeconds):'--');
+    setText('bdmRadarVisible',String(pts.length));setText('bdmRadarUnknown',String(unknown));
     state.alert=unknown?{level:'UNVERIFIED',count:unknown}:null;
     renderAlert();renderRadarTracks();
     setLive('bdmScannerLive',kind,pts.length&&kind==='ok'?'LIVE · PUBLIC ADS-B POSITIONS':label);
@@ -149,9 +246,32 @@
   }
   function bind(){window.addEventListener('igers:airtraffic',e=>handleAir(e.detail||[]));if(Array.isArray(window.__igersAirLastPayload))handleAir(window.__igersAirLastPayload);$('bdmRefresh')?.addEventListener('click',()=>refreshPublicAirFeed(true));$('bdmRadarRefresh')?.addEventListener('click',()=>refreshPublicAirFeed(true));$('bdmReset')?.addEventListener('click',()=>{state.alert=null;state.air=[];setLive('bdmRadarLive','warn','VERIFY · reset');setText('bdmFeedState','VERIFY');renderAlert();});$('bdmTestAlert')?.addEventListener('click',()=>{state.alert={level:'TEST',count:1};const e=$('bdmAlert');if(e){e.className='bdm-alert danger';e.textContent='TEST ALERT · simulated operator notification only. No real emergency action is triggered.';}setText('bdmAlertState','TEST');});$('bdmOperatorAck')?.addEventListener('click',()=>{setText('bdmAlertState','ACKNOWLEDGED · '+now());const e=$('bdmAlert');if(e){e.className='bdm-alert ok';e.textContent='Operator acknowledgement recorded locally. No automatic response is executed.';}});$('bdmMeshCycle')?.addEventListener('click',()=>{state.nodes.forEach((n,i)=>n.status=i%5===0?'DEGRADED':'ONLINE');renderZoneList();setText('bdmNetworkHealth',nodeHealth());setText('bdmMeshState','SIMULATION CYCLE · '+now());});}
   function syncMapLayerControls(){const map=[['bdmLayerOutline','outline'],['bdmLayerRivers','rivers'],['bdmLayerAir','air'],['bdmLayerNodes','nodes'],['bdmLayerRadar','radar']];map.forEach(([id,key])=>{const el=$(id);if(el)el.checked=!!state.layers[key];});const msg=$('bdmLayerSummary');if(msg)msg.textContent='Layers: '+map.filter(([,k])=>state.layers[k]).map(([,k])=>({outline:'boundary',rivers:'rivers',air:'public ADS-B',nodes:'virtual nodes',radar:'radar sweep'}[k])).join(' · ');}
-  function inspectBorderMarker(event){const c=$('bdmBorder3D');if(!c)return;const r=c.getBoundingClientRect(),x=event.clientX-r.left,y=event.clientY-r.top;let best=null,dist=Infinity;const consider=(px,py,data)=>{const d=Math.hypot(px-x,py-y);if(d<dist){dist=d;best=data;}};if(state.layers.nodes)state.nodes.forEach(n=>{const p=project(llTo3d(n.lon,n.lat,.2),r.width,r.height,1);consider(p[0],p[1],{type:'node',n});});if(state.layers.air)state.air.filter(pointInApproxBD).forEach(a=>{const p=project(llTo3d(Number(a.lon),Number(a.lat),.25),r.width,r.height,1);consider(p[0],p[1],{type:'air',a});});if(!best||dist>30)return;const out=$('bdmMapSelection');if(!out)return;if(best.type==='node'){const n=best.n;out.textContent='Selected '+n.id+' · virtual gateway simulation · '+n.status+' · approximate coordinate '+n.lat.toFixed(3)+', '+n.lon.toFixed(3)+'. Not a physical sensor or tower.';}else{const a=best.a;out.textContent='Public ADS-B observation '+(a.callsign||a.hex||'UNIDENTIFIED')+' · '+a.lat.toFixed(4)+', '+a.lon.toFixed(4)+' · altitude '+(Number.isFinite(a.alt)?Math.round(a.alt)+' ft':'n/a')+' · observed '+(Number.isFinite(a.seen)?Math.round(a.seen)+' s ago':'age n/a')+'. Public data only; not evidence of hostile activity.';}}
-  function bindMapControls(){const c=$('bdmBorder3D');const btn=(id,fn)=>$(id)?.addEventListener('click',fn);btn('bdmZoomIn',()=>{state.zoom=clamp(state.zoom+.15,.7,1.9);});btn('bdmZoomOut',()=>{state.zoom=clamp(state.zoom-.15,.7,1.9);});btn('bdmResetView',()=>{state.zoom=1;state.rotation=.18;const out=$('bdmMapSelection');if(out)out.textContent='View reset · select a highlighted virtual node or public-data marker for details.';});btn('bdmFullscreen',()=>{const box=c?.closest('.bdm-canvas');if(box?.requestFullscreen)box.requestFullscreen().catch(()=>{});});[['bdmLayerOutline','outline'],['bdmLayerRivers','rivers'],['bdmLayerAir','air'],['bdmLayerNodes','nodes'],['bdmLayerRadar','radar']].forEach(([id,key])=>$(id)?.addEventListener('change',e=>{state.layers[key]=!!e.target.checked;syncMapLayerControls();}));c?.addEventListener('click',inspectBorderMarker);syncMapLayerControls();}
-  function init(){if(!$('bdmBorder3D'))return;bind();bindMapControls();seedNodes();renderZoneList();setText('bdmNodeCount',String(state.nodes.length));setText('bdmNetworkHealth',nodeHealth());loadBoundary();refreshPublicAirFeed();renderRadarScanner();setInterval(refreshPublicAirFeed,60000);setInterval(()=>{const online=navigator.onLine;setLive('bdmNetLive',online?'ok':'offline',online?'ONLINE · browser network':'OFFLINE · browser network');},5000);setLive('bdmNetLive',navigator.onLine?'ok':'offline',navigator.onLine?'ONLINE · browser network':'OFFLINE · browser network');}
+  function inspectBorderMarker(event){
+    const c=$('bdmBorder3D');if(!c||Date.now()<state.suppressClickUntil)return;const r=c.getBoundingClientRect(),x=event.clientX-r.left,y=event.clientY-r.top;let best=null,dist=Infinity;
+    const consider=(px,py,data)=>{const d=Math.hypot(px-x,py-y);if(d<dist){dist=d;best=data;}};
+    const projectForView=(lon,lat,z)=>state.mapTileReady?mapPoint(lon,lat,r.width,r.height):project(llTo3d(lon,lat,z),r.width,r.height,1);
+    if(state.layers.nodes)state.nodes.forEach(n=>{const p=projectForView(n.lon,n.lat,.2);consider(p[0],p[1],{type:'node',n});});
+    if(state.layers.air)state.air.filter(pointInApproxBD).forEach(a=>{const p=projectForView(Number(a.lon),Number(a.lat),.25);consider(p[0],p[1],{type:'air',a});});
+    if(!best||dist>34)return;const out=$('bdmMapSelection');if(!out)return;
+    if(best.type==='node'){const n=best.n;out.textContent='Selected '+n.id+' · virtual gateway simulation · '+n.status+' · approximate coordinate '+n.lat.toFixed(3)+', '+n.lon.toFixed(3)+'. Not a physical sensor or tower.';}
+    else{const a=best.a;out.textContent='Public ADS-B observation '+(a.callsign||a.hex||'UNIDENTIFIED')+' · '+a.lat.toFixed(4)+', '+a.lon.toFixed(4)+' · altitude '+(Number.isFinite(a.alt)?Math.round(a.alt)+' ft':'n/a')+' · observed '+(Number.isFinite(a.seen)?Math.round(a.seen)+' s ago':'age n/a')+'. Public data only; not evidence of hostile activity.';}
+  }
+  function bindMapControls(){
+    const c=$('bdmBorder3D'),btn=(id,fn)=>$(id)?.addEventListener('click',fn);
+    btn('bdmZoomIn',()=>{state.zoom=clamp(state.zoom+.15,.7,1.9);state.mapZoom=clampMapZoom(state.mapZoom+1);});
+    btn('bdmZoomOut',()=>{state.zoom=clamp(state.zoom-.15,.7,1.9);state.mapZoom=clampMapZoom(state.mapZoom-1);});
+    btn('bdmResetView',()=>{state.zoom=1;state.rotation=.18;state.mapZoom=7;state.mapCenter={lat:23.8103,lon:90.4125};const out=$('bdmMapSelection');if(out)out.textContent='View reset · Bangladesh centered · select a public-data or virtual marker for details.';});
+    btn('bdmFullscreen',()=>{const box=c?.closest('.bdm-canvas');if(box?.requestFullscreen)box.requestFullscreen().catch(()=>{});});
+    [['bdmLayerOutline','outline'],['bdmLayerRivers','rivers'],['bdmLayerAir','air'],['bdmLayerNodes','nodes'],['bdmLayerRadar','radar']].forEach(([id,key])=>$(id)?.addEventListener('change',e=>{state.layers[key]=!!e.target.checked;syncMapLayerControls();}));
+    c?.addEventListener('click',inspectBorderMarker);
+    c?.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;const center=lonLatToWorld(state.mapCenter.lon,state.mapCenter.lat,state.mapZoom);state.drag={x:e.clientX,y:e.clientY,center,moved:false};try{c.setPointerCapture(e.pointerId);}catch(_){}});
+    c?.addEventListener('pointermove',e=>{if(!state.drag)return;const dx=e.clientX-state.drag.x,dy=e.clientY-state.drag.y;if(Math.abs(dx)+Math.abs(dy)>5)state.drag.moved=true;if(state.drag.moved){const next=worldToLonLat(state.drag.center[0]-dx,state.drag.center[1]-dy,state.mapZoom);state.mapCenter=next;if(e.cancelable)e.preventDefault();}});
+    const endDrag=e=>{if(!state.drag)return;if(state.drag.moved)state.suppressClickUntil=Date.now()+350;state.drag=null;try{if(c.hasPointerCapture(e.pointerId))c.releasePointerCapture(e.pointerId);}catch(_){}};
+    c?.addEventListener('pointerup',endDrag);c?.addEventListener('pointercancel',endDrag);
+    c?.addEventListener('wheel',e=>{if(e.cancelable)e.preventDefault();state.mapZoom=clampMapZoom(state.mapZoom+(e.deltaY<0?1:-1));},{passive:false});
+    syncMapLayerControls();
+  }
+  function init(){if(!$('bdmBorder3D'))return;bind();bindMapControls();seedNodes();renderZoneList();setText('bdmNodeCount',String(state.nodes.length));setText('bdmNetworkHealth',nodeHealth());setBasemapStatus('ONLINE MAP · LOADING TILES','warn');loadBoundary();refreshPublicAirFeed();renderRadarScanner();renderBorder3D();startAnimation();setInterval(refreshPublicAirFeed,60000);setInterval(()=>{const online=navigator.onLine;setLive('bdmNetLive',online?'ok':'offline',online?'ONLINE · browser network':'OFFLINE · browser network');},5000);setLive('bdmNetLive',navigator.onLine?'ok':'offline',navigator.onLine?'ONLINE · browser network':'OFFLINE · browser network');}
   window.IGERSBorderMonitor={state,loadBoundary,renderBorder3D};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

@@ -62,3 +62,54 @@ Direct request attempts to geoBoundaries, Airplanes.live and NASA GIBS failed at
 - Local HTTP smoke test: root page, service worker, versioned manifest/CSS/JS URLs, GeoJSON fallback and both PNG icons returned HTTP 200.
 - Final archive will retain all 80 original files and stay within the 98-file limit; no original path is intentionally removed.
 - Browser rendering/interaction screenshot: BLOCKED/UNVERIFIED. Chromium timed out in this workspace before the screenshot was produced. Live third-party provider availability is also not guaranteed by static tests.
+
+## 2026-10-09 · Border Online Map + Radar Sweep Update
+
+### Delivered changes
+
+- Reworked the existing `3D BORDER SURVEILLANCE & EARLY-WARNING PANEL` canvas to draw a real interactive OpenStreetMap raster basemap when visible tiles are available.
+- Plots the bundled Bangladesh ADM0 GeoJSON outline on top of the basemap; the existing boundary source refresh still runs and the bundled outline remains the fallback.
+- Added map pan (drag/touch), wheel zoom, Zoom +/- buttons, Reset view, and Fullscreen behavior without replacing existing control IDs.
+- Preserved the public ADS-B overlay and the illustrative virtual gateway layer; existing marker inspection and layer toggles now work in map coordinates when tiles are loaded.
+- Added an animated geographic radar-style sweep and range rings. The sweep is explicitly labeled **SIMULATED** and is not a real radar or sensor feed.
+- Added visible OpenStreetMap and geoBoundaries attribution, current viewport tile status, bounded retry (maximum two retries per failed tile), a configurable `window.IGERS_MAP_TILE_URL` template, and a local canvas fallback when the map tile provider is unavailable.
+- Fixed a performance issue in the existing border renderer by keeping one animation loop rather than spawning extra loops after repeated boundary refreshes.
+- Bumped the service-worker revision to `igers-2026-10-09-border-online-map-01` so GitHub Pages deployments can advertise the new app version to existing clients.
+
+### Validation performed
+
+- `node --check`: 41 JavaScript/MJS files passed.
+- Inline script syntax: 13 scripts passed; the inline border-monitor program exactly matches `border-monitor.js`.
+- HTML IDs: 418 IDs, no duplicates.
+- Local HTML references: 57 checked, no missing references.
+- CSS parser: 19 inline/external stylesheets, no top-level parse errors.
+- JSON/manifest and bundled GeoJSON parsing passed; bundled GeoJSON contains 93 features.
+- Python compilation: 4 files passed; air-traffic relay self-test passed.
+- `npm run build` passed via the repository's static fallback build (Vite dependencies are not installed in this build environment).
+- Local HTTP smoke test returned HTTP 200 for `/index.html`, `/sw.js`, `/data/bangladesh-boundary-fallback.geojson`, and `/border-monitor.js`.
+
+### Remaining verification limitation
+
+This environment could not resolve external internet hosts, and browser-based rendering did not complete. Therefore the OpenStreetMap tile endpoint and public ADS-B provider were not verified from this session. The app reports tile/provider errors and falls back to the bundled geographic visualization if online services are unreachable. The map tiles remain an external best-effort service, not an offline map pack.
+
+
+## Runtime audit follow-up (2026-10-09)
+
+- Fixed the border panel's Last Sync display so boundary-map refreshes cannot rewrite the actual last aircraft-feed sync time.
+- Added per-track observed-age text and an explicit `STALE OBS` label for public ADS-B observations older than 60 seconds.
+- Bumped the service-worker revision so deployed clients can detect this update.
+- Static validation: JavaScript and inline script syntax, CSS parsing, duplicate HTML IDs, local asset references, JSON/GeoJSON parsing, Python compilation, ADS-B relay self-test, build fallback, ZIP integrity and local HTTP endpoints.
+- Browser limitation: headless Chromium could not open local HTTP URLs because the workspace browser policy returned `ERR_BLOCKED_BY_ADMINISTRATOR`; an interactive browser rendering test could not be completed.
+
+### Final local verification results
+
+- `npm run build`: **PASS** using the offline static build path (Vite is not installed in this workspace, so the Vite-specific branch was not executed).
+- JavaScript/MJS syntax check: **PASS** for all checked `.js` and `.mjs` source files; all 13 inline scripts in `index.html` also pass Node syntax checks.
+- CSS parser: **PASS** for 4 `.css` files and 15 inline style blocks.
+- HTML IDs: **418 unique, 0 duplicates**. Local references: no missing referenced assets detected.
+- JSON/manifest and GeoJSON: **PASS**; bundled GeoJSON has 93 features and valid parsed geometry.
+- Python files: **4 compile successfully**. Air-traffic relay self-test: **PASS**. The file does not expose `unittest` cases, so unittest reported no tests.
+- Border track-renderer unit harness: **PASS** for fresh observed age, stale observation label, and unknown/missing age.
+- Local HTTP checks: all critical paths tested (index, border monitor script, CSS, bundled GeoJSON, manifest, service worker and PWA icon) returned **HTTP 200**.
+- ZIP integrity and root `index.html`: **PASS**; final archive is kept under the 98-file limit.
+- Browser rendering: **BLOCKED by the workspace browser policy** (`ERR_BLOCKED_BY_ADMINISTRATOR` for localhost/127.0.0.1). No visual screenshot or full interactive browser result is claimed.
