@@ -63,3 +63,43 @@ Chromium headless attempts timed out before producing a screenshot, so full brow
 5. Open the existing Pages URL and hard-refresh (`Ctrl+F5`) once after deployment.
 
 The ZIP is a website source/deployment package, not an Android APK.
+
+
+## Thesis 3D Concept Lab update (2026-10-09)
+
+Added an interactive, local SVG-based concept visualizer inside the existing `#concept` section with four isometric scenes: integrated source-to-storage architecture, roadway/kinetic recovery, controlled hydraulic recovery, and solar/airflow support. It preserves the existing IGERS `#concept` and `#concept3d` IDs and calculators. Each scene is explicitly marked as conceptual, not to scale, and not proof of measured output. Added responsive styling, accessible scene selectors, a conceptual energy-flow chain, and a service-worker revision bump.
+
+## Final thesis visual package verification (2026-10-09)
+
+- Added 4 local, original SVG concept illustrations: integrated IGERS architecture, road/kinetic recovery, controlled hydraulic recovery, and solar/airflow support.
+- Added `thesis-concept-lab.css` and `thesis-concept-lab.js`; the gallery is embedded inside the existing `#concept` section and uses accessible scene buttons plus keyboard arrow navigation.
+- Existing section IDs and existing calculator `#concept3d` remain intact. No remote image source or additional runtime library is required.
+- The illustrations are conceptual, not to scale, and do not imply measured performance, verified deployment or guaranteed recovery yield.
+- Checks: 571 unique HTML IDs; no duplicate IDs, broken internal anchors or missing local references; 13 inline scripts syntax checked; 46 JS/MJS files parsed; 7 CSS files parsed; JSON/manifest/GeoJSON parsed; 4 SVGs parsed and rendered for visual review; concept gallery interaction checks 7/7 passed; production static build succeeded; local HTTP smoke test 18/18 routes returned HTTP 200.
+- Full in-browser visual/interaction testing of the entire application was not available in this workspace. External live data provider availability was not verified by this package check.
+
+---
+
+## Follow-up bug-fix audit · 9 October 2026
+
+### Confirmed fix
+- Corrected malformed markup in the Weather section: an extra closing `div` had closed the responsive wrapper before the weather cards. The Weather digital stage and the detailed weather cards now remain inside the same `.wrap` container.
+- Bumped the Thesis Concept Lab CSS/JS query versions and service-worker revision from `thesis3d-v1` to `thesis3d-v2` so deployed clients can detect the updated release.
+
+### Validation performed
+- Production static build via `npm run build`: passed (offline static fallback mode; Vite dependencies were not installed in this environment).
+- JavaScript/MJS syntax: 46 files passed; service-worker syntax passed.
+- Inline JavaScript syntax: 13 scripts passed.
+- HTML parsing: 0 parser errors after the Weather wrapper correction.
+- HTML IDs and internal anchors: 571 IDs, no duplicate IDs; 41 internal anchors, no missing targets.
+- Local HTML asset references: no missing files.
+- CSS parsing: 7 stylesheets, no parser errors.
+- JSON, SVG and GeoJSON parsing: passed; Bangladesh fallback GeoJSON contains 93 features with no coordinate-range issues.
+- Python compilation: 4 scripts passed.
+- Concept Lab mock-runtime test: 15 assertions passed (default scene, four scene selections, ARIA selection, keyboard navigation, local image load/error states and initialization guard).
+- Local HTTP smoke test: 18/18 main routes returned HTTP 200, including all four thesis SVGs, CSS/JS, service worker, manifest, Bangladesh fallback GeoJSON, PWA icons and runway assets.
+
+### Limitations
+- Chromium screenshot/navigation timed out in this environment, so full visual browser testing was not confirmed.
+- External live-data providers were not exhaustively tested; their availability depends on network/provider status.
+- Final GitHub Pages publication has not been performed from this environment.
