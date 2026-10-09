@@ -2,7 +2,7 @@
  * Keep this file intentionally network-light: no stale application cache is kept.
  * Bump REVISION whenever shipping an application update.
  */
-const REVISION = 'igers-2026-10-09-full-panel-audit-03';
+const REVISION = 'igers-2026-10-09-powersuite12-v3';
 self.addEventListener('install', event => {
   event.waitUntil(self.skipWaiting());
 });
