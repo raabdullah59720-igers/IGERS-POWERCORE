@@ -103,3 +103,65 @@ Added an interactive, local SVG-based concept visualizer inside the existing `#c
 - Chromium screenshot/navigation timed out in this environment, so full visual browser testing was not confirmed.
 - External live-data providers were not exhaustively tested; their availability depends on network/provider status.
 - Final GitHub Pages publication has not been performed from this environment.
+
+## Thesis Concept Lab live-style visual layer update (2026-10-09, v3)
+
+- Added an animated canvas overlay on the four local isometric thesis illustrations. It draws scene-specific conceptual energy-flow paths, glowing particles/nodes and a subtle scan band. The overlay is explicitly labelled as a live concept simulation; it does not claim live sensor telemetry or measured kW output.
+- Added simulation controls: Play/Pause, Reset, 0.5x/1x/1.5x/2x speed, a simulation clock, active conceptual stage, and selected animation rate. Scene switching resets the simulation cycle and maintains accessible `aria-pressed` states.
+- Added subtle pointer-driven perspective tilt for fine-pointer devices, reduced-motion handling, pause while the document is hidden, and automatic resume when returning to the tab. If Canvas is unavailable, the static conceptual illustration remains and the control is disabled with a status explanation.
+- Retained all four local SVG scenes and the existing Thesis Concept Lab, calculator panels, and original navigation identifiers. No external image API or new runtime dependency was added.
+- Cache/update revision bumped to `igers-2026-10-09-thesis3d-v3`; concept CSS/JS URL query strings now use `thesis3d-v3`.
+
+### Validation
+- JavaScript/MJS syntax: 46 files passed; inline scripts: 13 passed.
+- HTML parsing: 0 parser errors; 582 IDs with no duplicates; 41 internal links with no missing targets; no missing local assets.
+- CSS: 7 stylesheets parsed without syntax/declaration errors; JSON, GeoJSON and SVG XML parsed.
+- Concept simulation mocked-runtime checks: 14/14 passed, including scene switches, ARIA state, pause, reset, speed, resume, hidden-tab pause/resume and keyboard navigation.
+- Production static build: `npm run build` passed; the built output contains the new Concept Lab files and matching v3 cache revision.
+- Local HTTP smoke test: 19/19 routes returned HTTP 200, including all four SVGs, Concept Lab CSS/JS, service worker, manifest, Bangladesh GeoJSON, PWA icons, command center assets, and runway simulator assets.
+- Source package remains 96 files, below the 98-file limit. Temporary `dist/` build output is excluded from the GitHub upload ZIP.
+
+### Limitations
+- This is a live-style 2.5D animated visualization layered over isometric conceptual illustrations, not a physical 3D engineering solver. Movement represents illustrative flow only, not measured energy or real sensor events.
+- Browser screenshot/visual test of the entire app could not be completed in this environment, and public external providers were not independently verified live.
+
+## Thesis Concept Lab animated 3D-style live visualization (v3 final verification)
+
+- Added a scene-synchronized Canvas overlay on top of each isometric concept SVG: animated dotted energy routes, glowing moving particles, pulsing junction nodes, and a subtle scanning band.
+- Added subtle pointer-based perspective tilt on fine-pointer devices. Reduced-motion preference starts the lab paused; the user can explicitly resume it. Animation pauses when the tab becomes hidden and resumes when visible again.
+- Added accessible Play/Pause, Reset, 0.5x/1x/1.5x/2x speed selection, simulation clock, active conceptual stage, and animation-rate readout. `aria-pressed`, keyboard scene navigation, and a screen-reader announcement region are wired.
+- Scene-specific paths were visually aligned against the integrated, roadway, hydraulic and solar SVG preview renders. Fixed the explicit `[hidden]` image-fallback styling so an unavailable scene illustration can actually be hidden while the status explains why.
+- Labels clearly say `LIVE CONCEPT SIMULATION`, `Illustrative animated paths · no sensor telemetry`, and `CONCEPT ONLY`; no fabricated energy output or sensor data is generated.
+- `thesis-concept-lab.css` and `thesis-concept-lab.js` query revisions are `thesis3d-v3`; service-worker revision is `igers-2026-10-09-thesis3d-v3`.
+
+### Final verification for this update
+- `npm run build`: passed using the repository's offline-safe static build fallback.
+- JavaScript/MJS syntax: 46 files passed; inline JavaScript: 13 scripts passed.
+- HTML: 0 parser errors; 582 unique IDs, no duplicate IDs; 41 internal links, no missing targets; no missing local assets.
+- CSS: 7 stylesheets parsed without errors. JSON/GeoJSON and all SVG XML assets parsed.
+- Concept gallery mocked-runtime checks: 14/14 passed (four scene switches, pause/resume, reset, speed, hidden-tab handling, keyboard navigation and ARIA selected state).
+- Local HTTP smoke test: 19/19 required routes returned HTTP 200.
+- Original project paths are preserved; source package remains 96 actual files and below the 98-file GitHub limit. Temporary `dist/` output is excluded from the upload ZIP.
+
+### Limitations
+- This is a layered isometric/2.5D animated illustration, not a physical 3D engineering solver or real sensor telemetry. The moving particles show conceptual pathways only.
+- Full in-browser rendering of the entire app and external live provider connectivity could not be independently verified in this environment.
+
+
+## Latest thesis visuals addition
+- Added the user-supplied sluice-gate and roadway energy-harvester images to Concept Lab as two selectable scenes.
+- Added animated canvas energy-path overlays and a clearly labelled simulated storage meter (not measured battery telemetry).
+- Preserved all prior project paths; two JPG assets are the only added files.
+- Service-worker revision bumped to v4 for update detection.
+- The image simulations are conceptual, not validated mechanical/electrical designs or sensor data.
+
+## User-supplied hydraulic and roadway concept visuals (v4)
+- Added `thesis-concept-sluice-gate.jpg` and `thesis-concept-road-harvester.jpg` as selectable Concept Lab scenes.
+- The six scene options are integrated ecosystem, road SVG concept, hydraulic SVG concept, solar/airflow SVG concept, supplied sluice-gate visual, and supplied road energy-harvester visual.
+- Canvas overlays animate illustrative flow / vehicle-associated recovery paths over both supplied images. The overlay runs locally and does not require new libraries or external image services.
+- Added a deterministic simulated storage-state indicator, explicitly labelled `SIMULATED · NOT MEASURED`; it is not battery telemetry or a measured charging profile. The 185W label present in the supplied road image remains part of that image and is not reported by the application as a live value.
+- Preserved the six scene choices, accessible selected state, Play/Pause, Reset, speed control, reduced-motion behavior, and hidden-tab animation pause/resume.
+- Fixed image-scene canvas resizing immediately after a scene switch; this prevents the previous scene's canvas dimensions from being temporarily reused when the supplied photos have different aspect ratios.
+- Bumped Concept Lab asset query strings and service-worker revision to v4.
+- Validation: 98 source files (the 96 baseline files retained plus 2 supplied image assets), 585 HTML IDs with no duplicates, no missing same-page anchors or local assets, 46 JS/MJS files parsed, 13 inline scripts parsed, 7 CSS files parsed, 4 Python files parsed, JSON/manifest/GeoJSON/SVG parsed, 30 Concept Lab runtime mock assertions passed, static build passed, 19/19 local HTTP routes returned 200, and ZIP integrity passed.
+- Browser visual automation was not available for full application-wide testing in this workspace; public feeds are not represented as measured energy telemetry in these concept scenes.
