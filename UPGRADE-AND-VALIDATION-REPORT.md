@@ -113,3 +113,59 @@ This environment could not resolve external internet hosts, and browser-based re
 - Local HTTP checks: all critical paths tested (index, border monitor script, CSS, bundled GeoJSON, manifest, service worker and PWA icon) returned **HTTP 200**.
 - ZIP integrity and root `index.html`: **PASS**; final archive is kept under the 98-file limit.
 - Browser rendering: **BLOCKED by the workspace browser policy** (`ERR_BLOCKED_BY_ADMINISTRATOR` for localhost/127.0.0.1). No visual screenshot or full interactive browser result is claimed.
+
+
+## 2026-10-09 · Bangladesh Airport / Runway Simulation Update
+
+### Delivered changes
+
+- Added an isolated airport-network and runway-simulation module to the existing `LIVE AIR TRAFFIC · 3D FLIGHT MONITOR` panel. Existing traffic globe, flight list, filters, zoom/fullscreen/refresh controls, other panels and admin modules are retained.
+- Added 16 listed Bangladesh airport/aerodrome site markers, classed as service-listed, limited/status-to-verify, or planned. Eight sites have a sourced runway reference; the remaining runways are intentionally schematic rather than invented. One proposed Bagerhat site marker is approximate.
+- Added an interactive Bangladesh airport network plot, selectable departure/arrival for a clearly labelled simulated airport-to-airport route, route pause/resume/reset, and airport selection.
+- Added animated runway taxi, landing and takeoff modes, direction reversal, pause/resume, runway references and source/reliability information. The runway drawing is schematic and not to scale.
+- Passed through origin/destination fields only when supplied by the public aircraft provider. Where not supplied, the live list explicitly reports that the public ADS-B response does not include a route. Nearest-airport distance is clearly labelled as proximity, not route origin. Simulated route is kept separate from real public-feed observations.
+- Added `airport-runway-sim.css` and `airport-runway-sim.js` as new isolated assets and bumped service-worker revision to `igers-2026-10-09-airport-runway-sim-01`.
+
+### Data notes
+
+- Runway references for Dhaka, Sylhet, Rajshahi, Jashore, Barishal and Cox's Bazar use CAAB AIP/AIP supplement references; Chattogram and Saidpur also use public airport/runway data where indicated in the module. Limited, unavailable, STOL or proposed sites do not receive fabricated runway dimensions.
+- This is an educational/engineering visualization, not flight dispatch, air-traffic control, or operational runway guidance. The actual live feed may not expose origin/destination, and the panel will not infer it.
+
+### Final validation snapshot · airport simulation package
+
+- `npm run build`: PASS via the static-first build script; `dist/` contains the new airport simulator JS/CSS, service worker, manifest and Bangladesh boundary GeoJSON.
+- JavaScript / MJS syntax: PASS for all project files; non-empty inline JavaScript blocks in `index.html` parse.
+- CSS: all 5 active `.css` files parse without errors.
+- HTML: 442 IDs, no duplicate IDs; all 20 direct element-ID references in the airport module match the HTML; 10 local source/link references checked, none missing.
+- JSON / manifest / GeoJSON: 4 files parsed successfully.
+- Node VM DOM/canvas mock: PASS for initialization, all 16 airport/aerodrome entries, selecting an airport, simulated route labeling, rendering provider-supplied origin/destination, not guessing missing routes, and displaying observation age.
+- Local HTTP smoke test: 8/8 routes returned HTTP 200 (root HTML, airport CSS/JS, service worker, manifest, Bangladesh fallback GeoJSON and both PWA icons).
+- Baseline comparison: all 80 original ZIP paths retained; two new airport simulator files added. Final root package count is 82 files, below the 98-file ceiling.
+- Browser screenshot / full interaction testing was not available in this execution environment. The Node VM harness validates logic paths but is not a substitute for deployed-browser rendering. Public ADS-B providers may omit route origin/destination fields; when missing the panel reports that limitation instead of inferring a route. Runway and demo route animation are explicitly schematic simulations.
+
+## 2026-10-09 · Final runtime bug-check pass (airport/runway panel)
+
+### Fixes applied
+
+- Stopped the airport network canvas from scheduling a continuous animation frame while the route animation is paused; resume restarts a single route loop.
+- Hardened public ADS-B record validation: null, blank, non-finite, and out-of-range latitude/longitude values are excluded rather than accidentally treated as coordinates such as 0,0.
+- Fixed observation-age display so missing/null age is shown as `Age n/a` instead of incorrectly appearing as `0 s old`.
+- Fixed runway Pause/Resume so the simulation clock freezes while paused and resumes from the frozen frame rather than jumping forward in time.
+- Bumped the airport JavaScript/CSS query version and service-worker revision to `airports02` / `airport-runway-sim-02` so deployed clients can discover the fix.
+
+### Final validation results
+
+- `npm run build`: **PASS**, using the project's offline-safe static production build path; the generated `dist/` contains `index.html`, airport simulator JS/CSS, service worker, manifest, bundled Bangladesh GeoJSON and both PWA icons.
+- JavaScript/MJS: **42 files passed** `node --check`.
+- Inline JavaScript: **13 scripts passed** syntax checking.
+- CSS: **5 files passed** brace/syntax-structure checks.
+- HTML: **442 IDs, zero duplicates**; 10 local relative references checked, none missing.
+- JSON / manifest / GeoJSON: **4 files parsed**; Bangladesh fallback GeoJSON contains **93 features**.
+- Python: **4 files parsed/compiled**; `python test_airtraffic_relay.py` self-test passed.
+- Airport runtime mock harness: **14 assertions passed**, including the 16 listed sites, airport selection, simulated-route labeling, pause/resume loop count, frozen runway state, invalid coordinate filtering, provided route display, missing route fallback, and unknown observation age.
+- Local HTTP smoke test: **12/12 routes returned HTTP 200**, including `index.html`, versioned airport JS/CSS, `sw.js`, manifest, GeoJSON, PWA icons, admin script and legal pages.
+- Final package: **82 files**, root `index.html`, ZIP integrity passed; all 82 baseline paths retained and only `index.html`, `airport-runway-sim.js`, `sw.js`, and this report changed.
+
+### Runtime verification limitation
+
+- A real Chromium page-render/interaction test could not be completed because the workspace browser policy blocks local-site navigation (`ERR_BLOCKED_BY_ADMINISTRATOR`). The canvas/UI behavior was instead tested through a Node VM mock harness and the app was served locally for HTTP checks. Public ADS-B provider availability was not verified; live provider behavior remains dependent on external connectivity and returned fields.
