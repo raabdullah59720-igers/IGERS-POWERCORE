@@ -1,0 +1,2347 @@
+# IGERS POWERCORE — Original Documentation Compendium
+
+This compendium preserves the full text of all Markdown documents that were consolidated to keep the GitHub upload below the 100-file limit. The source filename and SHA-256 are recorded for every document. Original Markdown is placed in fenced blocks so that its headings, links, code samples, and formatting are preserved as source text.
+
+## Document index
+
+- [ADMIN-MODULE-CONTROL-QA-2026-10-06.md](#doc-admin-module-control-qa-2026-10-06-md)
+- [ADVANCED-LIVE-SUITE-README.md](#doc-advanced-live-suite-readme-md)
+- [AIRSPACE-EARLY-WARNING-ADMIN-HARDENING-2026-10-06.md](#doc-airspace-early-warning-admin-hardening-2026-10-06-md)
+- [AIRSPACE-EARLY-WARNING-README.md](#doc-airspace-early-warning-readme-md)
+- [AUDIT_2026-09-13-COMMENTS-CARE.md](#doc-audit-2026-09-13-comments-care-md)
+- [AUDIT_FINAL_2026-09-13.md](#doc-audit-final-2026-09-13-md)
+- [BANGLADESH-AIR-TRAFFIC-3D-PRO-QA-2026-10-08.md](#doc-bangladesh-air-traffic-3d-pro-qa-2026-10-08-md)
+- [BANGLADESH-AIR-TRAFFIC-3D-QA-2026-10-08.md](#doc-bangladesh-air-traffic-3d-qa-2026-10-08-md)
+- [BD-SATELLITE-MONITOR-README.md](#doc-bd-satellite-monitor-readme-md)
+- [BORDER-COMMAND-MONITOR-2026-10-05.md](#doc-border-command-monitor-2026-10-05-md)
+- [BORDER-MONITOR-QA-2026-10-06.md](#doc-border-monitor-qa-2026-10-06-md)
+- [BORDER-MONITOR-README.md](#doc-border-monitor-readme-md)
+- [BORDER-ZONE-3D-MONITOR-RELEASE-2026-10-05.md](#doc-border-zone-3d-monitor-release-2026-10-05-md)
+- [BUGFIX-REPORT-2026-10-03-FULL.md](#doc-bugfix-report-2026-10-03-full-md)
+- [BUGFIX-REPORT-2026-10-09-02.md](#doc-bugfix-report-2026-10-09-02-md)
+- [DEPLOY_DIRECT.md](#doc-deploy-direct-md)
+- [DEPLOY_VERCEL_NOW.md](#doc-deploy-vercel-now-md)
+- [ENERGY-TIME-WEATHER-COMBINED-UPDATE-INSTALL.md](#doc-energy-time-weather-combined-update-install-md)
+- [FINAL-AIR-TRAFFIC-QA-2026-10-08.md](#doc-final-air-traffic-qa-2026-10-08-md)
+- [FINAL-QA-REPORT-2026-10-06.md](#doc-final-qa-report-2026-10-06-md)
+- [GITHUB-FINAL-CHECK-2026-09-22.md](#doc-github-final-check-2026-09-22-md)
+- [GITHUB-PAGES-DEPLOYMENT-README.md](#doc-github-pages-deployment-readme-md)
+- [GITHUB-PAGES-DIRECT-DEPLOY.md](#doc-github-pages-direct-deploy-md)
+- [GITHUB-PAGES-FIXED-SETUP.md](#doc-github-pages-fixed-setup-md)
+- [GITHUB-PAGES-PRODUCTION-DEPLOY.md](#doc-github-pages-production-deploy-md)
+- [GITHUB-PAGES-README.md](#doc-github-pages-readme-md)
+- [HASH-LINK-FIX.md](#doc-hash-link-fix-md)
+- [INCognito-QA-REPORT.md](#doc-incognito-qa-report-md)
+- [IN_APP_LIVE_VISUAL_UPGRADE_2026-09-14.md](#doc-in-app-live-visual-upgrade-2026-09-14-md)
+- [LIVE-DATA-3D-FLOW-QA-2026-10-08.md](#doc-live-data-3d-flow-qa-2026-10-08-md)
+- [MAGAZINE-PANEL-RELEASE-2026-09-22.md](#doc-magazine-panel-release-2026-09-22-md)
+- [NASA_CONNECTION_UPGRADE_2026-09-14.md](#doc-nasa-connection-upgrade-2026-09-14-md)
+- [NEXTGEN_UPGRADE_2026-10-06.md](#doc-nextgen-upgrade-2026-10-06-md)
+- [OPS_UPGRADE_2026-09-14.md](#doc-ops-upgrade-2026-09-14-md)
+- [PANEL-DATA-RELIABILITY-PATCH-2026-10-09.md](#doc-panel-data-reliability-patch-2026-10-09-md)
+- [PWA-DANGER-FIX-INSTALL.md](#doc-pwa-danger-fix-install-md)
+- [QA-BORDER-COMMAND-CALC-2026-10-05.md](#doc-qa-border-command-calc-2026-10-05-md)
+- [QA-BORDER-MAP-CONTROL-FINAL-2026-10-05.md](#doc-qa-border-map-control-final-2026-10-05-md)
+- [QA-BORDER-MAP-CONTROL-FIX-2026-10-05.md](#doc-qa-border-map-control-fix-2026-10-05-md)
+- [QA-FINAL-DEEP-INTEGRATION-2026-09-14.md](#doc-qa-final-deep-integration-2026-09-14-md)
+- [QA-RELEASE-VERIFICATION-2026-09-14.md](#doc-qa-release-verification-2026-09-14-md)
+- [QA-REPORT-2026-10-06.md](#doc-qa-report-2026-10-06-md)
+- [QA-REPORT-NEXTGEN-2026-10-06.md](#doc-qa-report-nextgen-2026-10-06-md)
+- [QA-REPORT.md](#doc-qa-report-md)
+- [README-INSTALL.md](#doc-readme-install-md)
+- [README.md](#doc-readme-md)
+- [README.old.md](#doc-readme-old-md)
+- [README_BUGFIX_2026-09-13.md](#doc-readme-bugfix-2026-09-13-md)
+- [REGRESSION-QA-2026-10-08.md](#doc-regression-qa-2026-10-08-md)
+- [RUNTIME-QA-2026-10-06.md](#doc-runtime-qa-2026-10-06-md)
+- [SATELLITE_MODULE_AUDIT_2026-09-13.md](#doc-satellite-module-audit-2026-09-13-md)
+- [SATELLITE_WEATHER_RESTORE_2026-09-14.md](#doc-satellite-weather-restore-2026-09-14-md)
+- [TOLL-NATIONAL-QA-2026-10-08.md](#doc-toll-national-qa-2026-10-08-md)
+- [UI-VISUAL-DATA-UPGRADE-2026-10-06.md](#doc-ui-visual-data-upgrade-2026-10-06-md)
+- [UPGRADE-ONLY-RELEASE-2026-09-22.md](#doc-upgrade-only-release-2026-09-22-md)
+- [UPGRADE-REPORT-2026-10-03.md](#doc-upgrade-report-2026-10-03-md)
+- [UPGRADE-REPORT-2026-10-05-DEEP-3D-LIVE-BORDER.md](#doc-upgrade-report-2026-10-05-deep-3d-live-border-md)
+- [UPGRADE-REPORT-2026-10-05-DEEP-3D-LIVE.md](#doc-upgrade-report-2026-10-05-deep-3d-live-md)
+- [UPGRADE_AUDIT_2026-09-14.md](#doc-upgrade-audit-2026-09-14-md)
+- [UPGRADE_NOTES_2026-09-13.md](#doc-upgrade-notes-2026-09-13-md)
+- [UPGRADE_PRO_RELEASE_2026-09-22.md](#doc-upgrade-pro-release-2026-09-22-md)
+- [VOICEMAIL-FULL-APP-AUDIT-2026-09-15.md](#doc-voicemail-full-app-audit-2026-09-15-md)
+- [WEATHER-3D-DIGITAL-UPGRADE-2026-10-06.md](#doc-weather-3d-digital-upgrade-2026-10-06-md)
+
+---
+
+<a id="doc-admin-module-control-qa-2026-10-06-md"></a>
+## Original file: `ADMIN-MODULE-CONTROL-QA-2026-10-06.md`
+
+SHA-256: `ff84b53b4d5b07082140485e41b0c192410d7b59047266441c3a9c754669d4b7`
+
+````markdown
+# IGERS POWERCORE — ADMIN MODULE CONTROL QA — 2026-10-06
+
+## Added
+- Administrator-gated software module controls inside the Air/Ground/Maritime early-warning panel.
+- Local ON/OFF controls for Radar Scan, ADS-B feed, Satellite View, and Alert Engine.
+- Coverage visualization control, alert test, acknowledge, reset, and local-state dispose/clear.
+- 15-minute administrator inactivity auto-lock retained.
+- Service-worker cache bumped to v10.
+
+## Safety boundary
+These controls operate only the browser-side monitoring/visualization/data-state modules. They do not control weapons, interceptors, target assignment, fire-control, jamming, or remote military infrastructure. “Dispose local monitor state” clears browser-local state only.
+
+## QA
+- Inline JavaScript blocks: 13
+- Inline JS syntax errors: 0
+- Duplicate HTML IDs: 0
+- Required admin/module-control IDs: present
+- Existing panel files: preserved; upgrade is additive to index.html plus service-worker cache version.
+````
+
+---
+
+<a id="doc-advanced-live-suite-readme-md"></a>
+## Original file: `ADVANCED-LIVE-SUITE-README.md`
+
+SHA-256: `ddc595642816b6981604762b59133401e1404cf082b872162467ab41316a3920`
+
+````markdown
+# IGERS POWERCORE — Advanced Live 3D Monitoring Suite
+
+This package is an additive upgrade to the existing IGERS POWERCORE web app. Existing sections are preserved.
+
+## Added independent panels
+
+1. **3D Air Traffic Monitor** — uses the existing Airplanes.live public ADS-B feed bridge and adds a 3D globe with flight-detail cards.
+2. **Google 3D Map Layer** — optional, user-supplied Google Maps JavaScript API key; no key is bundled.
+3. **Universal Seismic / Plate Reference Monitor** — USGS global all-hour earthquake feed + PB2002 plate-boundary reference model; browser alert threshold is configurable.
+4. **3D Coastal / Marine Monitor** — public Open-Meteo marine model for selected Bangladesh coastal points, including sea level, waves, SST and ocean currents.
+5. **IGERS-BD-01 3D Concept Lab** — scenario calculator for kinetic, hydraulic, solar and battery calculations.
+6. **3D Mobile-Tower Resilience Mesh** — simulation-only network-node dashboard. It does not operate real telecom, satellite or defence equipment.
+7. **3D Salah / Qibla** — browser location, AlAdhan prayer-time service and geometric Qibla bearing; local browser alerts.
+8. **Emergency Center** — local administrator message, evacuation-direction cue and notification test. No remote emergency broadcast is implemented.
+
+## Public sources used
+
+- Airplanes.live API: https://airplanes.live/api-docs/
+- USGS earthquake feeds: https://earthquake.usgs.gov/earthquakes/feed/v1.0/
+- PB2002 tectonic boundary reference: https://github.com/fraxen/tectonicplates
+- Open-Meteo Marine API: https://open-meteo.com/en/docs/marine-weather-api
+- Google Maps 3D documentation: https://developers.google.com/maps/documentation/javascript/3d/get-started
+- AlAdhan Prayer Times API: https://aladhan.com/prayer-times-api
+- AlAdhan Qibla API: https://aladhan.com/qibla-api
+- EMSC / SeismicPortal reference: https://www.seismicportal.eu/fdsn-wsevent.html
+
+## Important data limitations
+
+- `LIVE` means the browser reached the public provider and received data.
+- `VERIFY` means the module is ready but provider data is not presently verified.
+- `OFFLINE` means the request failed; the UI does not fabricate values.
+- USGS/EMSC event feeds are not official earthquake early-warning signals.
+- Open-Meteo states that coastal sea-level/current model accuracy is limited and is not suitable for coastal navigation.
+- ADS-B is not primary radar and cannot guarantee complete aircraft visibility.
+- Google 3D requires an authorized API key and the required Google Maps API configuration.
+- All calculation outputs in the IGERS concept lab are scenario estimates until replaced by measured field data.
+
+## Static web deployment
+
+Upload all files in this package together to the same GitHub Pages directory. The application remains client-side except for direct browser calls to the named public providers.
+````
+
+---
+
+<a id="doc-airspace-early-warning-admin-hardening-2026-10-06-md"></a>
+## Original file: `AIRSPACE-EARLY-WARNING-ADMIN-HARDENING-2026-10-06.md`
+
+SHA-256: `7dddd9225d5f49a139dbf433f77b5fb71c64876eae7bec08bb149dc9caf43165`
+
+````markdown
+# IGERS POWERCORE — Air/Ground/Maritime Early-Warning Admin Hardening
+
+## What changed
+- Added a dedicated administrator unlock directly inside the 3D Air/Ground/Maritime early-warning panel.
+- Protected coverage-visualization, local alert-test, acknowledgement and reset controls.
+- Reuses the existing IGERS administrator verifier/session so existing administrator workflows are not replaced.
+- Added a local `Lock controls` action and 15-minute inactivity auto-lock for this panel.
+- Kept public/authorized data feeds read-only.
+- No weapon deployment, target assignment, fire-control, interceptor launch, jamming, or automatic use-of-force controls are included.
+- Bumped service-worker cache from v8 to v9 for GitHub Pages deployment refresh.
+
+## Security limitation
+This project is a static GitHub Pages frontend. A browser-side password gate can restrict UI controls, but it is not production-grade authentication because the page source is delivered to the browser. A real secure deployment should move authentication and sensitive data access to a server-side identity provider/backend and never embed secrets in client JavaScript.
+
+## Existing-feature policy
+This upgrade is additive. Existing weather, time, energy, air traffic, seismic, marine, Salah/Qibla, analytics, border monitoring, satellite/imagery and other panels remain in the package.
+````
+
+---
+
+<a id="doc-airspace-early-warning-readme-md"></a>
+## Original file: `AIRSPACE-EARLY-WARNING-README.md`
+
+SHA-256: `f5ae916fea56e52712cde4098dde3daeb0948a2c68eb3f14ab12e1e299939745`
+
+````markdown
+# IGERS POWERCORE — 3D Bangladesh Air / Ground / Maritime Early-Warning Panel
+
+Additive module for the existing IGERS POWERCORE GitHub Pages app.
+
+## Data layers
+- NASA Worldview / GIBS: public Earth-observation imagery viewer.
+- Airplanes.live: public ADS-B aircraft positions via the documented `/v2/point/{lat}/{lon}/{radius}` endpoint.
+- Bangladesh ADM0 fallback geometry: existing local GeoJSON bundled with the app.
+
+## Administrator access
+The new configuration controls reuse the existing IGERS Administrator Gate/session. The panel does not expose or duplicate a password in this module.
+
+## Safety / scope
+This is a read-only early-warning and visualization layer. Coverage rings are generic visualization controls only. The module does not implement weapon deployment, interceptor launch, target assignment, fire-control, jamming, or automatic use of force.
+
+## Public-source limitations
+Public satellite imagery and public ADS-B data are not equivalent to military radar, military satellite telemetry, or a government command network. The UI therefore reports LIVE/VERIFY/OFFLINE honestly and does not fabricate sensor values.
+````
+
+---
+
+<a id="doc-audit-2026-09-13-comments-care-md"></a>
+## Original file: `AUDIT_2026-09-13-COMMENTS-CARE.md`
+
+SHA-256: `5572850a759e8359a2f36c6c3bea33f3e7250a5cc4028e9f6e14d068939a4778`
+
+````markdown
+IGERS-BD-01 — Comments / Customer Care Developer Demo Audit
+Date: 13 September 2026
+
+Upgrade scope:
+- Added a premium, isolated visual layer for the Comments / Customer Care developer-demo module.
+- Visitor inputs remain limited to Email Address + Comment / Customer Care Message.
+- No name, phone number, location, account or extra profile fields are collected by this module.
+- Data remains local to the browser via localStorage; no email/API/remote submission is implemented.
+- Existing weather, live time, environment, earthquake notification, air-traffic, legal pages and other site systems were not modified by the feedback UI upgrade.
+
+Validation performed:
+- JavaScript syntax checks: PASS
+- Duplicate HTML id check: PASS
+- Local asset/reference check: PASS
+- Local HTTP smoke tests for main page, legal pages, service worker, live enhancer, icons and major image assets: PASS
+- Responsive CSS includes mobile breakpoints and prefers-reduced-motion handling.
+
+Note:
+The project includes legacy React/Vite source files that are not referenced by the static website entry point. This audit intentionally leaves that legacy source untouched to avoid altering the existing deployed runtime.
+````
+
+---
+
+<a id="doc-audit-final-2026-09-13-md"></a>
+## Original file: `AUDIT_FINAL_2026-09-13.md`
+
+SHA-256: `4906cd43f39912aa5268224da68baa55fc62dfced551bf993685e289c20284a5`
+
+````markdown
+IGERS-BD-01 — FINAL HIGH-EFFICIENCY RUNTIME / BUILD AUDIT
+Date: 2026-09-13
+
+Base: IGERS-POWERCORE-WEATHER-COMMENTS-CARE-NPM-BUILD-VERIFIED-2026-09-13.zip
+
+TESTS PASSED
+1. ZIP extraction: PASS
+2. npm run build: PASS (offline-safe production fallback generated dist/)
+3. Built output HTTP smoke test: PASS
+   /, /privacy.html, /terms.html, /copyright.html, core JS/CSS/assets -> HTTP 200
+4. Node syntax validation: PASS for build.mjs, server.mjs, upgrade.js, script.js, sw.js
+5. HTML ID uniqueness: PASS (85 IDs, 85 unique)
+6. Local asset reference audit: PASS for index.html, privacy.html, terms.html, copyright.html
+7. Comments/Customer Care feature presence: PASS
+8. Feedback storage isolation: PASS; uses localStorage key igersDeveloperFeedbackV1
+9. Feedback remote submission check: PASS; no feedback fetch/remote submission code detected
+10. Local server test: PASS using PORT=4187; main/legal/feedback stylesheet returned 200
+11. ZIP integrity after rebuild: PASS
+
+KNOWN ENVIRONMENT LIMITATION
+A fresh npm install could not complete in this execution environment because registry access timed out. The project therefore uses its existing offline-safe build.mjs fallback when node_modules/Vite is unavailable. The package's static-first deployment works without installed dependencies.
+
+NO-REGRESSION INTENT
+The new Comments / Customer Care UI is isolated to its own feedback section and CSS layer. Existing weather, live time, earthquake notification, air-traffic, legal pages, and other site systems were not intentionally modified by this upgrade.
+````
+
+---
+
+<a id="doc-bangladesh-air-traffic-3d-pro-qa-2026-10-08-md"></a>
+## Original file: `BANGLADESH-AIR-TRAFFIC-3D-PRO-QA-2026-10-08.md`
+
+SHA-256: `e904bb9fa7024c2e0c9f398c58cc4b73fe816b2445e48200eee3fe05ee3c4c31`
+
+````markdown
+# Bangladesh Air Traffic 3D Professional QA
+
+Date: 2026-10-08
+
+- Bangladesh-footprint-only live rendering preserved.
+- Live provider health indicators added for authorized relay, Airplanes.live and OpenSky.
+- Last-update time, request latency, received/accepted/filtered counts added.
+- Target observation age shown in the live list and selected-flight detail.
+- Canvas resize/reallocation fixed: dimensions update only when container size or DPR changes, avoiding per-frame canvas resets.
+- No synthetic aircraft positions are generated.
+- Service Worker cache bumped to v20 to avoid stale GitHub Pages shell/assets.
+````
+
+---
+
+<a id="doc-bangladesh-air-traffic-3d-qa-2026-10-08-md"></a>
+## Original file: `BANGLADESH-AIR-TRAFFIC-3D-QA-2026-10-08.md`
+
+SHA-256: `17a33bfe250a7d3ab4f8ec1cd4362b46055dd288e2081368ac84765ea9e2c6d0`
+
+````markdown
+# IGERS-BD-01 — Bangladesh Air Traffic 3D Radar Fix QA
+Date: 2026-10-08
+
+## Scope
+- `airTraffic3D` is now a Bangladesh-footprint-only live ADS-B/MLAT visualization layer.
+- Aircraft are geographically filtered before rendering; positions outside the Bangladesh footprint are not drawn in this panel.
+- The panel includes a continuous radar sweep, Bangladesh outline, altitude extrusion, short trails, target list, selected-flight detail, and directional flow counters (N/E/S/W).
+- The existing broader `airtraffic` panel is preserved unchanged.
+
+## Data behavior
+- Preferred live source: authorized relay from Field Link when configured.
+- Public fallback: Airplanes.live point query centered on Dhaka.
+- Secondary fallback: OpenSky state vectors over the Bangladesh-region bounding box.
+- Source data are filtered to the Bangladesh footprint before state merge/render.
+- No synthetic aircraft positions are generated.
+- `LIVE`, `VERIFY`, and `OFFLINE` states remain explicit.
+
+## Static QA
+- 35 sections
+- 451 unique IDs
+- Duplicate IDs: 0
+- Missing local references: 0
+- JavaScript syntax checks: PASS for all project JS files checked
+- Service worker cache: `igers-powercore-v19`
+- ZIP integrity: PASS
+
+## Connectivity caveat
+The build environment could not resolve the public API hostnames during direct curl testing (`api.airplanes.live`, `opensky-network.org`). This is an environment/network limitation and is not evidence that the browser user will be offline. The app therefore keeps provider failure states explicit instead of fabricating live data.
+
+## Interpretation
+“Bangladesh air traffic” in this panel means aircraft whose current tracked position falls inside the Bangladesh geographic footprint. It does not mean only Bangladesh-registered airlines or aircraft.
+````
+
+---
+
+<a id="doc-bd-satellite-monitor-readme-md"></a>
+## Original file: `BD-SATELLITE-MONITOR-README.md`
+
+SHA-256: `dfd88aec1b63a6dc9ab9215ad2fbaf7104a2cc095c89bf51fb86d7c09e493b4e`
+
+````markdown
+# IGERS-BD-01 Bangladesh Satellite Monitor
+
+Additive monitor panel. Existing app modules are preserved.
+
+## Live/public data sources
+- NASA GIBS / Worldview: public Earth-observation imagery.
+- USGS Earthquakes GeoJSON: recent seismic events.
+- GDACS API: public multi-hazard alerts.
+- Existing IGERS ADS-B panel: public aircraft-feed state.
+- OpenStreetMap: Bangladesh basemap iframe.
+
+## Safety boundary
+The danger/threat indicator is a public-data hazard/anomaly indicator only. It does not identify hostile actors, generate targeting information, or control real-world sensors.
+
+## GitHub Pages
+All files are root-relative/relative and the build contains no CNAME file. Keep the GitHub Pages source on GitHub Actions.
+````
+
+---
+
+<a id="doc-border-command-monitor-2026-10-05-md"></a>
+## Original file: `BORDER-COMMAND-MONITOR-2026-10-05.md`
+
+SHA-256: `eaa22e9b6cf9f9566fc93ea3b3414fa8b15e1ebee994860391822edb23b365a4`
+
+````markdown
+# IGERS Border Zone Command Monitor — 2026-10-05
+
+This additive module provides a command-style visual interface using public data only:
+- Airplanes.live public ADS-B/MLAT-derived feed for aircraft counts and current positions.
+- NASA GIBS / Himawari-9 AHI Band 13 clean-infrared Earth-observation imagery.
+- A public-data aircraft flow heuristic: inbound, in-airspace, passing, outbound, based on current position and a 5-minute forward projection.
+- Existing Airplanes.live map iframe remains intact.
+- Existing simulated tower layer remains clearly labeled as simulated / authorized-feed-ready; no private telecom or restricted border sensor access is added.
+
+The interface is styled like a professional command/HUD console but does not claim military affiliation or access to military-only sensors.
+
+Calculation audit scope:
+- Road kinetic recovery: ΔKE = 1/2 m(v1²-v2²), converted from km/h to m/s; efficiency applied after gross loss; annual aggregation uses explicit locations × vehicles/year/location.
+- Water recovery: P = ρgQHη; flow is converted L/s → m³/s; annual energy uses hours/day × 365 × sites.
+- Footstep recovery: E = Fδ; stroke converted mm → m; efficiency applied; annual energy uses steps/day × pads × 365.
+- Fixed Professional Upgrade energy model so zero installed units correctly produce zero output instead of silently forcing one unit.
+````
+
+---
+
+<a id="doc-border-monitor-qa-2026-10-06-md"></a>
+## Original file: `BORDER-MONITOR-QA-2026-10-06.md`
+
+SHA-256: `71aae07a1d9594e18f7aa0b9827ea1caef35a6da190fdbd1dd1b7888cae61f7c`
+
+````markdown
+# IGERS POWERCORE — Border Monitor QA — 2026-10-06 (Final)
+
+## Integration
+- Baseline preserved: `IGERS-POWERCORE-ADVANCED-LIVE-3D-MONITORING-UPGRADE-2026-10-06.zip`.
+- Existing application structure/features preserved.
+- Border module remains a separate `#borderMonitor` section with dedicated CSS/JS and bundled Bangladesh fallback GeoJSON.
+- Added an independent read-only Airplanes.live refresh path so the Border panel does not depend on another panel's event payload.
+
+## Static QA
+- All standalone JavaScript files: PASS (`node --check`).
+- Inline JavaScript blocks: PASS.
+- Duplicate HTML IDs: NONE.
+- Missing local script/style/image/iframe references: NONE.
+- All Border JS DOM references exist in HTML: PASS.
+- Border navigation link exists: PASS.
+- Dedicated Border 3D canvas exists: PASS.
+- Dedicated Border radar-style scanner canvas exists: PASS.
+- Radar scanner render path initializes without JavaScript errors: PASS.
+- Dedicated alert buttons and mesh indicator exist: PASS.
+- Salah / Qibla panel renders a non-empty prayer grid in offline/local-fallback mode: PASS.
+- Qibla bearing calculation populated in runtime smoke test: PASS.
+- Site-wide 3D depth stylesheet loads as a separate additive asset: PASS.
+- Bundled Bangladesh GeoJSON parses as a valid FeatureCollection: PASS.
+- Service-worker cache version remains v5.
+
+## Module runtime-path test
+A Node VM mock-DOM/canvas test was used to execute the Border module's initialization/rendering path without requiring a browser GUI. The exported renderer was invoked successfully and initialized the canvas to 800x540 in the mock layout.
+
+The module's fallback-boundary and public-feed paths are guarded with explicit VERIFY/FALLBACK/OFFLINE states; no provider values are fabricated when external services are unreachable.
+
+## Browser execution limitation
+The execution environment blocks navigation to local HTTP/file/data pages with `ERR_BLOCKED_BY_ADMINISTRATOR`, so a full graphical browser interaction test cannot be certified from this environment. This is an execution-environment restriction and not a detected application JavaScript error.
+
+## Live-provider limitation
+Direct container HTTP calls to geoBoundaries and Airplanes.live returned HTTP 000 because outbound network access is restricted in this execution environment. The production browser must therefore determine LIVE/VERIFY/OFFLINE from actual provider reachability.
+
+## Design boundary
+- Bangladesh geography: public geoBoundaries ADM0 dataset with bundled fallback.
+- Aircraft layer: public ADS-B/aircraft feed, read-only.
+- Network mesh: explicitly virtual/illustrative until an authorized telemetry API is provided.
+- The panel does not provide protected military radar access, weapon control, targeting, jamming, interception, or automated engagement.
+- Unknown/unverified public track status is not a hostile-activity determination.
+
+
+## Final module smoke test
+- Node VM mock-DOM/canvas execution: ERROR_COUNT=0.
+- Salah grid populated: Fajr, Dhuhr, Asr, Maghrib, Isha.
+- Qibla populated: 278° W for the Dhaka fallback coordinates.
+- Border public ADS-B bridge path: LIVE in mock provider.
+- Border track count: 2 in mock provider.
+- Border scanner status: LIVE · ADS-B scanner in mock provider.
+````
+
+---
+
+<a id="doc-border-monitor-readme-md"></a>
+## Original file: `BORDER-MONITOR-README.md`
+
+SHA-256: `76f9d5095733b28d6aad40bcea15a4560df98c736dcd12168c58660a18f4e515`
+
+````markdown
+# IGERS POWERCORE — Bangladesh Border Defensive Monitor
+
+Additive module for the existing IGERS web app. The module provides a 3D Bangladesh ADM0 geographic view, public/authorized data status indicators, a read-only public ADS-B bridge, and an illustrative virtual border-network mesh.
+
+## Geography
+Primary boundary source: geoBoundaries `gbOpen` Bangladesh ADM0. The app attempts to load the current public geoBoundaries simplified GeoJSON in the browser. A bundled local fallback is included for offline continuity.
+
+Boundary metadata: https://www.geoboundaries.org/api/current/gbOpen/BGD/ADM0/
+Primary GeoJSON source referenced by the module: https://github.com/wmgeolab/geoBoundaries/raw/9469f09592ced973a3448cf66b6100b741b64c0d/releaseData/gbOpen/BGD/ADM0/geoBoundaries-BGD-ADM0_simplified.geojson
+
+## Live data boundary
+The panel can consume the existing IGERS Airplanes.live public ADS-B bridge already used by the app. It does not provide primary radar or military radar access.
+
+## Network representation
+The border gateway nodes are explicitly virtual/illustrative. They are not real mobile-operator tower locations and do not claim access to Grameenphone, Robi, Banglalink, Teletalk, BTRC, BGB, Bangladesh Armed Forces, or other protected networks.
+
+## Safety
+The panel is read-only and defensive. It provides detection/verification/status visualization and alerts only. It does not perform weapon control, automated engagement, jamming, interception, targeting, or tactical command.
+
+
+## Dedicated Radar-Style Scanner
+The Border panel now contains a separate scanner card with its own 3D-style sweep canvas, track counters, feed-age indicator and read-only public ADS-B track list. It is a radar-style visualization, not a military/primary radar feed.
+
+## Salah / Qibla reliability
+The Salah panel now renders a local solar-angle fallback immediately and then replaces it with the public AlAdhan result when reachable. This prevents a blank prayer grid when the external service is unavailable. AlAdhan documents the daily timings endpoints and calculation methods; the panel defaults to the Karachi/South-Asia reference method and clearly labels fallback mode when needed.
+
+## Site-wide 3D presentation
+A lightweight `global-3d.css` layer adds subtle perspective/depth, lighting and elevation effects to existing cards and visual containers without changing the existing information architecture or removing earlier features.
+````
+
+---
+
+<a id="doc-border-zone-3d-monitor-release-2026-10-05-md"></a>
+## Original file: `BORDER-ZONE-3D-MONITOR-RELEASE-2026-10-05.md`
+
+SHA-256: `bdc12dadcaf7be4d4e6699d5308b835a0e8d0f8dbf46d10bd49a8dc95ffe5742`
+
+````markdown
+# IGERS Border Zone 3D Monitor — Release Notes
+
+Date: 5 October 2026
+
+## Additive scope
+
+This module was added to the supplied `IGERS-POWERCORE-main (8).zip` baseline without removing or replacing the existing Energy, Water/Foodstep, Weather/Location, Air Traffic, Airspace Safety, Satellite Connection, Future Upgrade or 3D operations modules.
+
+### New panel
+
+- `BORDER ZONE 3D GROUND + AIR MONITOR`
+- Separate Ground / Air / Satellite layer controls
+- Animated 3D-style radar visualization rendered with `requestAnimationFrame()`
+- Public ADS-B-derived air states reused from the existing IGERS feed when available
+- Non-identifying aggregate/demo mobile-signal coverage visualization
+- Public NASA GIBS Himawari AHI Band-13 clean-infrared Earth-observation image layer with fallback look-back attempts
+- Satellite observation freshness / provider state indicators
+- Responsive desktop/tablet/mobile layout
+
+## Data and safety semantics
+
+The panel does not claim access to military radar, border-security sensors, telecom operator private data or individual mobile-device locations. The network layer is deliberately aggregate/demo unless an authorized operator feed is integrated later.
+
+NASA GIBS documentation exposes public WMS imagery through the EPSG:4326 endpoint, which is used by the satellite observation layer. CelesTrak public orbital-element refresh guidance is respected by the existing satellite connection module; the new panel does not create an extra high-frequency CelesTrak polling loop.
+
+## Validation performed for this release
+
+- All JavaScript source files: `node --check` PASS.
+- HTML duplicate-ID audit: PASS.
+- Local CSS/JS reference audit: PASS.
+- Offline/static production build via the repository's `build.mjs`: PASS.
+- Local HTTP smoke test: PASS (`http://127.0.0.1:4173/`).
+- Final ZIP extraction/integrity: PASS.
+
+## Browser/live-feed limitation
+
+The execution environment used for this build cannot directly resolve external public data hosts, so NASA GIBS/CelesTrak/ADS-B live connectivity cannot be truthfully certified from this sandbox. The module therefore reports provider success/failure from the user's browser rather than pretending a feed is live.
+````
+
+---
+
+<a id="doc-bugfix-report-2026-10-03-full-md"></a>
+## Original file: `BUGFIX-REPORT-2026-10-03-FULL.md`
+
+SHA-256: `463e640db2b339255542837152e30f73e856a8eb799f718dd3532738553a1e9e`
+
+````markdown
+# IGERS-BD-01 — Full Runtime Bug-Fix / QA Pass
+Date: 03 October 2026
+
+## Fixed
+- Restored and hardened the Live Time engine: Bangladesh, browser-local, and world time remain independent and update every second.
+- Restored the missing unified System Master Control panel with responsive status cards and admin-gated ALL SYSTEMS ON/OFF controls.
+- Kept existing Future Upgrade Control Center and machine controls; unified controls synchronize with their persistent local states.
+- Fixed missing environment helper functions (`setWidth`, `degToCompass`) that could interrupt environmental status updates.
+- Hardened weather runtime: Dhaka fallback remains available; browser geolocation can update the weather target; weather retries automatically; failure is displayed as an explicit unavailable state rather than leaving the panel ambiguous.
+- Preserved satellite element-age and air-traffic data-age displays.
+- Preserved simulation/live/unavailable distinctions; no physical hardware control is implied.
+
+## Verification
+- `node --check script.js` — PASS
+- `node --check igers-future-upgrade.js` — PASS
+- `node --check server.mjs` — PASS
+- `npm run build` — PASS
+- Duplicate HTML IDs — 0 found
+- Local asset references in index — previously audited; current root remains self-contained
+- Local HTTP smoke test — PASS (`/`, future JS/CSS, `/dist/index.html` returned 200)
+- External Open-Meteo connectivity from this execution environment — DNS unavailable, therefore live weather data itself was not claimed as network-verified here.
+
+## Security note
+The admin password is frontend/static prototype authentication. GitHub Pages cannot securely protect a secret embedded in client-side JavaScript. Production machine control requires an authenticated backend and authorized hardware controller.
+````
+
+---
+
+<a id="doc-bugfix-report-2026-10-09-02-md"></a>
+## Original file: `BUGFIX-REPORT-2026-10-09-02.md`
+
+SHA-256: `02055ea9f02f34957512235d23fc09f9927ad09caa24df6490d44dd80e87475e`
+
+````markdown
+# IGERS POWERCORE — focused bug-fix report (2026-10-09)
+
+## Fixed in this package
+- Added the missing `bdmNetLive` HTML target so the existing browser-network status updater can display its state.
+- Changed border monitor feed freshness logic to use the provider retrieval timestamp and ADS-B position age; cached data is no longer labelled `NOW` just because a refresh handler ran.
+- Added a retrieval timestamp to the border monitor's direct public-provider fallback.
+- Changed NASA GIBS date fallback to try explicit recent dates rather than the ambiguous `default` time value, advances promptly when every tile fails, and allows more time for slower tile responses.
+
+## Validation limits
+- Static checks can verify syntax, archive integrity, expected IDs and local asset paths.
+- A live Chromium visual/runtime session was blocked in the available environment, so public providers, NASA tiles, GitHub Pages deployment, and all remote feeds cannot be certified as live from this package build alone.
+- ADS-B is public flight-state data, not border radar or mobile-tower telemetry. Virtual nodes and radar-style sweeps remain simulations.
+````
+
+---
+
+<a id="doc-deploy-direct-md"></a>
+## Original file: `DEPLOY_DIRECT.md`
+
+SHA-256: `c9811403dcbbff441c5b718014ac5185171c2caaf1c69ac9e78b99a99d005bc8`
+
+````markdown
+# IGERS POWERCORE — Direct Deployment Package
+
+Version: 1.1.0-designer  
+Project: IGERS-BD-01 — Integrated Gradient-Based Energy Recovery & Storage System  
+Organization concept: IGERS POWERCORE TECHNOLOGIES LTD.  
+Author / Inventor: Abdullah Al Rafi [BD]
+
+## What is included
+This package keeps the latest verified IGERS interface as the functional base and adds a non-destructive designer layer. Existing monitoring and information modules are retained, including:
+
+- energy recovery concept architecture and deployment views
+- live time and weather panels
+- environmental / earthquake indicators
+- live air-traffic panel
+- Bangladesh Airspace Anomaly Monitor
+- satellite connection/orbital public-data monitor
+- NASA GIBS near-real-time imagery panel
+- NASA POWER atmospheric panel
+- satellite/disaster/navigation information layer
+- comments & customer-care demo interface
+- copyright, privacy and terms/disclaimer pages
+- Bangladesh flag visual treatment and responsive mobile navigation
+
+## Local run
+
+```bash
+npm run build
+npm run serve
+```
+
+Then open `http://127.0.0.1:4173/`.
+
+## Static hosting
+The production output is written to `dist/`. Upload the **contents of `dist/`** to a static hosting service. No GitHub repository is required for the static files themselves.
+
+Connect the custom domain `the custom domain` at the hosting provider using that provider's DNS instructions.
+
+## Important data note
+The dashboard uses public external data services. A live indicator means the browser reached the relevant public feed; it is not a guarantee that every upstream service is continuously available.
+
+The NASA Worldview panel is represented through the public NASA GIBS data layer and official source links. The site does not claim restricted spacecraft telemetry or military system access.
+
+The visitor comments interface in this static package is local browser demo storage; it does not send messages to a remote inbox.
+````
+
+---
+
+<a id="doc-deploy-vercel-now-md"></a>
+## Original file: `DEPLOY_VERCEL_NOW.md`
+
+SHA-256: `df5d8e96901bc8800b6dbcf41cb0d2b157e7c08d41a75109129328e52bd1d5a6`
+
+````markdown
+# IGERS POWERCORE — GitHub-free Vercel deployment
+
+The project is prepared for Vercel without a GitHub repository.
+
+## Deploy with Vercel CLI
+
+1. Install Node.js LTS.
+2. In this project folder run:
+
+```bash
+npm install
+npx vercel login
+npx vercel --prod
+```
+
+Vercel will build with `npm run build` and publish `dist/`.
+
+## Custom domain
+
+After deployment, add:
+
+`the custom domain`
+
+in Vercel → Project → Settings → Domains.
+
+Use the DNS records Vercel shows for the domain registrar. HTTPS/SSL is then handled by Vercel.
+
+## Important
+
+No GitHub repository is required for this route. The local static build and existing website features remain the source of deployment.
+````
+
+---
+
+<a id="doc-energy-time-weather-combined-update-install-md"></a>
+## Original file: `ENERGY-TIME-WEATHER-COMBINED-UPDATE-INSTALL.md`
+
+SHA-256: `73d0979f3deafc571916637b355a0530aaa9e5e627bec3c0597c8abc485a1dfb`
+
+````markdown
+# IGERS Combined Time + Weather + Live Energy Update
+
+This package is an additive update to the existing IGERS-BD-01 web app.
+
+## Included
+- Existing IGERS application and preserved panels/features.
+- Live Time / Weather update already integrated in the current baseline.
+- New `IGERS ENERGY CALCULATION ENGINE` panel.
+- Live recalculation when model inputs change.
+- Admin-protected Energy Engine ON/OFF and Reset controls.
+- Existing IGERS administrator password/session model is reused: `MIM2005`.
+
+## Energy reference model
+The default values reproduce the current illustrative roadway model:
+- mass = 900 kg
+- entry speed = 20 km/h
+- exit speed = 15 km/h
+- net recovery efficiency = 20%
+- 100,000 harvesting locations
+- 210,000 vehicle passages/year/location
+
+The model uses `ΔE = 0.5 m (v1² - v2²)` and then applies the recovery factor. It is a planning/illustrative model, not measured field production.
+
+## GitHub Pages
+Upload/extract the package so `index.html` remains at the repository root. Keep all files and relative paths together.
+
+## Security note
+The password/session mechanism is suitable only for a static prototype UI. GitHub Pages cannot protect a secret like a production backend. Physical hardware control is not performed by this panel.
+````
+
+---
+
+<a id="doc-final-air-traffic-qa-2026-10-08-md"></a>
+## Original file: `FINAL-AIR-TRAFFIC-QA-2026-10-08.md`
+
+SHA-256: `ae2f1eef1391f7c3027ac874cad8a62380878460f35cd3be3150e66c268519f5`
+
+````markdown
+# IGERS Bangladesh Air Traffic — Final QA 2026-10-08
+
+## Provider correction
+- Airplanes.live `/point` radius corrected from 450 nm to **250 nm** (documented API maximum).
+- 30-second browser refresh remains safely above the documented 1 request/second rate limit.
+- Bangladesh geographic polygon filtering remains active before 3D rendering.
+
+## Runtime hardening
+- Optional same-origin Python relay: `/api/airtraffic`.
+- Python relay uses standard library only.
+- Per-target stale pruning retained; temporary upstream failures no longer wipe the entire target set prematurely.
+- 3D canvas resize remains event/size driven rather than per animation frame.
+- Service Worker cache bumped to v21.
+
+## Tests
+- Python relay self-test: PASS.
+- Python relay `py_compile`: PASS.
+- Air traffic JS `node --check`: PASS.
+- Project local-script reference scan: PASS.
+- Duplicate ID scan: PASS.
+- ZIP integrity: PASS.
+- Local `/api/health` smoke test: PASS.
+- Live upstream availability in sandbox: NOT CERTIFIED because external DNS/network is unavailable in this environment.
+````
+
+---
+
+<a id="doc-final-qa-report-2026-10-06-md"></a>
+## Original file: `FINAL-QA-REPORT-2026-10-06.md`
+
+SHA-256: `a352e49bf543fa11f3d393a1f7c0470195d9f7ae2bed524c23ec009fea4ea02d`
+
+````markdown
+# IGERS POWERCORE — FINAL HARDENED QA — 2026-10-06
+
+## Static QA
+- JavaScript syntax: PASS — 0 errors across all project JS files.
+- Duplicate HTML IDs: 0.
+- Local stylesheet dependencies are inlined into `index.html` for GitHub Pages deployment robustness.
+- Service-worker revision: `igers-powercore-v11`.
+- Development-only `jscheck/` folder and build helper removed from deployment package.
+- Bangladesh fallback GeoJSON present.
+- Existing major sections retained, including Air Traffic, Airspace Safety, Border Monitor, 3D Early Warning, 3D Traffic, Seismic 3D, Marine 3D, IGERS 3D Lab, Tower Mesh, Salah/Qibla, Emergency, Weather and Data Analysis.
+
+## Browser runtime smoke QA
+Executed against the actual `index.html` in headless Chromium using the real browser DOM and canvas runtime.
+- Default theme: `night`.
+- Digital 3D Weather canvas initialized with non-zero dimensions.
+- 3D Air/Ground/Maritime early-warning scope initialized.
+- 3D Bangladesh Border monitor initialized.
+- 3D radar-style scanner initialized.
+- 3D Qibla canvas initialized.
+- Salah grid populated with 5 prayer entries.
+- Qibla result populated: 278° W (Dhaka fallback test location).
+- Administrator controls start locked.
+- No JavaScript `pageerror` exceptions.
+- No application console errors during the successful runtime boot; public network requests were isolated in the test harness and their forced aborts are not application errors.
+
+## Security boundary
+- Administrator controls are configuration/monitoring controls only.
+- No weapon firing, interceptor launch, target assignment, military fire-control, jamming, or remote weapons control is included.
+- GitHub Pages frontend authentication remains UI-level; production-grade secrets must live server-side.
+- Coverage rings in the early-warning panel are explicitly labeled as visualization-only.
+````
+
+---
+
+<a id="doc-github-final-check-2026-09-22-md"></a>
+## Original file: `GITHUB-FINAL-CHECK-2026-09-22.md`
+
+SHA-256: `5b4a6cf6c4b5089a1be992261ec4930034b801cd4db2388b0313be30e85a3a0c`
+
+````markdown
+# IGERS GitHub Final Check — 2026-09-22
+
+- Repository root contains index.html: YES
+- CNAME: the custom domain
+- .nojekyll: YES
+- Missing local HTML references: 0
+- Missing asset references: 1
+- Root structure: VERIFIED
+- Source package was flattened from the production `dist/` output so GitHub Pages can serve it directly.
+````
+
+---
+
+<a id="doc-github-pages-deployment-readme-md"></a>
+## Original file: `GITHUB-PAGES-DEPLOYMENT-README.md`
+
+SHA-256: `12d3998f102ea463dd248164547650f9682d06d1bdab65f1a578c18ff49a901f`
+
+````markdown
+IGERS POWERCORE — GitHub Pages deployment hardening — 2026-10-06
+
+This package contains index.html with the visual/theme CSS and upgrade JavaScript inlined into the page.
+The default theme is NIGHT. The Day/Night control remains available.
+
+Why this build exists:
+- avoids GitHub Pages/browser cache problems for the visual/theme layer
+- avoids dependence on separate theme/3D CSS/JS files for first paint
+- preserves existing local modules and data assets
+
+Deploy:
+1. Extract this ZIP.
+2. Replace the repository root files with these files, especially index.html.
+3. Keep the data/ folder and any existing assets.
+4. Commit/push to the GitHub Pages source branch.
+5. Open the Pages URL with a hard refresh (Ctrl+Shift+R) once.
+
+Note: public live APIs still require the user's browser/network and may show LIVE/VERIFY/OFFLINE states honestly.
+````
+
+---
+
+<a id="doc-github-pages-direct-deploy-md"></a>
+## Original file: `GITHUB-PAGES-DIRECT-DEPLOY.md`
+
+SHA-256: `c0c6b8656277b91c7c8dba864d17009c97ae0cc41c37171e0e6b5ab878441e1c`
+
+````markdown
+# IGERS POWERCORE · DIRECT GITHUB PAGES BUILD
+
+Canonical live URL:
+https://raabdullah59720-igers.github.io/IGERS-POWERCORE/
+
+This release is intentionally custom-domain-free. It contains no `CNAME` file and no runtime redirect to a custom domain.
+
+## Deploy
+1. Upload the CONTENTS of this package to the repository root.
+2. Keep `index.html` at the repository root.
+3. Keep the `.github/workflows/pages.yml` workflow.
+4. In GitHub: Settings → Pages → Build and deployment → Source → GitHub Actions.
+5. The workflow deploys the repository as a project site at `/IGERS-POWERCORE/`.
+
+Important: GitHub account/repository Pages settings are server-side. If a custom domain is still configured in Settings → Pages, remove it there to stop GitHub's server-side custom-domain redirect. The files in this package do not request or create such a redirect.
+````
+
+---
+
+<a id="doc-github-pages-fixed-setup-md"></a>
+## Original file: `GITHUB-PAGES-FIXED-SETUP.md`
+
+SHA-256: `bc321a3c58e8cc56854119cc532088ff1682d15067993b23643cdc3a19249852`
+
+````markdown
+# IGERS-BD-01 — GitHub Pages Fixed Release
+
+This package is prepared for direct GitHub Pages project hosting.
+
+## Important
+- `index.html` is at the repository root.
+- `.nojekyll` is included.
+- All website assets are kept with relative paths so the project works under:
+  `https://raabdullah59720-igers.github.io/IGERS-POWERCORE/`
+- The previous `CNAME` file for the custom domain has intentionally been removed from this GitHub-safe release. This avoids a broken/misconfigured custom-domain setup from interfering with the normal GitHub Pages URL.
+- If the custom domain is later configured correctly in GitHub Pages + DNS, a `CNAME` file containing only the custom domain can be restored.
+
+## Upload
+Upload the CONTENTS of this folder to the root of the `IGERS-POWERCORE` repository, not the outer ZIP folder.
+
+GitHub:
+1. Open the repository.
+2. Upload/replace the files in the repository root.
+3. Commit to the branch used by Pages.
+4. Settings → Pages → Deploy from a branch → select that branch and `/ (root)`.
+5. Wait for the Pages deployment to finish.
+6. Open the project URL.
+
+## Local QA performed
+- JavaScript syntax checked successfully for all project JS files.
+- Root `index.html` served successfully through a local HTTP server.
+- Relative asset references were checked.
+- Existing project assets/features were preserved.
+
+This is a static GitHub Pages release. Server-side files in the source package are not required for GitHub Pages.
+````
+
+---
+
+<a id="doc-github-pages-production-deploy-md"></a>
+## Original file: `GITHUB-PAGES-PRODUCTION-DEPLOY.md`
+
+SHA-256: `ef88026079c8c0153cf565a2c1194bd033599e02d82af36dbd34949f8020127a`
+
+````markdown
+# IGERS-BD-01 POWERCORE — Production GitHub Pages Release
+
+Target project URL:
+`https://raabdullah59720-igers.github.io/IGERS-POWERCORE/`
+
+## What is preserved
+This package is based on the latest IGERS POWERCORE full-feature release and preserves the existing Journal/Magazine, time, weather, earthquake, live ADS-B air traffic, airspace safety, NASA GIBS/GPM, NASA POWER, satellite/disaster intelligence, Bangabandhu-1 public orbital monitor, engineering lab, admin control, voicemail/customer-care, and advanced operations layers.
+
+## Production fixes
+- Restored the missing Professional Engineering Magazine PDF asset referenced by the app.
+- Added a read-only Satellite Public Data Connection Center for CelesTrak, SatNOGS and NASA GIBS source-health checks.
+- Added conservative timeout/fallback behavior; an unavailable external provider cannot blank the app.
+- Rotated the service-worker cache namespace to prevent a stale broken build from persisting.
+- Added a GitHub Pages Actions workflow and `404.html` fallback.
+- Hardened external links with `noopener noreferrer`.
+- Kept the physical-control boundary explicit: browser controls modify software state only and do not directly switch real equipment.
+
+## Upload rule
+Upload the CONTENTS of this ZIP to the repository root. Do not upload the ZIP as a single file. Existing duplicate root files should be replaced by this build's versions; do not place them inside another `IGERS-POWERCORE-main/` folder.
+
+## Pages setting
+Preferred: Settings → Pages → Build and deployment → Source → GitHub Actions.
+
+The workflow will deploy on pushes to `main` or `master`, or manually from Actions.
+
+## Satellite note
+The satellite connection panel uses public orbital-element/catalog and Earth-observation service metadata. It does not transmit commands or expose spacecraft telemetry/control.
+````
+
+---
+
+<a id="doc-github-pages-readme-md"></a>
+## Original file: `GITHUB-PAGES-README.md`
+
+SHA-256: `847f7321344a5023e9958f83ea3821121a565460d8e955999d8c75623fd6f544`
+
+````markdown
+# IGERS-BD-01 — GitHub Pages Deployment
+
+This folder is the deployable static website root.
+
+## GitHub Pages
+1. Upload **all files in this folder** to the repository root.
+2. Confirm `index.html` is directly in the repository root.
+3. GitHub → Settings → Pages → Deploy from branch → `main` → `/ (root)`.
+4. The included `CNAME` targets `the custom domain`.
+
+Do not upload this folder itself as a nested directory.
+````
+
+---
+
+<a id="doc-hash-link-fix-md"></a>
+## Original file: `HASH-LINK-FIX.md`
+
+SHA-256: `f291d8b3f751f0ac292413bb9f32e80fc6eb82d5ed5e699a8f559e78f44882ac`
+
+````markdown
+# IGERS hash/deep-link fix
+
+Direct links such as `#satelliteIntel` now use a resilient hash router and delayed scroll handler.
+
+Examples:
+- `#satelliteIntel` → Satellite Intelligence
+- `#satellite` → Satellite Intelligence
+- `#danger` → Bangladesh hazard monitor
+- `#towers` → Mobile tower monitoring
+- `#monitor` → IGERS command center
+
+The page also adds scroll-margin for the sticky header and bumps the service-worker cache to avoid stale navigation code.
+````
+
+---
+
+<a id="doc-incognito-qa-report-md"></a>
+## Original file: `INCognito-QA-REPORT.md`
+
+SHA-256: `04a6800be676cb84b0b3ca136358a4aee407519b46a800ce46d4cb619c64e3cc`
+
+````markdown
+# IGERS-BD-01 Incognito / PWA / 3D QA Report
+
+Build: 2026.10.06-3d-pwa.1
+
+## Passed
+- HTML duplicate ID scan: 0 duplicates
+- Local href/src reference scan: 0 missing local files
+- Node JavaScript syntax check: PASS for all top-level JS files and service worker
+- PWA manifest JSON: PASS
+- PWA `start_url`: `/IGERS-POWERCORE/`
+- PWA `scope`: `/IGERS-POWERCORE/`
+- App package ZIP integrity: PASS
+- App package contains 3D engine JS/CSS, PWA manifest/service worker, icons, and mobile tower controller
+- Direct app package download link exists in the web UI
+- 3D panel has rotate/reset/layer controls
+
+## Browser limitation
+The execution environment blocks local and external browser navigation with `ERR_BLOCKED_BY_ADMINISTRATOR`, so a truthful end-to-end Chromium Incognito page interaction run could not be completed here. The final package was therefore validated with source/parser/static HTTP/package checks instead of claiming a browser pass that was not observable.
+
+Chrome's native `beforeinstallprompt` is conditional on installability criteria and browser/device state; it is not guaranteed in private/incognito mode. The app therefore keeps a direct same-origin `DOWNLOAD APP` ZIP fallback in addition to the native PWA install button.
+
+## Expected behavior on GitHub Pages
+Use:
+https://raabdullah59720-igers.github.io/IGERS-POWERCORE/
+
+For native PWA install, use the normal browser window on HTTPS. In Incognito/private mode, use the built-in `DOWNLOAD APP` fallback when the native install prompt is not offered.
+````
+
+---
+
+<a id="doc-in-app-live-visual-upgrade-2026-09-14-md"></a>
+## Original file: `IN_APP_LIVE_VISUAL_UPGRADE_2026-09-14.md`
+
+SHA-256: `1039b27e39b2fc8ac1af1eb4d0f8cd944ee5334e1693060f7f3ce09f2c1f5bb5`
+
+````markdown
+# IGERS In-App Live Visual Upgrade — 2026-09-14
+
+## Scope
+This release keeps the existing IGERS application and its prior live systems while converting the newly added satellite/NASA experience to an in-app visual workflow.
+
+## In-app behavior
+- NASA GIBS Earth-observation imagery is rendered directly inside the IGERS page.
+- Satellite observation can be expanded in an in-app modal; it does not navigate to NASA Worldview.
+- NASA EONET regional event records are rendered inside the application and can be opened in an in-app detail modal.
+- NASA Astronomy Picture of the Day is rendered in the application and can be enlarged in-app.
+- Satellite/BMD navigation cards scroll to internal IGERS panels instead of opening external pages.
+- Source-state indicators remain source-specific and do not claim spacecraft telemetry or uninterrupted live video.
+
+## Regression checks
+- Production static build: PASS
+- JavaScript syntax checks: PASS
+- Duplicate HTML IDs: 0
+- Broken local asset references: 0
+- Satellite section external navigation: 0
+- NASA section external navigation: 0
+- Core/legal/runtime HTTP routes: 200
+- Existing Air Traffic / Earthquake / Airspace / Bangabandhu-1 markers: present
+- ZIP integrity: to be recorded after packaging
+
+## External-feed limitation
+The local QA environment cannot guarantee third-party external-feed availability. The application therefore exposes explicit feed freshness/availability states instead of falsely marking unavailable data as LIVE.
+````
+
+---
+
+<a id="doc-live-data-3d-flow-qa-2026-10-08-md"></a>
+## Original file: `LIVE-DATA-3D-FLOW-QA-2026-10-08.md`
+
+SHA-256: `1dcfbf7427cc011bec6f74c9bdf8f9af59b620e87c9b3b46be3c9425b90634dd`
+
+````markdown
+# IGERS POWERCORE — Live Data / Live Feed / Result / 3D / Traffic Flow QA
+Date: 2026-10-08
+
+## Fix scope
+Added an independent output center with four separately rendered panels:
+1. Live Feed Panel — provider-by-provider incoming observations.
+2. Live Result Panel — normalized result table independent of canvases.
+3. 3D Visualization Panel — separate 3D-style live-data rendering layer.
+4. Traffic Flow Panel — independent vehicle-flow visualization.
+
+## Data bridges fixed
+- Air Traffic 3D now dispatches `igers:airtraffic` with normalized current observations so the existing advanced air, border, and new live-output modules can consume the same feed.
+- Vehicle Movement Monitor now dispatches `igers:vehicle-flow` after each observed/authorized refresh.
+- National Toll Plaza already dispatches `igers:toll-traffic`; the new center consumes that event directly.
+- Service-worker cache was bumped from v17 to v18 and includes the new live-output assets.
+
+## Providers
+- Air: Airplanes.live public ADS-B API (browser fetch).
+- Seismic: USGS all-hour GeoJSON feed.
+- Weather: Open-Meteo current forecast endpoint for Dhaka.
+- Road traffic: public/authorized vehicle-count or toll/ITS endpoint only; no private CCTV bypass and no fabricated national live count.
+
+## Regression checks
+- Baseline IDs: 419
+- New-build IDs: 443
+- Removed baseline IDs: 0
+- Added IDs: 24 (new live-output center only)
+- Sections: 34 -> 35
+- Duplicate IDs: 0
+- Local HTML/CSS/JS references missing: 0
+- Inline JS syntax blocks checked: 13, failures: 0
+- New external JS syntax: PASS
+- ZIP integrity (`zip -T`): PASS
+- Local HTTP smoke check: index.html + new JS/CSS + sw.js returned HTTP 200
+
+## Runtime limitation
+A full Chromium page-run was attempted in the build sandbox, but the environment blocks local `http://127.0.0.1` and `file://` navigation with `ERR_BLOCKED_BY_ADMINISTRATOR`. Therefore browser click-through/runtime provider connectivity cannot be honestly certified from this sandbox. The package is statically validated and the live providers remain explicitly labeled by actual fetch status in the browser.
+
+
+## Regression repair applied
+- Fixed missing runtime script tags for `field-connectivity-hardening.js` and `vehicle-movement-monitor.js`. Their CSS had been loaded, but the JavaScript runtime modules were not attached to `index.html`.
+- Dependency order is now: Field Link → Vehicle Movement → Toll Plaza → PWA → Air Traffic 3D → Live Data/3D/Flow Center, so event bridges can initialize before asynchronous providers return.
+- Service worker cache version bumped to v18 to prevent GitHub Pages from retaining the pre-fix shell.
+````
+
+---
+
+<a id="doc-magazine-panel-release-2026-09-22-md"></a>
+## Original file: `MAGAZINE-PANEL-RELEASE-2026-09-22.md`
+
+SHA-256: `c5752682fa8c7604a05a2888e2701cd2c78d37a98bfc9f914c4f665902a7ed50`
+
+````markdown
+# IGERS Magazine Panel
+
+Added the Library copy of IGERS-BD-01 Professional Engineering Magazine as a new additive web-app panel.
+
+- Existing panels preserved.
+- Static relative PDF path for GitHub Pages.
+- Embedded browser PDF reader with Open, Download and Fullscreen controls.
+- Quick section links.
+- Service worker cache updated for the magazine PDF.
+````
+
+---
+
+<a id="doc-nasa-connection-upgrade-2026-09-14-md"></a>
+## Original file: `NASA_CONNECTION_UPGRADE_2026-09-14.md`
+
+SHA-256: `df7c80eafcec2e829e945e5483ec24a49245a25db8515af9a8706f54a0b82313`
+
+````markdown
+# IGERS NASA Connection & Intelligence Upgrade — 2026-09-14
+
+## Added
+- NASA GIBS Earth-observation image layer with source-specific freshness state.
+- Geostationary Himawari-9/AHI candidates (10-minute observation times) through NASA GIBS first, followed by NOAA-21, NOAA-20 and MODIS Terra fallback imagery.
+- NASA Worldview deep link centered on the current browser location when available.
+- NASA EONET v3 open natural-event metadata for a Bangladesh bounding box plus a global context count.
+- NASA astronomy panel with local-location sky planning (solar state, sunrise/sunset, dark-sky window) and NASA Astronomy Picture of the Day.
+- Explicit separation between satellite observation, forecast weather, disaster metadata, and astronomy media.
+- Feed-specific LIVE/READY/WARN/OFFLINE states to avoid false global LIVE claims.
+
+## Accuracy model
+- Green NASA GIBS state means the selected NASA imagery request loaded successfully; it does not imply continuous satellite video or spacecraft control.
+- EONET state means the EONET v3 feed returned current open-event metadata.
+- APOD state means the NASA astronomy endpoint returned current astronomy media.
+- The existing Open-Meteo weather panel remains the numerical forecast source.
+- No private Bangabandhu-1 telemetry or government control access is claimed.
+
+## QA
+- `node --check nasa-intel.js`: PASS
+- `npm run build`: PASS
+- Duplicate HTML IDs: 0
+- Missing local asset references: 0
+- Local HTTP server: PASS
+- `/`, `/privacy.html`, `/terms.html`, `/copyright.html`, `/nasa-intel.js`, `/dist/index.html`, `/dist/nasa-intel.js`: HTTP 200
+- External NASA provider end-to-end fetch was not claimed in this sandbox because outbound networking is restricted; runtime logic is fail-safe and source-specific.
+````
+
+---
+
+<a id="doc-nextgen-upgrade-2026-10-06-md"></a>
+## Original file: `NEXTGEN_UPGRADE_2026-10-06.md`
+
+SHA-256: `c3dfe489bb13afa93e6069032d13f7479d7cd06473972332f098533dcc91175e`
+
+````markdown
+# IGERS-BD-01 Next-Gen Engineering Simulation Upgrade — 2026-10-06
+
+This additive upgrade preserves the existing application and adds an isolated Engineering Simulation Command Center.
+
+## Added panels
+- Conceptual 3D Model Gallery
+- Automatic Calculation Panel (per model)
+- System Architecture panel
+- Fleet / scenario summary panel
+- Local Simulation Control panel
+- Time/Weather indicator repair layer from the 2026-10-03 package
+
+## Conceptual 3D models
+Road recovery, river-current hydrokinetic, regulator/low-head hydraulic, footstep micro-harvest, bridge/culvert node, regenerative rail, airport PV-first, hybrid PV+VAWT, and BESS.
+
+## Engineering integrity
+Outputs are marked conceptual/scenario/site-dependent. The simulator does not present a calculation as proof of field performance or construction readiness.
+
+## Static deployment note
+The administrative control is deliberately described as a local browser simulation control. GitHub Pages cannot provide server-side authentication.
+````
+
+---
+
+<a id="doc-ops-upgrade-2026-09-14-md"></a>
+## Original file: `OPS_UPGRADE_2026-09-14.md`
+
+SHA-256: `c8625a57d5adc69bc60d9c6dcfb9f74e11c356bd8e0f720bf9bb9fa63e8eb477`
+
+````markdown
+# IGERS-BD-01 — Integrated Operations Upgrade — 14 September 2026
+
+## Added
+- Integrated communications/operations layer for authorised Bangabandhu-1/BSCL backhaul workflows.
+- Field-energy ledger for Road, Border, Naval, Bridge and Dam prototype harvesters.
+- Maintenance/condition panel with explicit prototype status.
+- Bangladesh road-intelligence map workspace with satellite/aerial and traffic-provider launch controls.
+- Freshness-aware data-trust language: LIVE / STALE / SIMULATED / OFFLINE.
+
+## Engineering honesty
+Bangabandhu-1 is a communications satellite. This frontend does not claim direct satellite control, spacecraft telemetry, or exclusive access to a satellite link. A real operational deployment requires an authorised BSCL/service-provider gateway, secure backend ingestion, authentication, field-node telemetry and appropriate network licensing.
+
+The prototype energy values in the dashboard are simulation values until signed field telemetry is connected.
+
+The embedded Bangladesh map is a conventional basemap. Satellite imagery is not represented as inherently live. Dynamic traffic requires an authorised traffic-data provider; Google documents Traffic Layer availability in Bangladesh. Street-level imagery and live traffic remain provider-controlled services.
+
+## Validation
+- JavaScript syntax: PASS
+- Production build: PASS
+- Duplicate HTML IDs: 0
+- Static HTTP smoke tests: PASS (/, privacy.html, terms.html, copyright.html, sw.js)
+- Existing air traffic / earthquake / airspace-safety IDs preserved
+- Existing weather/location paths preserved
+````
+
+---
+
+<a id="doc-panel-data-reliability-patch-2026-10-09-md"></a>
+## Original file: `PANEL-DATA-RELIABILITY-PATCH-2026-10-09.md`
+
+SHA-256: `cff620c11976d21fb9cd82632b297d2d890fadb529984db417223dfa3b518bfb`
+
+````markdown
+# IGERS POWERCORE — Panel Data Reliability Patch
+
+Build date: 2026-10-09
+
+## Changes in this patch
+
+- Restores the direct NASA GIBS tile viewer in the existing Public Satellite Imagery / Worldview-GIBS panel, with layer selection, zoom, refresh, tile-load status, and a bounded recent-date fallback. The Worldview website remains available as a separate public-viewer route.
+- Bundles a simplified Bangladesh outline so the border/air-ground-maritime views do not remain blank solely because an external boundary API cannot load. The outline is a visual fallback, not a legal, navigational, or operational boundary product.
+- Adds a shared public ADS-B data bridge and sequential fallback between Airplanes.live and ADSB.lol. The flight, air-defense and border panels can reuse a common successful fetch instead of independently polling a provider every few seconds.
+- Reduces redundant public-feed polling and makes unavailable/stale status explicit when both public providers cannot be reached.
+- Preserves existing page structure and adds changes within the named panels/modules rather than rebuilding the app.
+
+## Real data vs visual simulation
+
+- Aircraft positions are public ADS-B-derived observations when the selected provider returns them. Coverage, completeness, update cadence and availability depend on receiver/provider reach and browser/network conditions.
+- NASA GIBS provides public satellite imagery products, not a real-time tactical sensor feed. Image acquisition/processing can lag, and a valid imagery tile is not proof of a live sensor connection.
+- The local Bangladesh outline, animated sweep, 3D effects, generic coverage rings and any nodes without an authorized feed are visual/reference elements only. They must not be described as 24/7 real radar coverage, telecom-tower access, border sensor detections, or a verified maritime/ground sensor network.
+- No private mobile-tower feed, carrier network access, classified radar, restricted sensor feed, or actual military system is enabled by this patch. Integrate those only through a specifically authorized, documented API.
+- The app is a static-site project. Any password gate implemented in browser JavaScript/session storage is only a UI gate, not production-grade authentication. Do not store production secrets in client-side files.
+
+## Deployment and checks
+
+Upload the project contents to the existing GitHub Pages repository using the same root structure, including `data/bangladesh-boundary-fallback.geojson`, `nasa-gibs-bd.js`, and `nasa-gibs-bd.css`.
+
+Static checks performed for this build: all standalone JavaScript files and all four non-empty inline JavaScript blocks pass `node --check`; required links/DOM hooks and the GeoJSON fallback asset are present. A browser visual/runtime test could not be completed in this environment, so deployment must still be checked in Chrome with browser DevTools open. Public provider access may vary by CORS, network policy, endpoint availability, and browser conditions.
+````
+
+---
+
+<a id="doc-pwa-danger-fix-install-md"></a>
+## Original file: `PWA-DANGER-FIX-INSTALL.md`
+
+SHA-256: `683464ac71afa48cbd827661996466a6e5cc23d2bd74bbd54a9a82b0fe72faec`
+
+````markdown
+# IGERS POWERCORE: Danger Alert + App Install Fix
+
+Build: 2026.10.06-bdtower.2
+
+## What was fixed
+- PWA manifest now includes valid 192x192 and 512x512 PNG icons.
+- GitHub Pages start URL and scope are `/IGERS-POWERCORE/`.
+- Service-worker cache version was bumped and old IGERS caches are deleted on activation.
+- Service worker skips cached navigation responses so new deployments are picked up.
+- An in-app INSTALL APP button was added with Android/Chrome/Edge prompt support.
+- iPhone/iPad fallback instructions are built into the UI.
+- Danger/Threat alert engine explicitly shows `ENGINE ON · MONITORING` even when a public feed is degraded.
+- A `Test alert channel` button lets the user verify the notification channel without claiming a real threat.
+- Real public hazard severity is still data-driven from public feeds. No fabricated live danger is shown.
+
+## GitHub Pages deployment
+1. Extract this ZIP.
+2. Upload the CONTENTS to the repository ROOT. Do not create an extra nested `IGERS-POWERCORE/` folder inside the repository.
+3. Keep GitHub Pages source on GitHub Actions.
+4. Open:
+   https://raabdullah59720-igers.github.io/IGERS-POWERCORE/
+5. Hard refresh once with Ctrl+Shift+R after deployment.
+
+## Install the app
+- Android Chrome/Edge: use `INSTALL APP` when the browser offers the prompt, or Browser menu -> Install app / Add to Home screen.
+- iPhone/iPad Safari: Share -> Add to Home Screen.
+- Installability requires the secure HTTPS GitHub Pages URL.
+
+## Danger alert testing
+Use `Test alert channel` inside the Bangladesh Satellite / Danger Monitor panel. This sends a developer/test notification only. A real DANGER state appears only when the public hazard/anomaly rules are met.
+````
+
+---
+
+<a id="doc-qa-border-command-calc-2026-10-05-md"></a>
+## Original file: `QA-BORDER-COMMAND-CALC-2026-10-05.md`
+
+SHA-256: `57467edd20333b01f9d7e5198700de078c47a82958f181c91ac6496847be7eba`
+
+````markdown
+# IGERS Border Command + Calculation QA — 2026-10-05
+
+## Integration
+- Existing Air Traffic module preserved.
+- Border Command monitor added as an independent section after the existing Air Traffic panel.
+- Public Airplanes.live API snapshot is reused for counts and aircraft positions.
+- Existing Airplanes.live live map remains available inside the new monitor and via Open Live Map.
+- NASA GIBS / Himawari-9 AHI Band 13 public Earth-observation image layer added with 10-minute-slot fallback attempts.
+- Existing simulated tower/mobile coverage module remains explicitly labelled simulated / authorized-feed-ready.
+
+## Border flow counters
+The monitor now shows:
+- Total aircraft received from the regional public API response.
+- Aircraft with position data.
+- Current aircraft inside the approximate Bangladesh polygon.
+- Inbound: outside now, predicted to enter within a 5-minute forward projection.
+- Passing: inside now, predicted to remain in-airspace over the next 5 minutes.
+- Outbound: inside now, predicted to exit within a 5-minute forward projection.
+- Aggregate flow = inbound + passing + outbound.
+
+The flow classification is an interface heuristic based on current public ADS-B-derived state, not a flight-plan or military-intelligence determination.
+
+## Calculation audit
+Independent unit checks passed against the exact equations used by the live calculators:
+- Road kinetic-energy recovery: 1/2 m(v1²-v2²), km/h→m/s conversion, efficiency after gross loss, annual aggregation.
+- Water: rho*g*Q*H*eta with L/s→m3/s conversion, operating hours/day and 365 days/year.
+- Footstep: F*stroke*eta with mm→m conversion and annual steps.
+- Professional Upgrade hydraulic module: zero installed units now correctly yields zero output rather than silently forcing one.
+
+Default-model audit values:
+- Road gross loss: 6076.389 J/event; net recovered: 1215.278 J/event; annual model: 7,089,120.370 kWh/year.
+- Water net: 5.15025 kW/site; annual model: 225,580.95 kWh/year.
+- Foot net: 1.68 J/step; annual model: 51.10 kWh/year.
+
+## Verification
+- All JS files pass `node --check`.
+- `npm run build` passes.
+- Local HTTP smoke test: 200 for root, index, new JS/CSS, dist index and dist new JS.
+- Baseline file content preserved; only additive module files and the intended index/logic patches were added.
+````
+
+---
+
+<a id="doc-qa-border-map-control-final-2026-10-05-md"></a>
+## Original file: `QA-BORDER-MAP-CONTROL-FINAL-2026-10-05.md`
+
+SHA-256: `5e95ec17b5535856889491fa4c06c244f66d82904600bb7c2942aeac4f8ad973`
+
+````markdown
+# IGERS Border Map Control — Final QA
+Date: 2026-10-05
+
+## Passed
+- Re-audited the supplied PRO-MIL-STYLE-PUBLIC-SATELLITE-BORDER release.
+- All project JavaScript files pass Node syntax validation.
+- Production static build passes.
+- Local HTTP smoke test returns HTTP 200 for root/index, Border JS/CSS and generated dist assets.
+- All 179 files from the previous release are preserved; the patch adds only new/updated map-control assets and QA output.
+- Border monitor now uses a real geographic Leaflet map with OpenStreetMap tiles centered on Bangladesh.
+- Aircraft search results are plotted at the exact latitude/longitude received from the existing Airplanes.live public API snapshot rather than an approximate screen-space projection.
+- Bangladesh boundary overlay is displayed on the geographic map.
+- Zoom control and a Bangladesh-view recenter control are available.
+- Aircraft markers expose status, altitude, speed, track and position in map popups.
+- Live aggregate counters show total received, position data, inbound, in-airspace, passing, outbound and total flow.
+- Radar search status is driven by the freshness of the public aircraft snapshot; stale/offline data does not remain falsely marked LIVE.
+- If Leaflet CDN loading fails, the existing Airplanes.live public live-map iframe is used as a fallback.
+
+## Data semantics
+- The radar/search layer is a public ADS-B/MLAT-derived aircraft visualization, not a restricted military radar feed.
+- Inbound/outbound/passing are derived from current public position plus a 5-minute forward projection against the Bangladesh polygon; they are not flight-plan or military-intelligence classifications.
+- No individual mobile-phone location is collected or inferred.
+- Satellite observation uses NASA GIBS/Worldview public Earth-observation imagery.
+````
+
+---
+
+<a id="doc-qa-border-map-control-fix-2026-10-05-md"></a>
+## Original file: `QA-BORDER-MAP-CONTROL-FIX-2026-10-05.md`
+
+SHA-256: `d1d7e9ff8ab7bf0314dc8eafd036526ca051b8088a6915024c4d76f0f12e148b`
+
+````markdown
+IGERS Border Map Control QA — 5 October 2026
+
+Fix: replaced the command-panel aircraft view from pixel-projected markers over a remote iframe with a real Leaflet/OpenStreetMap geographic basemap. Public aircraft results now render as geolocated markers using the exact lat/lon returned by the existing Airplanes.live API snapshot. Bangladesh boundary/zone overlay, zoom controls, Bangladesh recenter control, popups and live counts are included.
+
+The Airplanes.live iframe remains as a fallback if Leaflet CDN loading fails.
+
+Safety/data semantics: public ADS-B/MLAT-derived air traffic only; no restricted military radar or individual phone tracking.
+````
+
+---
+
+<a id="doc-qa-final-deep-integration-2026-09-14-md"></a>
+## Original file: `QA-FINAL-DEEP-INTEGRATION-2026-09-14.md`
+
+SHA-256: `630a0b614c1faa784f4e370c10fd5deee187322dff16ad2284b2f978eabfaf59`
+
+````markdown
+# IGERS-BD-01 — Final Deep Integration QA
+Date: 2026-09-14
+
+## Package integrity
+- ZIP extracted successfully: PASS
+- Production build (`node build.mjs`): PASS
+- JavaScript syntax checks: PASS
+- Duplicate HTML IDs: 0
+- Local asset/reference checks: PASS
+
+## Preserved legacy/core IGERS features
+- Energy source map: PASS
+- Energy journey / conversion architecture: PASS
+- Roads / bridges / water / hybrid applications: PASS
+- Sentinel/NOC concept: PASS
+- Bangladesh deployment section: PASS
+- Environmental/radar/earthquake layer: PASS
+- Time engine: PASS
+- Weather/location layer: PASS
+- Inventor / project identity: PASS
+- Engineering limitations/safety section: PASS
+- Feedback/customer-care section: PASS
+
+## Live/added systems
+- Live Air Traffic: PASS
+- Earthquake alert feed + notification UI: PASS
+- Satellite connection monitor: PASS
+- Airspace Anomaly Monitor: PASS
+- Satellite weather/observation visual layer: PASS
+- NASA GIBS visual layer: PASS
+- NASA EONET disaster intelligence: PASS
+- NASA astrography/live-location panel: PASS
+- Same-origin provider gateway: PASS
+- Provider failure state: HTTP 502 / UPSTREAM_UNAVAILABLE
+
+## Runtime smoke test
+Local server started successfully.
+Core routes returned HTTP 200:
+- /
+- /privacy.html
+- /terms.html
+- /copyright.html
+- /nasa-intel.js
+- /sw.js
+
+Provider gateway behavior from this isolated environment:
+- weather: 502 UPSTREAM_UNAVAILABLE
+- USGS: 502 UPSTREAM_UNAVAILABLE
+- NASA EONET: 502 UPSTREAM_UNAVAILABLE
+- NASA API: 502 UPSTREAM_UNAVAILABLE
+- NASA GIBS: 502 UPSTREAM_UNAVAILABLE
+
+These 502 results are expected because this execution environment has no outbound provider connectivity. The app now reports this state honestly instead of presenting stale data as LIVE.
+
+## Conclusion
+The new live/remote-data layer is integrated into the same application package and the previous core IGERS features are preserved. No duplicate HTML IDs or broken local references were detected. The only untestable condition here is actual third-party live data retrieval because the test environment blocks outbound network access.
+````
+
+---
+
+<a id="doc-qa-release-verification-2026-09-14-md"></a>
+## Original file: `QA-RELEASE-VERIFICATION-2026-09-14.md`
+
+SHA-256: `9e8c8e91ca717c78e754a5cd2e8a75ea1ae39c9cfa4a66667e052829025c0b87`
+
+````markdown
+# IGERS POWERCORE — Final Complete Release Verification
+Date: 14 September 2026
+
+## Release
+IGERS-POWERCORE-FINAL-COMPLETE-2026-09-14
+
+## Verified
+- Clean extraction and file integrity
+- Production build via `npm run build`: PASS
+- `dist/index.html` generated: PASS
+- Duplicate HTML IDs: PASS (0)
+- JavaScript syntax: PASS (`script.js`, `igers-live-enhancer.js`, `server.mjs`)
+- Inline application script extraction + syntax check: PASS (after fixing Airspace Monitor string-literal syntax defect)
+- Local server startup: PASS
+- HTTP smoke test for core/legal/runtime assets: PASS
+- Required feature presence: PASS (weather, air traffic, earthquake, satellite, airspace anomaly, energy/network/maintenance/road layers)
+- Common secret/private-key marker scan: PASS
+- Final source inspection: PASS
+- ZIP integrity: PASS
+
+## Live-feed behavior
+The UI uses explicit freshness/error states where implemented and does not claim proprietary satellite telemetry. External-feed availability, CORS, quotas and provider changes remain outside the local package test environment.
+
+## Browser limitation
+A full browser-rendered test was attempted previously, but the sandbox Chromium policy blocked navigation with `ERR_BLOCKED_BY_ADMINISTRATOR`. No false browser-pass claim is made.
+
+## Release assessment
+READY FOR USER-SIDE IMPORT/RUN TESTING. A reproducible inline JavaScript syntax defect in the Airspace Monitor was found and fixed; the final package was rebuilt and the fixed inline script now passes syntax validation.
+````
+
+---
+
+<a id="doc-qa-report-2026-10-06-md"></a>
+## Original file: `QA-REPORT-2026-10-06.md`
+
+SHA-256: `829b90631eec90516d2cae0b3ccd3b5f7a6fde86250e72a95ae84a5dd05d79a4`
+
+````markdown
+# IGERS POWERCORE — Navigation Build QA (2026-10-06)
+
+## Passed
+- ZIP integrity: PASS
+- Required local assets (cover + 44-page engineering PDF): present
+- Duplicate HTML IDs: none
+- Inline JavaScript syntax (`node --check`): PASS for all script blocks
+- Navigation panel + map + 3D canvas + controls: present
+- `state.navMap` initialization: present before navigation interactions
+- Air Traffic / Earthquake / Weather / Alert / Anomaly / Silo / Satellite / Border / Admin panels: present
+- Service worker cache includes index, cover and engineering PDF
+
+## Navigation hardening
+- Driving uses the public OSRM demo route endpoint.
+- Walking/Cycling are explicitly labeled as direct-navigation fallback modes; they no longer pretend to return an OSRM road route.
+- When OSRM is unavailable, the UI shows VERIFY + direct distance/bearing and clears ETA instead of keeping stale route data.
+- Map click updates destination and triggers navigation calculation.
+- Browser geolocation is permission-gated.
+
+## Runtime limitation
+The build sandbox could not complete a stable Chromium interactive render against localhost before timeout, and external routing/ADS-B providers may be inaccessible from the sandbox network. The static/runtime wiring was therefore validated by source inspection, syntax checking, DOM-reference checks and package integrity. The app is designed to display LIVE only after a provider responds and VERIFY when it does not.
+````
+
+---
+
+<a id="doc-qa-report-nextgen-2026-10-06-md"></a>
+## Original file: `QA-REPORT-NEXTGEN-2026-10-06.md`
+
+SHA-256: `f7fa5bc6969b0b29764dfacbc1b9b7e8b9375aff854536588c93f241651a2737`
+
+````markdown
+# IGERS POWERCORE — NEXT-GEN QA REPORT — 2026-10-06
+
+## Build / syntax
+- `igers-nextgen.js`: PASS (`node --check`)
+- `time-weather-update.js`: PASS
+- `live-indicator-fix.js`: PASS
+- `time-energy-repair.js`: PASS
+- Existing `script.js`: PASS
+- Existing `igers-live-enhancer.js`: PASS
+- Offline production build: PASS (`node build.mjs`)
+
+## Static integration
+- Missing local HTML/CSS/JS asset references: NONE
+- Duplicate IDs across static HTML + new simulation template: NONE
+- New Simulation Lab navigation anchor: PRESENT
+- Automatic calculation panel: PRESENT
+- Local simulation control panel: PRESENT
+- Conceptual 3D canvas: PRESENT
+
+## Conceptual model set
+1. Road Kinetic Recovery
+2. River Current Hydrokinetic
+3. Regulator / Low-Head Hydraulic
+4. Footstep / Pedestrian Micro-Harvest
+5. Bridge / Culvert Energy Node
+6. Rail Regenerative Braking
+7. Airport PV Canopy + Footstep
+8. Hybrid Solar + VAWT Resilience Node
+9. BESS + Local Load Sizing
+
+## Calculation integrity spot checks
+Independent arithmetic checks were run for the default scenarios. The implemented equations match the intended engineering forms (kinetic, hydrokinetic, hydraulic, footstep, regenerative braking, PV, hybrid wind/PV and BESS sizing).
+
+## Live-provider / browser limitation
+The container environment prevented a full Chromium navigation test of the locally served application (`ERR_BLOCKED_BY_ADMINISTRATOR`). Therefore the report does **not** claim a successful full browser interaction run from this environment. Live external providers are still handled by the existing application using explicit LIVE / degraded / offline states rather than invented values.
+
+## Deployment status
+The root project and `dist/` build are ready for GitHub Pages upload. Existing modules and files were preserved; the new Simulation Command Center is additive.
+````
+
+---
+
+<a id="doc-qa-report-md"></a>
+## Original file: `QA-REPORT.md`
+
+SHA-256: `70f70f5ff98ff4fee3de24a8ad328e36fbdbb13cae900ac0ae106afb399239c6`
+
+````markdown
+# IGERS POWERCORE — FINAL QA REPORT — 2026-10-06
+
+## Static QA
+- JavaScript syntax: PASS (all inline script blocks).
+- Duplicate HTML IDs: NONE.
+- Missing `$()` DOM references: NONE after final patch.
+- Required 3D renderer functions restored: `prepCanvas`, `loop`, `weather3DUpdate`, `air3DUpdate`, `siloUpdate`, `satellite`.
+- Required 3D canvases present: Air Traffic, Weather, Anomaly, Silo, Admin.
+- Journal cover and 44-page PDF are physically included in `assets/`.
+- Service-worker cache bumped to final v3.
+
+## Interactive UI QA (Playwright, mocked external providers)
+- All 13 main sections rendered in DOM.
+- 5 required 3D canvases initialized with non-zero dimensions.
+- Alert Test button produced visible in-app toast.
+- Alert toggle changed ON → OFF → ON correctly.
+- Admin password `IGERS-2026` unlocked the maintenance console.
+- Flight-detail renderer displayed callsign, registration, ICAO hex, altitude, ground speed, track, vertical rate, squawk, latitude, longitude, category and provider.
+- Silo recalculation responded to user input and produced a maintenance state/notice.
+- Page errors after the final runtime patch: NONE in the mocked-provider browser test.
+
+## External-provider limitation
+The sandbox cannot certify live production responses from every public provider because external network access and local HTTP browser navigation are restricted here. The application therefore intentionally uses LIVE/VERIFY/UNKNOWN states rather than fabricating provider output.
+
+## Visual QA
+A full-page Playwright render was captured after the final renderer repair. The 3D Air Traffic, 3D Weather, 3D Anomaly, 3D Silo and Administrative 3D canvases rendered as visible interactive graphics.
+````
+
+---
+
+<a id="doc-readme-install-md"></a>
+## Original file: `README-INSTALL.md`
+
+SHA-256: `c6e8852d369a818a939c2b9d475fd4bb49d80f7550875fb1badf0c4124b17a25`
+
+````markdown
+# IGERS Live Engineering Indicators — ADD-ONLY — TESTED
+
+This package is an isolated add-on. It does not replace the existing IGERS application and does not intentionally modify existing panels, APIs, localStorage, routes, or other application data.
+
+## Install
+Copy `igers-live-indicators/` into the existing repository root, then add before `</head>`:
+
+```html
+<link rel="stylesheet" href="./igers-live-indicators/igers-live-indicators.css">
+<script src="./igers-live-indicators/igers-live-indicators.js" defer></script>
+```
+
+The 12 indicators are explicitly labelled **MODEL / DEMONSTRATION**. They are not claimed as sensor/API live measurements.
+
+## Verification performed
+- ZIP integrity check: PASS
+- JavaScript syntax check: PASS
+- Browser-style DOM runtime harness: PASS
+- 12 indicator cards rendered: PASS
+- Duplicate-load guard: PASS
+- CSS root isolation / selector scoping: PASS
+- No fetch / XHR / WebSocket / localStorage / sessionStorage calls: PASS
+- Existing-app mutation through routes/history/location: NONE DETECTED
+
+A headless Chromium run was attempted, but the execution environment's Chromium process did not terminate reliably; therefore the browser-harness result above is the runtime verification used for this isolated add-on. No application-source regression claim is made because the complete current IGERS site source is not included in this add-on package.
+````
+
+---
+
+<a id="doc-readme-md"></a>
+## Original file: `README.md`
+
+SHA-256: `8a465d07445537405d120f83340135d22b8072c6dfe17427dcd2361733701681`
+
+````markdown
+# IGERS-BD-01 Magazine Integration | Developer Package
+
+This package integrates the Library magazine into the existing IGERS POWERCORE static website without external viewer dependencies.
+
+## Contents
+#magazine/index.html: responsive magazine page
+#magazine/styles.css: responsive styling
+#magazine/IGERS-BD-01-Professional-Engineering-Magazine.pdf: 70-page A4 magazine
+#integration/magazine-section.html: homepage card
+#integration/magazine.css: homepage card styling
+
+## Deploy
+Copy the `magazine/` folder into the existing repository root. The public page becomes `/IGERS-POWERCORE/magazine/`.
+
+Add the markup from `integration/magazine-section.html` to the existing homepage and its CSS to the existing stylesheet. Do not replace the existing index or application files.
+
+## Source identity
+Project: IGERS-BD-01
+Author / Inventor: Abdullah Al Rafi [BD]
+Publication: 09 September 2026
+Edition: 2026 Professional Thesis & Engineering Concept Edition
+
+## QA
+The PDF is bundled locally, so the viewer does not depend on an external document host. Browser-native PDF rendering provides zoom, page navigation and printing. A direct Open PDF and Download action are included for compatibility.
+````
+
+---
+
+<a id="doc-readme-old-md"></a>
+## Original file: `README.old.md`
+
+SHA-256: `f552a18a33a443514a322e7653bd927d5d83b7c3c81a47e43c9eca300b8e3e09`
+
+````markdown
+# IGERS-BD-01 Final Safe Live Enhancer
+
+This is a **drop-in enhancement** for the existing `raabdullah59720-igers/IGERS-POWERCORE` static site.
+
+## What it does
+
+- Adds a clearly visible Bangladesh national-flag visual to the existing first hero section (`#home.hero`).
+- Adds a small Bangladesh flag mark beside the existing IGERS brand.
+- Keeps the current HTML sections and existing site architecture intact.
+- Keeps live clock values updating every second.
+- Independently refreshes Dhaka weather/environment data from Open-Meteo.
+- Independently refreshes Asia earthquake data from the USGS past-hour GeoJSON feed.
+- Independently refreshes Dhaka-region ADS-B aircraft state data from Airplanes.live.
+- Uses request timeouts and isolated failures, so one provider outage does not stop the rest of the page.
+- Uses only scoped visual CSS injected by the script. It does not add global `section`, `button`, `a`, `header`, `.card`, `.panel`, or `.live` rules.
+- Uses no external image file for the flag. The flag is embedded as an SVG data URI, eliminating broken relative paths.
+
+## Install
+
+Upload `igers-live-enhancer.js` to the repository root.
+
+Then, in `index.html`, add **one line only** immediately before `</body>`:
+
+```html
+<script src="igers-live-enhancer.js"></script>
+```
+
+Do **not** remove the current `style.css`, `styles.css`, `script.js`, or the existing inline script. This file is intended to sit on top of the current application.
+
+## Why this is safer
+
+The current site already contains live-data logic for time, weather, environmental readings, earthquakes, and Airplanes.live aircraft data. This enhancer mirrors those providers with independent, timeout-protected refreshes while preserving the existing element IDs and section structure.
+
+The flag layer is inserted only inside `#home.hero`, with `pointer-events:none`. It cannot become a click-blocking overlay.
+
+## Static QA
+
+Before delivery, this package was checked for:
+
+- JavaScript syntax via Node.js
+- balanced template literals/braces/parentheses at source level
+- no forbidden broad selectors in the injected CSS string
+- no external flag asset dependency
+- no DOM rewrite of the navigation or unrelated sections
+- only one file required to integrate
+
+## Important live-data limitation
+
+A browser cannot guarantee that an external public data provider is reachable at every moment. When a provider is unavailable, the corresponding panel shows a retry/offline state and the other systems continue operating.
+
+## Current repository context verified
+
+The current IGERS repository already contains `index.html`, `script.js`, `style.css`, `styles.css`, an existing Airplanes.live integration, Open-Meteo weather/environment calls, USGS earthquake polling, and a world/local time engine. The live site also exposes those sections.
+
+This package does not claim to replace those existing systems. It is a safer final presentation + live-refresh layer.
+````
+
+---
+
+<a id="doc-readme-bugfix-2026-09-13-md"></a>
+## Original file: `README_BUGFIX_2026-09-13.md`
+
+SHA-256: `c0cb3196f53a0c899a79d8d3e9e0f7baf24212be1d0e849285a776da325f99af`
+
+````markdown
+# IGERS-BD-01 Bug-Fix Audit — 13 September 2026
+
+Fixed / hardened:
+- Browser location detection with safe Dhaka fallback.
+- Weather and environment feeds now use the active location coordinates.
+- Weather timezone uses the active location (`auto`) instead of always forcing Dhaka.
+- Added manual “Use my location” control and clear location/feed status.
+- Removed the unused Leaflet CDN reference with a mismatched integrity value.
+- Added a dependency-free local server and Windows `START-IGERS.bat` launcher.
+- Preserved earthquake, notification, live time, weather, environment, and air-traffic sections.
+- Preserved all original images/assets and project identity.
+
+Run locally:
+1. Double-click `START-IGERS.bat`.
+2. The browser opens at `http://127.0.0.1:4173/`.
+3. Allow location permission to use current browser coordinates; otherwise Dhaka fallback remains active.
+
+Note: live external feeds still require internet access and can be unavailable when their public providers are down or browser/network policy blocks them.
+
+## Legal / privacy hardening — 13 September 2026
+- Added public `copyright.html`, `privacy.html` and `terms.html` pages.
+- Added legal links and copyright line to the main site footer.
+- Added a project-specific proprietary notice in `LICENSE` so the bundled Apache-2.0 template license is no longer presented as the project license.
+- Privacy notice documents browser geolocation, functional localStorage, notifications and current external live-data providers.
+- Terms page explicitly distinguishes conceptual/illustrative engineering information from certified or measured performance and limits reliance on live feeds for safety-critical decisions.
+````
+
+---
+
+<a id="doc-regression-qa-2026-10-08-md"></a>
+## Original file: `REGRESSION-QA-2026-10-08.md`
+
+SHA-256: `5e8f42d34746e5de08b7f9091d60b4b638359df415a3a938d2c6cb5964164842`
+
+````markdown
+# IGERS POWERCORE — Full Regression QA — 2026-10-08
+
+Baseline: `IGERS-GITHUB-TOLL-PLAZA-3D-FULL-2026-10-08.zip`
+
+## Restored / preserved panels
+- Core IGERS sections and existing system control
+- 3D Early Warning / IronDome-style public-data monitor
+- Existing Air Traffic panel
+- **Separate 3D Air Traffic / Flight Detail panel**
+- **Separate Bangladesh Vehicle Movement & Count Monitor**
+- **Separate Field Link / Network & Satellite Resilience panel**
+- **National Toll Plaza registry with individual 3D-style plaza models**
+- National hourly toll-flow seismograph
+- Individual plaza hourly mini-seismographs
+- RHD/BBA source-link/report layer
+- Authorized live toll/ITS feed connector
+- Authorized CCTV snapshot/HLS connector
+- Chrome/PWA install/download panel
+- Existing Border, Satellite, Seismic, Marine, Tower Mesh, Emergency, Weather, Time, Energy, Analytics and other sections
+
+## Automated checks
+- External JavaScript syntax: PASS
+- Inline JavaScript syntax: PASS (13 inline blocks)
+- Duplicate HTML IDs: PASS (0 duplicates)
+- Missing local references: PASS (0)
+- Required runtime files: PASS
+- Local HTTP resource test: PASS (index + manifest + service worker + new modules = HTTP 200)
+- ZIP integrity: PASS
+- Compact deployment remains below GitHub browser-upload file limit
+
+## Runtime note
+The container could serve every module over HTTP, but the large page did not reliably finish Chromium `--dump-dom` within the sandbox timeout. This does not invalidate static syntax/reference checks; external live-provider availability still depends on the user's browser/network/provider access.
+
+## Data integrity
+- No private government CCTV is scraped or bypassed.
+- Live counts are only marked live when supplied by a public/authorized feed.
+- Reference/estimated values remain explicitly labeled.
+- ADS-B data is read-only visualization; no weapon/target control is implemented.
+````
+
+---
+
+<a id="doc-runtime-qa-2026-10-06-md"></a>
+## Original file: `RUNTIME-QA-2026-10-06.md`
+
+SHA-256: `4428e56531b11bcaa8a14de38ecf431bbfa6b178f23b671c2330c4e6c9661e0e`
+
+````markdown
+# IGERS POWERCORE — RUNTIME QA — 2026-10-06
+
+## Browser DOM smoke test
+Actual application HTML + bundled local JavaScript modules were executed in Chromium with external providers mocked only at the network boundary.
+
+- Page errors: 0
+- Console errors/warnings: 0
+- Duplicate IDs: 0
+- Day/Night toggle: PASS (Day -> Night/Day label transition)
+- Border Monitor section: PRESENT
+- Border 3D canvas: INITIALIZED
+- Border Radar 3D canvas: INITIALIZED
+- Salah prayer grid: POPULATED (Fajr, Dhuhr, Asr, Maghrib, Isha)
+- Qibla indicator: POPULATED (278° W for Dhaka fallback)
+- Data Analysis panel: RENDERED
+- Existing major monitor sections: PRESENT
+
+## Provider test policy
+External network responses were mocked only for deterministic runtime testing. Production provider availability is still represented by the app's LIVE / VERIFY / OFFLINE logic.
+
+## Environment limitation
+Direct Chromium navigation to local file/localhost pages is restricted in the execution environment. The runtime result above therefore verifies the actual bundled DOM/JavaScript execution path without claiming production-network availability.
+````
+
+---
+
+<a id="doc-satellite-module-audit-2026-09-13-md"></a>
+## Original file: `SATELLITE_MODULE_AUDIT_2026-09-13.md`
+
+SHA-256: `507caa7fa6ed846a2c9004586d5a7c577c598060ffb3d92055ee4de9842bb032`
+
+````markdown
+# IGERS Satellite & Disaster Intelligence Module — Audit
+Date: 2026-09-13
+
+## Added
+- Independent `Satellite & Disaster Intelligence` section.
+- Bangabandhu-1 public orbital-data monitor retained.
+- Official BMD source navigation for satellite imagery, radar, cyclone and warnings.
+- HIMAWARI / FY-2 source navigation labels based on BMD public satellite products.
+- Map/navigation view with OpenStreetMap handoff and browser-location support.
+- Source clock / UI sync indicator.
+
+## Isolation
+- Existing Air Traffic Management is not replaced or rewritten by the satellite-intelligence UI.
+- Airspace Safety remains a separate module.
+- Weather, earthquake and Comments/Customer Care modules remain separate.
+
+## Validation
+- `npm run build`: PASS
+- Duplicate HTML IDs: 0
+- Broken internal hash targets: 0
+- Inline JS syntax: PASS
+- `igers-live-enhancer.js`: PASS
+- `upgrade.js`: PASS
+- Production server critical routes: HTTP 200
+- Built `dist` contains the satellite module and controls.
+
+## Data accuracy notes
+- BMD official satellite/radar/warning pages are used as source-navigation destinations rather than fabricating government operational feeds.
+- Bangabandhu-1 connection status represents public orbital-element data connectivity, not spacecraft telemetry, imagery, or government control.
+- Disaster severity/warnings should be verified against the official BMD source.
+````
+
+---
+
+<a id="doc-satellite-weather-restore-2026-09-14-md"></a>
+## Original file: `SATELLITE_WEATHER_RESTORE_2026-09-14.md`
+
+SHA-256: `fb16f444898d06ab3d93f64befb30f9f864a06bb86d520a7f2da71ffb261b9d4`
+
+````markdown
+# IGERS Satellite Weather & Disaster Intelligence Restore
+
+Restored on 14 September 2026.
+
+## Restored capabilities
+- Dedicated Satellite & Disaster Intelligence section (`#satelliteIntel`).
+- Bangladesh-focused satellite navigation layer.
+- HIMAWARI / FY-2 satellite product navigation via Bangladesh Meteorological Department (BMD).
+- BMD weather radar, cyclone and warning navigation.
+- NASA GIBS near-real-time MODIS Earth-observation image panel for Bangladesh (`MODIS_Terra_CorrectedReflectance_TrueColor`).
+- Satellite observation freshness/error state; unavailable imagery is not labelled LIVE.
+- Existing Open-Meteo weather forecast remains separate from satellite observation.
+- Existing Bangabandhu-1 public orbital-element connection monitor remains separate from satellite imagery.
+- Existing Air Traffic, Earthquake and Airspace Safety systems remain independent.
+- Location-aware OSM navigation control restored for the satellite intelligence section.
+
+## Accuracy rule
+Satellite imagery is presented as Earth observation. Forecast weather remains a weather-model feed. Bangabandhu-1 status is public orbital-element data, not private spacecraft telemetry or control.
+
+## Validation
+- `node --check script.js`: PASS
+- Inline application script syntax: PASS
+- Duplicate HTML IDs: 0
+- Satellite section count: 1
+- NASA GIBS image source present: YES
+- HIMAWARI source navigation present: YES
+- BMD satellite/radar/warning links present: YES
+- Existing live feature markers preserved: YES
+- Offline production build: PASS
+````
+
+---
+
+<a id="doc-toll-national-qa-2026-10-08-md"></a>
+## Original file: `TOLL-NATIONAL-QA-2026-10-08.md`
+
+SHA-256: `08ffe02e96d439b1816f9f76d5dc43c73aa6ce26f8f0a7245dffaf3f7488374b`
+
+````markdown
+# Toll National QA — 2026-10-08
+
+Baseline: IGERS-POWERCORE-main (10).zip
+Baseline IDs: 353
+New IDs: 374
+Baseline IDs removed: 0
+New Toll IDs added: 21
+
+QA:
+- JS syntax: PASS for all project JS modules
+- Python relay py_compile: PASS
+- Toll runtime simulation stub: PASS
+- Toll event bridge runtime (`igers:vehicle-flow`): PASS
+- Duplicate IDs: 0
+- Missing local references: 0
+- Local HTTP smoke: PASS (index, Toll JS/CSS, SW, manifest, Python relay, launcher)
+- ZIP integrity: PASS
+
+Official data references:
+- RHD Traffic Insight Hub supports 1st 24-hour, 2nd 24-hour and 48-hour report generation.
+- RHD Online Road Network publishes source-verified toll-plaza LRP/location records used in this module.
+- BBA public site is linked for bridge/tunnel toll authority reference.
+
+Live-data rule: the module marks data LIVE only when a public or operator-authorized feed actually returns values. No private CCTV or protected system is bypassed.
+````
+
+---
+
+<a id="doc-ui-visual-data-upgrade-2026-10-06-md"></a>
+## Original file: `UI-VISUAL-DATA-UPGRADE-2026-10-06.md`
+
+SHA-256: `9e0b745c4b8508b58aeb9d5fc202e76cfff565f0669759e22b9976eb566da689`
+
+````markdown
+# IGERS POWERCORE — UI / Visual / Data Analysis Upgrade
+
+## Preserved baseline
+This package is an additive upgrade to the existing IGERS POWERCORE application. Existing panels, live-data modules, calculations, legal pages, Border Monitor, Salah/Qibla, Air Traffic, Seismic, Marine, Satellite and system controls are preserved.
+
+## New UI capabilities
+- Persistent **Day / Night mode** with browser/system preference on first load.
+- Theme choice is stored locally as `igers-theme` and survives reloads.
+- Subtle **3D depth / perspective interaction** on cards and major visual surfaces.
+- Lightweight visual sheen and improved elevation for existing 3D panels.
+- Respects `prefers-reduced-motion`.
+
+## New Data Analysis panel
+- **System Health** score is computed from existing system-state indicators.
+- **Nominal stream count** and **degraded/fallback count** are derived from current UI states.
+- Source-health matrix covers Time, Weather, Environment, Earthquake, Air Traffic, Satellite, Border and Energy.
+- Trend graph is a visual history model derived from the current system-health score; it is explicitly labelled as modelled and does not represent fabricated sensor telemetry.
+- Refresh timestamp is local browser time.
+
+## QA
+- JavaScript syntax: PASS for all app JS files.
+- Duplicate HTML IDs: none.
+- Missing local HTML script/link references: none.
+- Bangladesh fallback GeoJSON: valid FeatureCollection with one feature.
+- New theme button and analytics section present.
+- New CSS/JS resources return HTTP 200 from a local static server.
+
+## Browser verification note
+The execution environment's Chromium process was unable to complete a reliable headless graphical session and timed out. Source/static checks and HTTP resource checks were therefore used as the authoritative QA for this visual-only additive layer. Existing external provider limitations remain unchanged.
+````
+
+---
+
+<a id="doc-upgrade-only-release-2026-09-22-md"></a>
+## Original file: `UPGRADE-ONLY-RELEASE-2026-09-22.md`
+
+SHA-256: `86dd06f5033717aa74ab1b49472f8a481d8c100720309973cc7ede958fe24453`
+
+````markdown
+IGERS-BD-01 — Upgrade-Only Release
+Date: 22 September 2026
+
+This package preserves the existing IGERS website/application and adds a non-destructive presentation upgrade. No existing project files were removed.
+
+Verified changes:
+- Existing core script/main module hashes preserved.
+- Added designer.css + designer.js presentation layer.
+- Existing index.html, styles.css and package metadata updated only for the upgrade integration.
+- No duplicate HTML IDs detected (143 IDs / 143 unique).
+- Production build completed through the project's offline-safe build script.
+- Local HTTP smoke test passed for /, /index.html, /privacy.html, /terms.html, /copyright.html and /manifest.webmanifest.
+
+Important: live external providers (NASA/weather/ADS-B/etc.) remain dependent on their public network availability. The package does not fake external connectivity.
+````
+
+---
+
+<a id="doc-upgrade-report-2026-10-03-md"></a>
+## Original file: `UPGRADE-REPORT-2026-10-03.md`
+
+SHA-256: `2cd7451dcddc976175bd8ae0b2dec05be45baed9becd9eb60122e486ec4b9700`
+
+````markdown
+# IGERS-BD-01 — Future Upgrade QA Report
+
+## Baseline
+The latest complete IGERS website package available in the persistent Library was used as the working baseline: `IGERS-POWERCORE-FINAL-VERIFIED-2026-09-14.zip`. The newer 2026-10-03 `IGERS-POWERCORE-main (6).zip` referenced in the request was not present in the Library index available to this run, so this release does **not** claim to be a byte-for-byte modification of that missing archive.
+
+## Additive upgrades
+- Bangladesh Mobile Tower Radar — isolated panel, simulated demo nodes, region filter, node/link controls, radar animation, tower information cards.
+- IGERS Future Upgrade Control Center — per-module ON/OFF states with ACTIVE / INACTIVE / SIMULATION / UNAVAILABLE status semantics and local persistence.
+- Administrator authentication prototype — masked password input, session login/logout, failed-login message, activity log, admin-only controls.
+- Master and individual machine controls — simulation-only, persistent UI state, confirmation before Master OFF.
+- GitHub Pages/static compatibility — relative assets and `.nojekyll` retained.
+
+## Data integrity
+No real mobile-tower coordinates are presented as verified. The tower panel explicitly uses `SIMULATED DEMONSTRATION` nodes.
+
+## Security limitation
+`MIM2005` is implemented as requested for the prototype, but browser-side/static authentication is not production-grade security. Physical machine control is not claimed; controls only modify simulated browser state.
+
+## Automated checks performed
+- ZIP extraction and file inventory.
+- Required `index.html` present in repository root and `dist/`.
+- New JS/CSS files present in both root and `dist/`.
+- Relative script/style references inserted.
+- Existing root `.nojekyll` and `dist/.nojekyll` retained.
+- JavaScript syntax check with Node.js.
+- Static HTML reference check for new assets.
+- Final ZIP re-extraction and integrity check.
+
+## Tests not possible
+- Real GitHub Pages deployment from this environment.
+- Browser visual interaction/console testing with a full browser automation stack.
+- Verification of real mobile-tower locations or private operator databases.
+- Physical hardware control.
+- Any external live API requiring credentials.
+
+## Remaining limitation
+For an exact upgrade of `IGERS-POWERCORE-main (6).zip`, that exact archive must be available in the Library or attached to the conversation. This release instead uses the latest complete Library website baseline available during the run.
+````
+
+---
+
+<a id="doc-upgrade-report-2026-10-05-deep-3d-live-border-md"></a>
+## Original file: `UPGRADE-REPORT-2026-10-05-DEEP-3D-LIVE-BORDER.md`
+
+SHA-256: `d71ca040217992160cc6c242207b29ff4895fc5fc87024289472ddff73a1605a`
+
+````markdown
+# IGERS POWERCORE — Deep 3D Border Zone Additive Upgrade
+
+Date: 5 October 2026
+
+Baseline: `IGERS-POWERCORE-main (8).zip`
+
+## Delivered
+
+- Added separate `Border Zone 3D Ground + Air Monitor`.
+- Added public NASA GIBS Earth-observation image layer.
+- Added public ADS-B-derived air-state visualization by reusing the existing Air Traffic snapshot.
+- Added non-identifying aggregate/demo mobile signal / coverage layer.
+- Added 3D-style radar sweep, ground sectors, satellite link visualization and live health states.
+- Added layer controls and satellite refresh control.
+- Preserved the existing panels and modules.
+
+## Refresh model
+
+Local visuals use `requestAnimationFrame()` for continuous rendering. External data uses provider-safe schedules or existing module data rather than pretending that internet providers can be polled every nanosecond.
+
+## Important engineering/data boundary
+
+A website cannot legitimately access private mobile-phone locations, telecom subscriber data, military border radar or restricted security feeds without authorized infrastructure and credentials. This release therefore uses only public/authorized-safe data semantics and clearly labels simulation/aggregate layers.
+````
+
+---
+
+<a id="doc-upgrade-report-2026-10-05-deep-3d-live-md"></a>
+## Original file: `UPGRADE-REPORT-2026-10-05-DEEP-3D-LIVE.md`
+
+SHA-256: `59bf21e394dde05bd939e945b6de4dedfbf8b368d38b4cc956cf70bf40b6f48b`
+
+````markdown
+# IGERS POWERCORE — Deep 3D Live Calculation Upgrade
+
+Date: 5 October 2026
+
+## Scope
+This is an additive upgrade to the supplied `IGERS-POWERCORE-main (7).zip` baseline. Existing panels and modules were preserved; the new layer is linked into the existing page without replacing the existing calculation, weather, location, air-traffic or satellite modules.
+
+## Added
+- Consolidated **Calculation Results Console** linked to the existing Energy, Water Flow and Footstep input fields.
+- **Calculate & View Results** action with validation and a consolidated engineering snapshot.
+- New **IGERS FRAME-LIVE 3D MONITOR** positioned immediately after the existing satellite connection section.
+- CSS-based 3D satellite/orbit visualization with live connection, latency and element-age display sourced from the existing satellite panel.
+- Frame-live 3D instrument modules for road energy, water flow, footstep harvesting, weather/time, combined output and location status.
+- Local calculation values update on every browser animation frame while result text is rate-limited for performance.
+- Satellite connection manager button delegates to the existing satellite refresh function.
+
+## Refresh semantics
+A browser cannot perform a real external network refresh every nanosecond. JavaScript and public data providers operate on millisecond/second-scale scheduling. The upgrade therefore uses `requestAnimationFrame()` for local visual/calculation updates (normally ~60–144+ FPS depending on display/browser) and keeps external feed refresh at provider-safe cadence.
+
+## QA performed
+- JavaScript syntax checks: all project `.js` files pass `node --check`.
+- New module syntax check: pass.
+- HTML duplicate-ID audit: 193 IDs, 193 unique in the supplied baseline after integration.
+- Local asset reference audit: no missing local script or stylesheet references detected.
+- Production build: pass using the project's offline-safe `build.mjs` path.
+- Local server smoke test: `http://127.0.0.1:4173/` returned HTTP 200.
+
+## Browser QA limitation
+A full headless Chromium DOM interaction run was attempted, but the page's long-running live timers/external feed behavior prevented a clean bounded `--dump-dom` completion in this environment. Static/source/build validation passed; no claim is made that a full end-to-end browser test was completed here.
+
+## Engineering disclaimer
+All energy values remain conceptual/calculation-model outputs and are not physical sensor telemetry. Satellite connectivity refers to public orbital-element data and does not imply spacecraft telemetry or spacecraft control.
+````
+
+---
+
+<a id="doc-upgrade-audit-2026-09-14-md"></a>
+## Original file: `UPGRADE_AUDIT_2026-09-14.md`
+
+SHA-256: `3f7c7da0d2323dc66be237e64334a99a2cf4aaa6a0ca926e5400d49e81a2ae0d`
+
+````markdown
+# IGERS POWERCORE Live Systems Upgrade Audit — 2026-09-14
+
+## Baseline preserved
+- Live Air Traffic / ADS-B module remains in place.
+- Earthquake alert system remains multi-source (USGS + EMSC).
+- Bangabandhu-1 satellite connection monitor remains isolated from Air Traffic and Airspace Safety.
+- Bangladesh Airspace Anomaly Monitor remains a separate public-data heuristic layer.
+- Weather, location, privacy, terms, copyright and the rest of the IGERS interface are preserved.
+
+## Accuracy / efficiency changes
+### Air Traffic
+- Live status is now freshness-aware instead of treating any successful HTTP response as LIVE.
+- `<=45 s` newest position: LIVE.
+- `46–120 s`: DEGRADED.
+- `>120 s`: STALE.
+- Feed outage: OFFLINE.
+- Status explicitly identifies Airplanes.live as the provider.
+
+### Earthquake
+- USGS feed `metadata.generated` is used for source freshness when available.
+- `<=3 min`: LIVE / freshness verified.
+- `3–10 min`: DEGRADED.
+- `>10 min`: STALE.
+- If both sources are unreachable: OFFLINE and no alert is inferred.
+- USGS + EMSC remain separate sources and are deduplicated for display.
+
+### Satellite
+- CelesTrak GP data remains on a low-cadence refresh aligned with the provider's published 2-hour GP update interval.
+- The indicator now describes the dataset as CURRENT/STALE rather than pretending it is spacecraft telemetry.
+- Orbit-element epoch age is used for freshness.
+- Official BMD satellite/radar navigation is surfaced without fabricating a BMD machine-readable feed.
+
+### Airspace Anomaly Monitor
+- Adds public emergency transponder-code awareness (7700/7600/7500) as a notice.
+- Raises the speed outlier threshold and requires stronger combined conditions before an unverified high-altitude target becomes a higher-severity outlier.
+- The module continues to state that ADS-B public data cannot confirm hostile, stealth or hypersonic objects.
+- Feed failure never creates a danger notice.
+
+## Local QA
+- `npm run build`: PASS
+- JavaScript syntax checks: PASS
+- Duplicate HTML IDs: 0
+- HTTP smoke tests: `/`, `/privacy.html`, `/copyright.html`, `/terms.html`, `/manifest.webmanifest`, `/sw.js` => HTTP 200
+- Required production assets present: PASS
+
+## External-source verification note
+This build uses public providers whose current documentation was checked on 2026-09-14. The isolated container used for packaging does not have outbound network access, so no claim is made that the live third-party APIs were successfully queried from inside the packaging runtime.
+````
+
+---
+
+<a id="doc-upgrade-notes-2026-09-13-md"></a>
+## Original file: `UPGRADE_NOTES_2026-09-13.md`
+
+SHA-256: `b591016aaba070fae6b64c580d8410c98059bfc54e1ab600071b5cf62f7a8f1a`
+
+````markdown
+# IGERS-BD-01 upgrade package
+
+- Fixed the missing Bangladesh flag overlay by actually loading the enhancer and using a local SVG asset with isolated layering.
+- Kept the existing weather, time and Airplanes.live systems intact.
+- Upgraded earthquake monitoring to a multi-source USGS + EMSC browser feed with timeout isolation, deduplication, visibility-aware polling and notification de-duplication.
+- Satellite/remote-sensing note: satellites can support earthquake mapping/coseismic deformation analysis, but they are not a safe substitute for a primary real-time seismic warning feed. This package therefore does not falsely claim satellite-based instant earthquake prediction.
+- Existing interface remains informational and is not an official Bangladesh earthquake warning service.
+````
+
+---
+
+<a id="doc-upgrade-pro-release-2026-09-22-md"></a>
+## Original file: `UPGRADE_PRO_RELEASE_2026-09-22.md`
+
+SHA-256: `5b2c6b86a460847312f31e6967fccd936c67c68a40507ecffac592ca764c9717`
+
+````markdown
+# IGERS-BD-01 Professional Upgrade Release — 2026-09-22
+
+This release is additive. Existing IGERS panels, live-data modules, legal pages, graphics and project identity are preserved.
+
+## New panels
+- IGERS Command Center: core integrity scan, system status, event console, refresh, JSON snapshot export.
+- Engineering Lab: hydro/flow recovery conceptual power and energy estimator.
+- Engineering Lab: roadside solar harvesting conceptual estimator.
+- System-flow visualization: source → recover → convert → store → apply.
+- Analytics & Research Library: validation pathway and measured/estimated/live data distinction.
+- New navigation entries for Command Center, Engineering Lab and Analytics.
+- Dependency-free implementation for GitHub Pages performance.
+
+## Deployment
+- `index.html` remains at repository root.
+- `.nojekyll` remains present.
+- The custom `CNAME` file is intentionally absent so this release can use the GitHub project-page URL directly.
+- Existing live-data APIs remain independent from the new panels.
+
+## Engineering note
+The new calculators are conceptual estimation tools. They do not represent measured field performance. Future measured/experimental data can be connected without changing the UI architecture.
+````
+
+---
+
+<a id="doc-voicemail-full-app-audit-2026-09-15-md"></a>
+## Original file: `VOICEMAIL-FULL-APP-AUDIT-2026-09-15.md`
+
+SHA-256: `0cf167f230432341af4f9036e3b376e46bd4369a33f3fe32a5ff75e73bdf452a`
+
+````markdown
+# IGERS POWERCORE — Public Voicemail + Full Feature Audit
+
+Date: 15 September 2026
+
+## Base package
+This build uses the IGERS-POWERCORE NASA GIBS live-indicator package as the base so existing live/environmental/satellite modules remain present.
+
+## Added
+- Public Voicemail recorder in the Comments / Care area.
+- Maximum recording duration: 60 seconds.
+- Browser preview, stop, discard and publish controls.
+- Shared public feed through `/api/voicemails`.
+- Public audio playback through `/api/voicemails/:id/audio`.
+- MIME validation, 7 MB audio limit and basic per-connection rate limiting.
+- Privacy/terms notes for public recordings.
+
+## Existing feature verification
+Verified in source package:
+- IGERS-BD-01 identity and project title.
+- Inventor / author: Abdullah Al Rafi [BD].
+- Concept / invention date: 14 August 2026.
+- Weather / Open-Meteo.
+- Environmental and earthquake feeds.
+- Air traffic / Airplanes.live.
+- Airspace safety monitor.
+- Satellite connection / Bangabandhu-1 public orbital-data context (NORAD 43463).
+- NASA GIBS imagery and NASA GPM precipitation panel.
+- Comments / Customer Care.
+- Copyright / Privacy / Terms pages.
+
+## QA checks
+- `node build.mjs`: PASS.
+- JavaScript syntax checks: PASS.
+- Server syntax check: PASS.
+- Duplicate HTML IDs: PASS (none found).
+- Home-page HTTP smoke test: PASS.
+- Voicemail GET feed: PASS.
+- Voicemail POST/upload: PASS.
+- Voicemail audio retrieval: PASS.
+- Uploaded recording appears in shared feed: PASS.
+- ZIP integrity test: PASS.
+
+## Deployment note
+Shared/public voicemail requires the included Node server (or an equivalent backend implementing the same API). A static-only hosting environment cannot persist cross-user voice recordings by itself.
+````
+
+---
+
+<a id="doc-weather-3d-digital-upgrade-2026-10-06-md"></a>
+## Original file: `WEATHER-3D-DIGITAL-UPGRADE-2026-10-06.md`
+
+SHA-256: `41c6f9c8d352933fb99ad077c0a3eded2ccb7e7a5dc9ced6baad8188ac31260a`
+
+````markdown
+# IGERS POWERCORE — Digital 3D Weather Upgrade
+
+This additive upgrade converts the Weather panel from an analog/emoji presentation into a digital 3D atmospheric console.
+
+Included:
+- Procedural 3D-style sky/depth scene with horizon grid, clouds, sun/moon, wind vectors and precipitation particles.
+- Live values bound to the existing Open-Meteo weather engine; no duplicate provider or fabricated sensor values.
+- Digital temperature, humidity, wind, precipitation, condition and direction HUD.
+- Hourly forecast strip synchronized from the existing weather-hourly stream.
+- Night/Day theme compatibility.
+- Reduced performance footprint: capped animation geometry and 2x device-pixel ratio.
+- Existing Weather API/location logic, Weather live-indicator and all other IGERS panels remain intact.
+- Service-worker cache version bumped to v7.
+
+QA:
+- All inline script blocks pass Node syntax checking.
+- All standalone JavaScript files pass Node syntax checking.
+- Upgrade is additive and does not replace the existing Weather API/data flow.
+````
+
+---

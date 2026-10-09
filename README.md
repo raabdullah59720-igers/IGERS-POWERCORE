@@ -1,24 +1,22 @@
-# IGERS-BD-01 Magazine Integration | Developer Package
+# IGERS POWERCORE — GitHub Compact Package
 
-This package integrates the Library magazine into the existing IGERS POWERCORE static website without external viewer dependencies.
+This distribution is compacted to stay below GitHub's 100-file browser-upload limit while preserving the original project assets and documentation.
 
-## Contents
-#magazine/index.html: responsive magazine page
-#magazine/styles.css: responsive styling
-#magazine/IGERS-BD-01-Professional-Engineering-Magazine.pdf: 70-page A4 magazine
-#integration/magazine-section.html: homepage card
-#integration/magazine.css: homepage card styling
+## Upload instructions
 
-## Deploy
-Copy the `magazine/` folder into the existing repository root. The public page becomes `/IGERS-POWERCORE/magazine/`.
+1. Extract `IGERS-POWERCORE-GITHUB-READY-2026-10-09.zip`.
+2. Open the extracted `IGERS-POWERCORE-main` folder.
+3. Upload the *contents of that folder* to the root of your existing GitHub Pages repository (not the outer folder itself).
+4. Keep `index.html` at repository root and keep `data/bangladesh-boundary-fallback.geojson`, image/icon files, `sw.js`, `manifest.webmanifest`, and the original nested backup ZIP.
+5. Do not rename `igers-compact-bundle.css`, `time-weather-update.css`, or `styles.css`; the app references them.
+6. `PROJECT-DOCUMENTATION-COMPENDIUM.md` contains the full text of every original Markdown file, with source filenames and SHA-256 checksums.
 
-Add the markup from `integration/magazine-section.html` to the existing homepage and its CSS to the existing stylesheet. Do not replace the existing index or application files.
+## File consolidation
 
-## Source identity
-Project: IGERS-BD-01
-Author / Inventor: Abdullah Al Rafi [BD]
-Publication: 09 September 2026
-Edition: 2026 Professional Thesis & Engineering Concept Edition
+- Component/module CSS is combined in `igers-compact-bundle.css`. The original inline styles in `index.html` stay inline to preserve their cascade positions. The time/weather stylesheet remains separate because its JavaScript module loads it late, and `styles.css` remains for `main.jsx`'s import. A few unlinked, generic legacy themes are preserved inside the bundle but disabled so they do not unexpectedly override the existing website.
+- Original Markdown reports are preserved in `PROJECT-DOCUMENTATION-COMPENDIUM.md`.
+- Application JavaScript, HTML pages, Python relays/tests, imagery, icons, GeoJSON, JSON/configuration, and the original app ZIP are retained.
 
-## QA
-The PDF is bundled locally, so the viewer does not depend on an external document host. Browser-native PDF rendering provides zoom, page navigation and printing. A direct Open PDF and Download action are included for compatibility.
+## Verification note
+
+Static syntax, asset-path, archive-integrity, and compact file-count checks are performed on this package. Live provider availability still depends on external services, network policy, browser CORS, and provider rate limits; a static package check cannot guarantee every live feed is online.

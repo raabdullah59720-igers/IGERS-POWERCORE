@@ -143,7 +143,7 @@
   function renderAirSelected(){
     const a=state.selectedAir;if(!a){setText('alsAirSelected','No aircraft selected');setText('alsAirSelectedMeta','Select a target from the live list.');return;}
     setText('alsAirSelected',a.callsign||a.hex||'Unknown');setText('alsAirSelectedMeta',(a.reg||'Registration n/a')+' · '+(a.type||'Type n/a')+' · '+(a.category||'ADS-B'));
-    const vals=[['Altitude',a.alt==null?'—':Math.round(a.alt)+' ft'],['Speed',a.speed==null?'—':Math.round(a.speed)+' kt'],['Track',a.track==null?'—':Math.round(a.track)+'°'],['Position',(a.lat==null||a.lon==null)?'—':a.lat.toFixed(4)+', '+a.lon.toFixed(4)],['Squawk',a.squawk||'—'],['Provider','Airplanes.live']];
+    const vals=[['Altitude',a.alt==null?'—':Math.round(a.alt)+' ft'],['Speed',a.speed==null?'—':Math.round(a.speed)+' kt'],['Track',a.track==null?'—':Math.round(a.track)+'°'],['Position',(a.lat==null||a.lon==null)?'—':a.lat.toFixed(4)+', '+a.lon.toFixed(4)],['Squawk',a.squawk||'—'],['Provider',window.__igersAirProvider||'Public ADS-B']];
     const box=$('alsAirDetail');if(box)box.innerHTML=vals.map(v=>'<div><b>'+esc(v[1])+'</b><span>'+esc(v[0])+'</span></div>').join('');
   }
   function handleAirFeed(list){
@@ -151,16 +151,26 @@
     setText('alsAirCount',state.air.length);setText('alsAirPos',state.air.filter(a=>a.lat!=null&&a.lon!=null).length);
     let newest=Infinity;state.air.forEach(a=>{if(Number.isFinite(Number(a.seen)))newest=Math.min(newest,Number(a.seen));});
     setText('alsAirAge',Number.isFinite(newest)?(newest<60?Math.round(newest)+'s':Math.round(newest/60)+'m'):'—');
-    setText('alsAirLast','Last provider sync · '+nowTime());setLive('alsAirLive',state.air.length?'':'offline',state.air.length?'LIVE · Airplanes.live':'VERIFY · no positioned targets');
+    setText('alsAirLast','Last provider sync · '+nowTime());setLive('alsAirLive',state.air.length?'':'offline',state.air.length?'LIVE · '+(window.__igersAirProvider||'Public ADS-B'):'VERIFY · no positioned targets');
     if(state.selectedAir){const fresh=state.air.find(x=>x.hex===state.selectedAir.hex);state.selectedAir=fresh||state.selectedAir;}
     renderAirList3D();renderAirSelected();
   }
-  async function refreshAirFallback(){
-    if(Array.isArray(window.__igersAirLastPayload)&&window.__igersAirLastPayload.length){handleAirFeed(window.__igersAirLastPayload);return;}
+  async function refreshAirFallback(force=false){
+    if(Array.isArray(window.__igersAirLastPayload)){
+      handleAirFeed(window.__igersAirLastPayload);
+      if(force && typeof window.__igersRefreshAirTraffic==='function') window.__igersRefreshAirTraffic();
+      return;
+    }
+    if(typeof window.__igersRefreshAirTraffic==='function'){
+      setLive('alsAirLive','warn','SYNCING · shared public ADS-B feed');setText('alsAirLast','Waiting for shared provider · '+nowTime());
+      if(force) window.__igersRefreshAirTraffic();
+      return;
+    }
     try{
       const r=await fetch('https://api.airplanes.live/v2/point/23.8103/90.4125/250',{cache:'no-store'});if(!r.ok)throw new Error('feed');const d=await r.json();
-      handleAirFeed((d.ac||[]).map(a=>({hex:a.hex||'',callsign:(a.flight||'').trim(),lat:a.lat,lon:a.lon,alt:a.alt_baro,speed:a.gs,track:a.track,reg:a.r,type:a.t,category:a.category,squawk:a.squawk,seen:a.seen_pos,baroRate:a.baro_rate})));
-    }catch(_){setLive('alsAirLive','offline','OFFLINE · provider unavailable');setText('alsAirLast','Retry pending · '+nowTime());}
+      const rows=(d.ac||[]).map(a=>({hex:a.hex||'',callsign:(a.flight||'').trim(),lat:a.lat,lon:a.lon,alt:a.alt_baro,speed:a.gs,track:a.track,reg:a.r,type:a.t,category:a.category,squawk:a.squawk,seen:a.seen_pos,baroRate:a.baro_rate}));
+      window.__igersAirLastPayload=rows;window.__igersAirProvider='Airplanes.live';window.__igersAirLastSync=Date.now();window.dispatchEvent(new CustomEvent('igers:airtraffic',{detail:rows}));handleAirFeed(rows);
+    }catch(_){setLive('alsAirLive','offline','OFFLINE · public provider unavailable');setText('alsAirLast','Retry pending · '+nowTime());}
   }
 
   // ---------- Seismic / Plate ----------
