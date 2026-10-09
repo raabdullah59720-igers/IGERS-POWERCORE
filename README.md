@@ -5,14 +5,14 @@
 Inventor & Author: Abdullah Al Rafi [BD]  
 Concept / Invention Date: 14 August 2026
 
-This is a static-first, GitHub Pages-compatible engineering dashboard. The page contains the pre-existing project modules plus additive improvements to the border monitor, 3D air-traffic view, combined air/ground/maritime visualization, and NASA GIBS imagery viewer.
+This is a static-first, GitHub Pages-compatible engineering dashboard. The page contains the pre-existing project modules plus additive improvements to the border monitor, 3D air-traffic view, combined air/ground/maritime visualization, NASA GIBS imagery viewer, and a presentation-only design system that standardizes navigation, spacing, typography, cards, controls and mobile behavior without replacing application features.
 
 ## Deploy to GitHub Pages
 
 1. Download and extract this ZIP. The archive stores project files directly at its root, including `index.html`.
 2. Upload all extracted files and the `data` folder to the root of the existing `IGERS-POWERCORE` repository. Do not put them inside an extra nested project folder. `index.html` must remain at the repository root.
 3. In GitHub, open **Settings → Pages** and confirm the existing source branch/folder that serves the site.
-4. After GitHub Pages publishes the new commit, open the existing site URL and hard-refresh with **Ctrl+F5**. If the old build remains, clear the site’s cache/service-worker storage once and reload.
+4. Commit the uploaded files. GitHub Pages publishes automatically from the currently configured source; wait until its deployment finishes. The service worker checks for a new build on load and every 60 seconds while the app is open, then reloads a previously controlled page when the new worker activates. Versioned CSS/JS/manifest URLs also help bypass stale asset caches. A hard refresh (**Ctrl+F5**) is still a useful first check after replacing the package. GitHub Pages deployment/CDN propagation itself cannot be made instantaneous by frontend code.
 
 ## Data honesty
 
@@ -24,6 +24,6 @@ This is a static-first, GitHub Pages-compatible engineering dashboard. The page 
 
 ## File-count and historical sources
 
-The package is kept below the requested 98-file maximum. Historical Markdown/text reports are consolidated into `PROJECT-DOCUMENTATION-ARCHIVE.md`; source CSS files are preserved in `STYLES-SOURCE-ARCHIVE.css`. `index.html` continues to use its existing `igers-compact-bundle.css` and inline scripts. The unused nested ZIP was removed to avoid shipping a second copy of the application inside the repository.
+The package is kept below the requested 98-file maximum. Historical Markdown/text reports are consolidated into `PROJECT-DOCUMENTATION-ARCHIVE.md`; source CSS files are preserved in `STYLES-SOURCE-ARCHIVE.css`. `index.html` continues to use its existing `igers-compact-bundle.css` and inline scripts, with `design-standard.css` loaded afterward for visual consistency. The unused nested ZIP was removed to avoid shipping a second copy of the application inside the repository.
 
 The off-line boundary fallback is in `data/bangladesh-boundary-fallback.geojson`. It carries per-feature source/accuracy metadata. For the current authoritative boundary, verify geoBoundaries availability and attribution before promoting that source to the live layer.

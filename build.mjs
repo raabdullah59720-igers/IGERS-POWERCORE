@@ -4,6 +4,19 @@ import { spawnSync } from 'node:child_process';
 
 const root = resolve(process.cwd());
 const dist = join(root, 'dist');
+const skip = new Set(['node_modules', 'dist', '.git']);
+
+function copyTree(src, dst, onlyMissing = false) {
+  mkdirSync(dst, { recursive: true });
+  for (const name of readdirSync(src)) {
+    if (skip.has(name)) continue;
+    const from = join(src, name);
+    const to = join(dst, name);
+    const st = statSync(from);
+    if (st.isDirectory()) copyTree(from, to, onlyMissing);
+    else if (!onlyMissing || !existsSync(to)) cpSync(from, to);
+  }
+}
 
 function runRealVite() {
   const viteBin = process.platform === 'win32'
@@ -17,24 +30,18 @@ function runRealVite() {
   return true;
 }
 
-if (runRealVite()) process.exit(0);
+if (runRealVite()) {
+  // Keep runtime files accessed through inline fetch()/dynamic URL construction.
+  // Vite cannot discover every such file from strings inside inline scripts.
+  copyTree(root, dist, true);
+  console.log('✓ Vite build complete; remaining static runtime assets copied into dist/.');
+  process.exit(0);
+}
 
 // Offline-safe fallback for this static-first deployment.
 // It preserves the exact website assets and HTML/JS/CSS without requiring a registry.
 if (existsSync(dist)) rmSync(dist, { recursive: true, force: true });
 mkdirSync(dist, { recursive: true });
 
-const skip = new Set(['node_modules', 'dist', '.git']);
-function copyTree(src, dst) {
-  mkdirSync(dst, { recursive: true });
-  for (const name of readdirSync(src)) {
-    if (skip.has(name)) continue;
-    const from = join(src, name);
-    const to = join(dst, name);
-    const st = statSync(from);
-    if (st.isDirectory()) copyTree(from, to);
-    else cpSync(from, to);
-  }
-}
 copyTree(root, dist);
 console.log('✓ Offline static production build created in dist/');

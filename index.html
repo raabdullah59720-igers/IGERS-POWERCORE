@@ -51,7 +51,7 @@ section{padding:72px 0}
 @media(max-width:850px){.feedback-shell{grid-template-columns:1fr}}
 
 </style>
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="manifest" href="manifest.webmanifest?v=20261009-fix02">
 <meta name="theme-color" content="#07111f">
 
 <style>
@@ -335,6 +335,7 @@ body[data-theme="day"] .ad3d-section{background:linear-gradient(180deg,#eef7fa,#
 
 </style>
 <link rel="stylesheet" href="igers-compact-bundle.css" data-igers-compact-css="true">
+<link rel="stylesheet" href="design-standard.css?v=20261009-fix02" data-igers-design-standard="true">
 <style id="igers-upgrade-controls">
 /* Additive October 2026 control layer; existing project styles remain intact. */
 .bdm-map-controls,.ad3d-controlbar,.als-map-tools{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin:10px 0}
@@ -688,7 +689,7 @@ body[data-theme="day"] .ad3d-section{background:linear-gradient(180deg,#eef7fa,#
   function setQuakeFeedState(ok,text){if(quakeFeedState){quakeFeedState.textContent='● '+text;quakeFeedState.classList.toggle('offline',!ok);}}
   function markQuakeSync(){if(quakeLastSync)quakeLastSync.textContent='Last sync: '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
   async function testQuakeNotification(){if(!notificationSupported()){setNotifyStatus('Browser notifications are not supported',false,true);return;}try{if(Notification.permission!=='granted'&&await Notification.requestPermission()!=='granted')return setNotifyStatus('Permission not granted',false,true);const reg='serviceWorker' in navigator?await navigator.serviceWorker.ready:null;if(reg)await reg.showNotification('IGERS earthquake alert test',{body:'Alert channel is working. No real earthquake is being reported.',tag:'igers-test',icon:'icon.svg',badge:'icon.svg',data:{url:location.href}});else new Notification('IGERS earthquake alert test',{body:'Alert channel is working.'});}catch(_){setNotifyStatus('Test notification failed',false,true);}}
-  async function requestQuakeNotifications(){if(!notificationSupported())return setNotifyStatus('Browser notifications are not supported',false,true);try{const permission=await Notification.requestPermission();if(permission==='granted'){const settings={enabled:true,threshold:notifyThreshold?.value||'4.5'};localStorage.setItem(NOTIFY_KEY,JSON.stringify(settings));setNotifyStatus('Alerts enabled · '+(settings.threshold==='significant'?'Significant':'M'+settings.threshold+'+ · Asia'),true);if('serviceWorker' in navigator)await navigator.serviceWorker.register('sw.js');}else setNotifyStatus('Permission not granted',false,true);}catch(_){setNotifyStatus('Could not enable notifications',false,true);}}
+  async function requestQuakeNotifications(){if(!notificationSupported())return setNotifyStatus('Browser notifications are not supported',false,true);try{const permission=await Notification.requestPermission();if(permission==='granted'){const settings={enabled:true,threshold:notifyThreshold?.value||'4.5'};localStorage.setItem(NOTIFY_KEY,JSON.stringify(settings));setNotifyStatus('Alerts enabled · '+(settings.threshold==='significant'?'Significant':'M'+settings.threshold+'+ · Asia'),true);if('serviceWorker' in navigator)await navigator.serviceWorker.ready;}else setNotifyStatus('Permission not granted',false,true);}catch(_){setNotifyStatus('Could not enable notifications',false,true);}}
   function updateNotifyUI(){const x=getNotifySettings();if(notifyThreshold)notifyThreshold.value=x.threshold||'4.5';if(x.enabled&&notificationSupported()&&Notification.permission==='granted')setNotifyStatus('Alerts enabled · '+(x.threshold==='significant'?'Significant':'M'+x.threshold+'+ · Asia'),true);else setNotifyStatus('Notifications are off');}
   notifyButton?.addEventListener('click',requestQuakeNotifications);testNotifyButton?.addEventListener('click',testQuakeNotification);notifyThreshold?.addEventListener('change',()=>{try{const x=getNotifySettings();x.threshold=notifyThreshold.value;localStorage.setItem(NOTIFY_KEY,JSON.stringify(x));}catch(_){}updateNotifyUI();});updateNotifyUI();
   async function fireEarthquakeNotification(event){const x=getNotifySettings();if(!x.enabled||!notificationSupported()||Notification.permission!=='granted')return;const p=event.properties||{},m=Number(p.mag);const g=event.geometry?.coordinates||[],lat=Number(g[1]),lon=Number(g[0]),dist=haversineKm(bangladeshLat,bangladeshLon,lat,lon);const threshold=x.threshold==='significant'?(p.alert||m>=6):Number.isFinite(m)&&m>=Number(x.threshold);if(!threshold)return;const id=event.id||event._id||((p.code||p.place||'quake')+'-'+(p.time||''));let seen=[];try{seen=JSON.parse(localStorage.getItem(seenKey)||'[]');}catch(_){}if(seen.includes(id))return;seen=[id,...seen].slice(0,200);try{localStorage.setItem(seenKey,JSON.stringify(seen));}catch(_){}const title='Earthquake alert · M'+(Number.isFinite(m)?m.toFixed(1):'?');const body=(p.place||'Unknown location')+' · '+Math.round(dist)+' km from Dhaka';try{if(navigator.serviceWorker?.controller){const reg=await navigator.serviceWorker.ready;await reg.showNotification(title,{body,tag:'quake-'+id,renotify:true,icon:'icon.svg',badge:'icon.svg',data:{url:p.url||location.href}});}else new Notification(title,{body});}catch(_){} }
@@ -1805,7 +1806,25 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 
 </script>
-<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
+<script>(function(){
+  if(!('serviceWorker' in navigator)) return;
+  const hadController=!!navigator.serviceWorker.controller;
+  let reloading=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(hadController&&!reloading){reloading=true;window.location.reload();}
+  });
+  const registerAndCheck=async()=>{
+    try{
+      const registration=await navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'});
+      await registration.update().catch(()=>{});
+      // Keep a deployed, already-open app aware of GitHub Pages updates.
+      const timer=window.setInterval(()=>registration.update().catch(()=>{}),60000);
+      window.addEventListener('pagehide',()=>window.clearInterval(timer),{once:true});
+    }catch(error){console.warn('IGERS update check unavailable; the website remains usable.',error);}
+  };
+  if(document.readyState==='complete') registerAndCheck();
+  else window.addEventListener('load',registerAndCheck,{once:true});
+})();</script>
 <script>
 /* Digital 3D weather engine: additive, data-driven, no replacement of existing weather API. */
 (function(){
@@ -1915,7 +1934,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   window.addEventListener('storage',syncAdmin);setInterval(()=>{expireAdmin();syncAdmin();},800);setInterval(()=>{if(!Array.isArray(window.__igersAirLastPayload)||!window.__igersAirLastPayload.length)refreshTracks();},45000);window.addEventListener('online',()=>{$('ad3dNetwork').textContent='ONLINE';if(!Array.isArray(window.__igersAirLastPayload)||!window.__igersAirLastPayload.length)refreshTracks();});window.addEventListener('offline',()=>{$('ad3dNetwork').textContent='OFFLINE';});
   loadModules();resize();loadBoundary();setSatellite();syncAdmin();bindAd3dControls();$('ad3dNetwork').textContent=navigator.onLine?'ONLINE':'OFFLINE';refreshTracks();draw();
 })();</script>
-<script src="toll-national-pro.js"></script>
-<script src="nasa-gibs-bd.js" defer></script>
+<script src="toll-national-pro.js?v=20261009-fix02"></script>
+<script src="nasa-gibs-bd.js?v=20261009-fix02" defer></script>
 </body>
 </html>

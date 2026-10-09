@@ -1,0 +1,265 @@
+/* IGERS POWERCORE · Standard visual system
+   Presentation-only overrides. No application logic, IDs, or event handlers are changed. */
+:root {
+  --ui-bg: #07111c;
+  --ui-surface: rgba(13, 25, 38, .94);
+  --ui-surface-raised: rgba(17, 32, 46, .96);
+  --ui-border: rgba(151, 184, 202, .17);
+  --ui-text: #e9f1f7;
+  --ui-muted: #9aabba;
+  --ui-accent: #67d2e2;
+  --ui-accent-soft: rgba(103, 210, 226, .11);
+  --ui-positive: #83d6b3;
+  --ui-shadow: 0 14px 36px rgba(0, 0, 0, .20);
+  --ui-radius: 17px;
+  --ui-radius-sm: 11px;
+  color-scheme: dark;
+}
+
+body[data-theme="night"] {
+  --ui-surface: rgba(13, 25, 38, .94);
+  --ui-surface-raised: rgba(17, 32, 46, .96);
+  --ui-border: rgba(151, 184, 202, .17);
+  --ui-text: #e9f1f7;
+  --ui-muted: #9aabba;
+  --ui-accent: #67d2e2;
+  --ui-accent-soft: rgba(103, 210, 226, .11);
+  --ui-shadow: 0 14px 36px rgba(0, 0, 0, .20);
+  color-scheme: dark;
+}
+
+body[data-theme="day"] {
+  --ui-surface: rgba(255, 255, 255, .96);
+  --ui-surface-raised: rgba(246, 250, 252, .98);
+  --ui-border: rgba(76, 111, 128, .19);
+  --ui-text: #18303c;
+  --ui-muted: #617784;
+  --ui-accent: #087d98;
+  --ui-accent-soft: rgba(8, 125, 152, .08);
+  --ui-shadow: 0 14px 36px rgba(38, 71, 84, .09);
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 132px; }
+body {
+  color: var(--ui-text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.62;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg, video, canvas { max-width: 100%; }
+button, input, select, textarea { font: inherit; }
+a { text-underline-offset: .18em; }
+:focus-visible { outline: 2px solid var(--ui-accent) !important; outline-offset: 3px; }
+
+/* A tidy two-row header keeps every existing destination available without a wall of links. */
+.nav {
+  background: rgba(5, 12, 20, .91);
+  border-bottom: 1px solid var(--ui-border);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .10);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+}
+body[data-theme="day"] .nav { background: rgba(249, 252, 253, .94); }
+.navin {
+  height: auto;
+  min-height: 0;
+  display: block;
+  padding-top: 12px;
+  padding-bottom: 5px;
+}
+.brand {
+  display: inline-block;
+  font-size: 13px;
+  line-height: 1.25;
+  letter-spacing: .105em;
+  color: var(--ui-text);
+}
+.brand small {
+  margin-top: 3px;
+  font-size: 9px;
+  line-height: 1.3;
+  letter-spacing: .12em;
+  color: var(--ui-muted);
+}
+.navlinks {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 8px;
+  padding: 3px 1px 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(103, 210, 226, .38) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+.navlinks a {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  min-height: 31px;
+  padding: 6px 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--ui-muted);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: .015em;
+  line-height: 1.2;
+  transition: color .18s ease, background .18s ease, border-color .18s ease;
+}
+.navlinks a:hover, .navlinks a:focus-visible {
+  color: var(--ui-text);
+  background: var(--ui-accent-soft);
+  border-color: var(--ui-border);
+}
+.theme-control {
+  flex: 0 0 auto;
+  min-height: 31px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* More even page rhythm and readable headline scale. */
+.wrap { width: 100%; max-width: 1280px; padding-inline: clamp(16px, 2.6vw, 30px); }
+.hero { padding-top: clamp(48px, 6vw, 74px); padding-bottom: clamp(34px, 4vw, 54px); }
+.hero-grid { gap: clamp(26px, 4vw, 54px); }
+h1, h2, h3, h4 { text-wrap: balance; }
+h1 { font-size: clamp(39px, 5.2vw, 70px); line-height: 1.04; letter-spacing: -.045em; }
+h2 { font-size: clamp(27px, 3.2vw, 43px); line-height: 1.12; letter-spacing: -.035em; }
+h3 { font-size: clamp(15px, 1.25vw, 18px); line-height: 1.35; letter-spacing: -.015em; }
+.lead { max-width: 66ch; font-size: clamp(15px, 1.35vw, 17px); line-height: 1.75; }
+section { scroll-margin-top: 132px; }
+section:not(.hero) { padding-top: clamp(42px, 5vw, 62px); padding-bottom: clamp(42px, 5vw, 62px); }
+.section-head { gap: 18px; align-items: end; margin-bottom: 23px; }
+.section-head > div:first-child { min-width: 0; }
+.section-head h2 { margin-bottom: 8px; }
+.kicker { font-size: 10px; letter-spacing: .14em; font-weight: 750; }
+.eyebrow { font-size: 10px; letter-spacing: .10em; }
+.mini { line-height: 1.55; }
+
+/* Consistent component language, while retaining each specialist panel's colors and content. */
+.card, .clock-card, .energy-live-card, .system-control-card, .als-card, .bdm-card,
+.ia-card, .toll-card, .toll-plaza, .bzm-card, .ad3d-card, .hero-visual,
+.radar-card, .sensor-card, .alert-box, .notify-panel, .weather-digital-shell {
+  border-radius: var(--ui-radius);
+  box-shadow: var(--ui-shadow);
+}
+.card, .clock-card, .energy-live-card, .system-control-card, .als-card, .bdm-card,
+.ia-card, .toll-card, .toll-plaza, .bzm-card, .ad3d-card, .radar-card,
+.sensor-card, .alert-box, .notify-panel {
+  border-color: var(--ui-border);
+}
+.card, .clock-card, .energy-live-card, .system-control-card, .als-card, .bdm-card,
+.ia-card, .toll-card, .bzm-card, .ad3d-card, .radar-card, .sensor-card {
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.card:hover, .clock-card:hover, .energy-live-card:hover, .system-control-card:hover,
+.als-card:hover, .bdm-card:hover, .ia-card:hover, .toll-card:hover, .bzm-card:hover {
+  border-color: color-mix(in srgb, var(--ui-accent) 42%, var(--ui-border));
+  box-shadow: 0 17px 38px rgba(0, 0, 0, .16);
+}
+body[data-theme="day"] .card:hover,
+body[data-theme="day"] .clock-card:hover,
+body[data-theme="day"] .energy-live-card:hover,
+body[data-theme="day"] .system-control-card:hover,
+body[data-theme="day"] .als-card:hover,
+body[data-theme="day"] .bdm-card:hover,
+body[data-theme="day"] .ia-card:hover,
+body[data-theme="day"] .toll-card:hover,
+body[data-theme="day"] .bzm-card:hover {
+  box-shadow: 0 16px 36px rgba(38, 71, 84, .11);
+}
+.hero-visual { border-radius: 24px; }
+.grid, .grid2, .time-wrap, .weather, .airtraffic-shell { gap: clamp(12px, 1.5vw, 17px); }
+.card { padding: clamp(16px, 1.8vw, 22px); }
+.tag, .toll-status, .toll-pill { letter-spacing: .025em; }
+
+/* Controls get consistent focus and touch targets without overriding module-specific behavior. */
+.btn, button, .navlinks a, .theme-control, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+.btn, button {
+  transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease, color .18s ease;
+}
+.btn { min-height: 38px; border-radius: 10px; }
+.btn:hover, button:hover { filter: brightness(1.04); }
+input, select, textarea {
+  border-radius: var(--ui-radius-sm);
+  min-height: 38px;
+}
+textarea { min-height: 90px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible {
+  border-color: var(--ui-accent) !important;
+  box-shadow: 0 0 0 3px var(--ui-accent-soft);
+}
+button:disabled, input:disabled, select:disabled, textarea:disabled {
+  cursor: not-allowed;
+  opacity: .58;
+}
+
+/* Data and status areas remain quiet enough to scan. */
+.airmap, .mapbox, .weather-digital-stage, .bzm-viewport, .toll-map,
+.toll-flow-wrap, .toll-plaza-visual, .als-canvas-wrap, .bdm-canvas,
+.gibs-viewport, .nasa-viewport {
+  border-radius: 15px;
+  border-color: var(--ui-border);
+}
+.air-statusbar, .status, .source-note, .air-row, .air-detail-grid div {
+  border-radius: 10px;
+}
+.air-value, .clock, .temp, .sensor-value, .toll-stat b, .ad3d-metric strong {
+  font-variant-numeric: tabular-nums;
+}
+.table, table { border-collapse: collapse; }
+:is(table) th { font-weight: 750; }
+
+/* Mobile keeps controls reachable and avoids narrow, squashed cards. */
+@media (max-width: 980px) {
+  .wrap { padding-inline: 18px; }
+  .hero-grid { grid-template-columns: minmax(0, 1fr); }
+  .hero-visual { min-height: 320px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid2, .weather, .profile { grid-template-columns: minmax(0, 1fr); }
+  .time-wrap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  html { scroll-padding-top: 120px; }
+  .wrap { padding-inline: 15px; }
+  .navin { padding-top: 10px; }
+  .brand { font-size: 12px; }
+  .brand small { font-size: 8px; }
+  .navlinks { gap: 4px; margin-top: 6px; padding-bottom: 7px; }
+  .navlinks a, .theme-control { min-height: 30px; padding: 6px 9px; font-size: 10px; }
+  .hero { padding-top: 38px; }
+  h1 { font-size: clamp(36px, 10vw, 51px); }
+  h2 { font-size: clamp(26px, 7vw, 34px); }
+  .lead { font-size: 15px; }
+  section:not(.hero) { padding-top: 39px; padding-bottom: 39px; }
+  .section-head { align-items: flex-start; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+  .grid, .grid2, .time-wrap, .weather, .profile { grid-template-columns: minmax(0, 1fr); }
+  .journey { grid-template-columns: 1fr; gap: 5px; }
+  .journey .arrow { transform: rotate(90deg); line-height: 1.25; }
+  .card { padding: 16px; }
+  .airmap { border-radius: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
