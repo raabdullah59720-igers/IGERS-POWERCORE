@@ -1,22 +1,29 @@
-# IGERS POWERCORE — GitHub Compact Package
+# IGERS-BD-01 · POWERCORE
 
-This distribution is compacted to stay below GitHub's 100-file browser-upload limit while preserving the original project assets and documentation.
+**Integrated Gradient-Based Energy Recovery and Storage System**
 
-## Upload instructions
+Inventor & Author: Abdullah Al Rafi [BD]  
+Concept / Invention Date: 14 August 2026
 
-1. Extract `IGERS-POWERCORE-GITHUB-READY-2026-10-09.zip`.
-2. Open the extracted `IGERS-POWERCORE-main` folder.
-3. Upload the *contents of that folder* to the root of your existing GitHub Pages repository (not the outer folder itself).
-4. Keep `index.html` at repository root and keep `data/bangladesh-boundary-fallback.geojson`, image/icon files, `sw.js`, `manifest.webmanifest`, and the original nested backup ZIP.
-5. Do not rename `igers-compact-bundle.css`, `time-weather-update.css`, or `styles.css`; the app references them.
-6. `PROJECT-DOCUMENTATION-COMPENDIUM.md` contains the full text of every original Markdown file, with source filenames and SHA-256 checksums.
+This is a static-first, GitHub Pages-compatible engineering dashboard. The page contains the pre-existing project modules plus additive improvements to the border monitor, 3D air-traffic view, combined air/ground/maritime visualization, and NASA GIBS imagery viewer.
 
-## File consolidation
+## Deploy to GitHub Pages
 
-- Component/module CSS is combined in `igers-compact-bundle.css`. The original inline styles in `index.html` stay inline to preserve their cascade positions. The time/weather stylesheet remains separate because its JavaScript module loads it late, and `styles.css` remains for `main.jsx`'s import. A few unlinked, generic legacy themes are preserved inside the bundle but disabled so they do not unexpectedly override the existing website.
-- Original Markdown reports are preserved in `PROJECT-DOCUMENTATION-COMPENDIUM.md`.
-- Application JavaScript, HTML pages, Python relays/tests, imagery, icons, GeoJSON, JSON/configuration, and the original app ZIP are retained.
+1. Download and extract this ZIP. The archive stores project files directly at its root, including `index.html`.
+2. Upload all extracted files and the `data` folder to the root of the existing `IGERS-POWERCORE` repository. Do not put them inside an extra nested project folder. `index.html` must remain at the repository root.
+3. In GitHub, open **Settings → Pages** and confirm the existing source branch/folder that serves the site.
+4. After GitHub Pages publishes the new commit, open the existing site URL and hard-refresh with **Ctrl+F5**. If the old build remains, clear the site’s cache/service-worker storage once and reload.
 
-## Verification note
+## Data honesty
 
-Static syntax, asset-path, archive-integrity, and compact file-count checks are performed on this package. Live provider availability still depends on external services, network policy, browser CORS, and provider rate limits; a static package check cannot guarantee every live feed is online.
+- Border fallback geometry and river strokes are bundled low-resolution geography for offline visualization only. The UI still attempts a public geoBoundaries boundary first/alongside its fallback. Do not use the fallback as legal, cadastral, surveying, or operational boundary data.
+- Air traffic is read-only public ADS-B data when Airplanes.live can be reached. No fictional aircraft are added. Provider coverage may be incomplete and observations may be stale.
+- Virtual border/ground nodes and radar sweeps are labelled simulation/illustration and do not imply access to private telecom networks, national surveillance infrastructure, military radar, or physical systems.
+- The NASA GIBS panel reports tile success/failure counts and bounded date retries. Satellite imagery is not live spacecraft telemetry. Live endpoint verification was blocked in the packaging environment by unavailable DNS/network access; verify the tile panel after deployment.
+- Browser-side admin locks remain prototype UI restrictions only, not production authentication.
+
+## File-count and historical sources
+
+The package is kept below the requested 98-file maximum. Historical Markdown/text reports are consolidated into `PROJECT-DOCUMENTATION-ARCHIVE.md`; source CSS files are preserved in `STYLES-SOURCE-ARCHIVE.css`. `index.html` continues to use its existing `igers-compact-bundle.css` and inline scripts. The unused nested ZIP was removed to avoid shipping a second copy of the application inside the repository.
+
+The off-line boundary fallback is in `data/bangladesh-boundary-fallback.geojson`. It carries per-feature source/accuracy metadata. For the current authoritative boundary, verify geoBoundaries availability and attribution before promoting that source to the live layer.

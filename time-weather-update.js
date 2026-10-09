@@ -41,7 +41,7 @@
   function init(){
     addAssets(); build('time','time'); build('weather','weather');
     document.querySelectorAll('[data-twx-refresh="time"]').forEach(b=>b.addEventListener('click',()=>{syncTimeUI();b.classList.add('twx-refreshing');setTimeout(()=>b.classList.remove('twx-refreshing'),450)}));
-    document.querySelectorAll('[data-twx-refresh="weather"]').forEach(b=>b.addEventListener('click',()=>{b.classList.add('twx-refreshing');clickExisting('useMyLocation');const original=$('weatherUpdated')?.textContent;clickExisting('useMyLocation');setTimeout(()=>{if($('weatherUpdated')?.textContent===original)clickExisting('useMyLocation');b.classList.remove('twx-refreshing')},500)}));
+    document.querySelectorAll('[data-twx-refresh="weather"]').forEach(b=>b.addEventListener('click',()=>{b.classList.add('twx-refreshing');clickExisting('useMyLocation');setTimeout(()=>b.classList.remove('twx-refreshing'),9000)}));
     document.querySelectorAll('[data-twx-location]').forEach(b=>b.addEventListener('click',()=>clickExisting('useMyLocation')));
     syncTimeUI();watchWeather();setInterval(syncTimeUI,1000);setInterval(updateWeatherAge,1000);
     // Weather data refresh: use the existing weather engine, never invent values.

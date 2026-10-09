@@ -11,7 +11,7 @@
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
   const state = {
-    air: [], selectedAir: null, quakes: [], marine: null, marineSite: 'chattogram',
+    air: [], selectedAir: null, airFilter:'all', airZoom:1, airRotation:0, airTilt:.22, airSyncAt:0, airGeoBoundary:[], quakes: [], marine: null, marineSite: 'chattogram',
     plates: [], googleReady:false, geo:null, prayers:null, qibla:null,
     tower: [], emergency:null, admin:false, concept:null,
     googleKey: localStorageSafe('igersGoogle3dKey') || ''
@@ -35,7 +35,7 @@
     if(env && p===env)return true;
     return p==='MIM2005';
   }
-  // Shared in-page admin verifier for additive panels. GitHub Pages frontend auth is not production security.
+  // Shared verifier used by additive protected panels. GitHub Pages frontend auth is not production security.
   window.__IGERS_ADMIN_AUTH__ = tryAdminPassword;
   function syncAdminUI(){
     document.querySelectorAll('[data-als-admin-only]').forEach(el=>el.classList.toggle('als-hidden',!state.admin));
@@ -75,7 +75,7 @@
   }
   function drawGlobe(canvas, options){
     const sized=sizeCanvas(canvas);if(!sized)return;const {ctx,w,h}=sized;ctx.clearRect(0,0,w,h);
-    const r=Math.min(w,h)*.29; const ry=options.rotationY||0, rx=options.rotationX||.2;
+    const r=Math.min(w,h)*.29*(options.zoom||1); const ry=options.rotationY||0, rx=options.rotationX||.2;
     ctx.fillStyle='#071923';ctx.beginPath();ctx.arc(w/2,h/2,r,0,Math.PI*2);ctx.fill();
     ctx.strokeStyle='rgba(85,221,255,.38)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(w/2,h/2,r,0,Math.PI*2);ctx.stroke();
     for(let lat=-75;lat<=75;lat+=15){
@@ -99,11 +99,15 @@
     }
     (options.points||[]).forEach(o=>{
       const p=rotPoint(llxyz(o.lat,o.lon),ry,rx);if(p.z < -0.88)return;const q=project(p,w,h,r/(Math.min(w,h)*.9));
-      const sz=o.size||3;ctx.beginPath();ctx.fillStyle=o.color||'#8af3bf';ctx.shadowColor=o.color||'#8af3bf';ctx.shadowBlur=8;ctx.arc(q.x,q.y,sz,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+      const sz=o.size||3;ctx.beginPath();ctx.fillStyle=o.color||'#8af3bf';ctx.shadowColor=o.color||'#8af3bf';ctx.shadowBlur=8;ctx.arc(q.x,q.y,sz,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;if(Number.isFinite(o.track)){const ang=(o.track-90)*Math.PI/180,len=10;ctx.strokeStyle=o.color||'#8af3bf';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(q.x,q.y);ctx.lineTo(q.x+Math.cos(ang)*len,q.y+Math.sin(ang)*len);ctx.stroke();const ex=q.x+Math.cos(ang)*len,ey=q.y+Math.sin(ang)*len;ctx.beginPath();ctx.moveTo(ex,ey);ctx.lineTo(ex-Math.cos(ang-.55)*4,ey-Math.sin(ang-.55)*4);ctx.lineTo(ex-Math.cos(ang+.55)*4,ey-Math.sin(ang+.55)*4);ctx.closePath();ctx.fillStyle=o.color||'#8af3bf';ctx.fill();}
       if(o.label){ctx.fillStyle='#dff7ff';ctx.font='10px system-ui';ctx.fillText(o.label,q.x+7,q.y-6);}
     });
   }
   function llxyz(lat,lon){const la=rad(lat),lo=rad(lon);return {x:Math.cos(la)*Math.cos(lo),y:Math.sin(la),z:Math.cos(la)*Math.sin(lo)};}
+  async function loadAirGeoBoundary(){try{const r=await fetch('./data/bangladesh-boundary-fallback.geojson',{cache:'no-store'});if(!r.ok)throw new Error('boundary '+r.status);const j=await r.json();const f=(j.features||[]).find(x=>x.properties?.layer==='national-boundary'||x.properties?.name==='Bangladesh');const g=f?.geometry;if(!g)return;const rings=[];if(g.type==='Polygon')rings.push(g.coordinates?.[0]||[]);if(g.type==='MultiPolygon')g.coordinates.forEach(p=>rings.push(p?.[0]||[]));state.airGeoBoundary=rings.filter(x=>x.length>1);}catch(_){state.airGeoBoundary=[];}}
+  function filteredAir(){let a=state.air.filter(x=>x.lat!=null&&x.lon!=null&&x.lat!==''&&x.lon!==''&&Number.isFinite(Number(x.lat))&&Number.isFinite(Number(x.lon)));if(state.airFilter==='bd')a=a.filter(x=>Number(x.lat)>=20.67&&Number(x.lat)<=26.45&&Number(x.lon)>=88.08&&Number(x.lon)<=92.67);if(state.airFilter==='identified')a=a.filter(x=>String(x.callsign||'').trim().length>0);return a;}
+  function updateAirFreshness(){if(!state.airSyncAt)return;const age=Math.max(0,Math.round((Date.now()-state.airSyncAt)/1000));if(age>90){setLive('alsAirLive','warn','STALE · last public response '+(age<3600?age+'s':Math.round(age/60)+'m')+' ago');setText('alsAirLast','STALE · last provider response '+new Date(state.airSyncAt).toLocaleTimeString());}}
+
   function simpleGrid(canvas, cfg){
     const sized=sizeCanvas(canvas);if(!sized)return;const {ctx,w,h}=sized;ctx.clearRect(0,0,w,h);
     ctx.fillStyle='#06131b';ctx.fillRect(0,0,w,h);
@@ -128,49 +132,54 @@
   }
 
   // ---------- Air Traffic 3D ----------
-  function airPoint(a){return Number.isFinite(a.lat)&&Number.isFinite(a.lon)?{lat:a.lat,lon:a.lon,size:state.selectedAir?.hex===a.hex?5:3,color:state.selectedAir?.hex===a.hex?'#8af3bf':'#55ddff',label:state.selectedAir?.hex===a.hex?(a.callsign||a.hex):''}:null;}
+  function airPoint(a){return a.lat!=null&&a.lon!=null&&Number.isFinite(Number(a.lat))&&Number.isFinite(Number(a.lon))?{lat:Number(a.lat),lon:Number(a.lon),track:a.track!=null&&a.track!==''&&Number.isFinite(Number(a.track))?Number(a.track):null,size:state.selectedAir?.hex===a.hex?5:3,color:state.selectedAir?.hex===a.hex?'#8af3bf':'#55ddff',label:state.selectedAir?.hex===a.hex?(a.callsign||a.hex):''}:null;}
   function renderAir3D(){
-    const pts=state.air.map(airPoint).filter(Boolean);drawGlobe($('alsAir3D'),{rotationY:performance.now()/24000,rotationX:.22,points:pts});
+    const pts=filteredAir().map(airPoint).filter(Boolean);drawGlobe($('alsAir3D'),{rotationY:state.airRotation+Math.sin(performance.now()/11000)*.015,rotationX:state.airTilt,zoom:state.airZoom,points:pts,boundaries:state.airGeoBoundary});
     requestAnimationFrame(renderAir3D);
   }
   function renderAirList3D(){
-    const box=$('alsAirList3D');if(!box)return;box.innerHTML='';state.air.filter(a=>a.lat!=null&&a.lon!=null).slice(0,18).forEach(a=>{
-      const row=document.createElement('div');row.className='als-row';row.innerHTML='<div><strong>'+esc(a.callsign||a.hex||'UNKNOWN')+'</strong><small>'+esc(a.reg||a.type||'ADS-B target')+' · '+esc(a.category||'category n/a')+'</small></div><em>'+(a.alt==null?'—':Math.round(a.alt).toLocaleString()+' ft')+'</em>';
-      row.onclick=()=>{state.selectedAir=a;renderAirList3D();renderAirSelected();};box.appendChild(row);
+    const box=$('alsAirList3D');if(!box)return;box.innerHTML='';filteredAir().slice(0,18).forEach(a=>{
+      const row=document.createElement('button');row.type='button';row.className='als-row als-row-button';row.setAttribute('aria-label','Select aircraft '+(a.callsign||a.hex||'unknown'));row.innerHTML='<div><strong>'+esc(a.callsign||a.hex||'UNKNOWN')+'</strong><small>'+esc(a.reg||a.type||'ADS-B target')+' · '+esc(a.category||'category n/a')+'</small></div><em>'+(a.alt==null?'—':Math.round(a.alt).toLocaleString()+' ft')+'</em>';
+      row.addEventListener('click',()=>{state.selectedAir=a;renderAirList3D();renderAirSelected();});box.appendChild(row);
     });
-    if(!box.children.length)box.innerHTML='<div class="als-note">No positioned aircraft in the current public response.</div>';
+    if(!box.children.length)box.innerHTML='<div class="als-note">No aircraft match this filter in the current public response. This is not a synthetic track list.</div>';
   }
   function renderAirSelected(){
     const a=state.selectedAir;if(!a){setText('alsAirSelected','No aircraft selected');setText('alsAirSelectedMeta','Select a target from the live list.');return;}
     setText('alsAirSelected',a.callsign||a.hex||'Unknown');setText('alsAirSelectedMeta',(a.reg||'Registration n/a')+' · '+(a.type||'Type n/a')+' · '+(a.category||'ADS-B'));
-    const vals=[['Altitude',a.alt==null?'—':Math.round(a.alt)+' ft'],['Speed',a.speed==null?'—':Math.round(a.speed)+' kt'],['Track',a.track==null?'—':Math.round(a.track)+'°'],['Position',(a.lat==null||a.lon==null)?'—':a.lat.toFixed(4)+', '+a.lon.toFixed(4)],['Squawk',a.squawk||'—'],['Provider',window.__igersAirProvider||'Public ADS-B']];
+    const vals=[['Altitude',a.alt==null||!Number.isFinite(Number(a.alt))?'—':Math.round(Number(a.alt))+' ft'],['Speed',a.speed==null||!Number.isFinite(Number(a.speed))?'—':Math.round(Number(a.speed))+' kt'],['Track',a.track==null||!Number.isFinite(Number(a.track))?'—':Math.round(Number(a.track))+'°'],['Position',(a.lat==null||a.lon==null)?'—':a.lat.toFixed(4)+', '+a.lon.toFixed(4)],['Squawk',a.squawk||'—'],['Observed age',a.seen!=null&&Number.isFinite(Number(a.seen))&&Number(a.seen)>=0?Math.round(Number(a.seen))+' s':'n/a'],['Provider',window.__igersAirProvider||'Public ADS-B']];
     const box=$('alsAirDetail');if(box)box.innerHTML=vals.map(v=>'<div><b>'+esc(v[1])+'</b><span>'+esc(v[0])+'</span></div>').join('');
   }
   function handleAirFeed(list){
-    state.air=Array.isArray(list)?list.slice():[];
-    setText('alsAirCount',state.air.length);setText('alsAirPos',state.air.filter(a=>a.lat!=null&&a.lon!=null).length);
-    let newest=Infinity;state.air.forEach(a=>{if(Number.isFinite(Number(a.seen)))newest=Math.min(newest,Number(a.seen));});
-    setText('alsAirAge',Number.isFinite(newest)?(newest<60?Math.round(newest)+'s':Math.round(newest/60)+'m'):'—');
-    setText('alsAirLast','Last provider sync · '+nowTime());setLive('alsAirLive',state.air.length?'':'offline',state.air.length?'LIVE · '+(window.__igersAirProvider||'Public ADS-B'):'VERIFY · no positioned targets');
+    state.air=Array.isArray(list)?list.slice():[];state.airSyncAt=Number(window.__igersAirLastSync)||Date.now();
+    setText('alsAirCount',state.air.length);setText('alsAirPos',state.air.filter(a=>a.lat!=null&&a.lon!=null&&a.lat!==''&&a.lon!==''&&Number.isFinite(Number(a.lat))&&Number.isFinite(Number(a.lon))).length);
+    let newest=Infinity;state.air.forEach(a=>{if(Number.isFinite(Number(a.seen))&&Number(a.seen)>=0)newest=Math.min(newest,Number(a.seen));});
+    setText('alsAirAge',Number.isFinite(newest)?(newest<60?Math.round(newest)+'s':Math.round(newest/60)+'m'):'n/a');
+    setText('alsAirLast','Provider response · '+new Date(state.airSyncAt).toLocaleTimeString());const age=(Date.now()-state.airSyncAt)/1000;setLive('alsAirLive',age>90?'warn':(state.air.length?'':'warn'),age>90?'STALE · public response is old':(state.air.length?'LIVE · '+(window.__igersAirProvider||'Public ADS-B'):'CONNECTED · no positioned targets'));
     if(state.selectedAir){const fresh=state.air.find(x=>x.hex===state.selectedAir.hex);state.selectedAir=fresh||state.selectedAir;}
     renderAirList3D();renderAirSelected();
   }
+  let airFallbackInFlight=null;
   async function refreshAirFallback(force=false){
     if(Array.isArray(window.__igersAirLastPayload)){
       handleAirFeed(window.__igersAirLastPayload);
-      if(force && typeof window.__igersRefreshAirTraffic==='function') window.__igersRefreshAirTraffic();
+      if(force&&typeof window.__igersRefreshAirTraffic==='function'){
+        try{await window.__igersRefreshAirTraffic();}catch(_){}
+        if(Array.isArray(window.__igersAirLastPayload))handleAirFeed(window.__igersAirLastPayload);
+      }
       return;
     }
     if(typeof window.__igersRefreshAirTraffic==='function'){
-      setLive('alsAirLive','warn','SYNCING · shared public ADS-B feed');setText('alsAirLast','Waiting for shared provider · '+nowTime());
-      if(force) window.__igersRefreshAirTraffic();
+      setLive('alsAirLive','warn','SYNCING · shared public ADS-B feed');setText('alsAirLast','Waiting for the main public provider · '+nowTime());
+      if(force){try{await window.__igersRefreshAirTraffic();}catch(_){}if(Array.isArray(window.__igersAirLastPayload))handleAirFeed(window.__igersAirLastPayload);}
       return;
     }
-    try{
-      const r=await fetch('https://api.airplanes.live/v2/point/23.8103/90.4125/250',{cache:'no-store'});if(!r.ok)throw new Error('feed');const d=await r.json();
-      const rows=(d.ac||[]).map(a=>({hex:a.hex||'',callsign:(a.flight||'').trim(),lat:a.lat,lon:a.lon,alt:a.alt_baro,speed:a.gs,track:a.track,reg:a.r,type:a.t,category:a.category,squawk:a.squawk,seen:a.seen_pos,baroRate:a.baro_rate}));
+    if(airFallbackInFlight)return airFallbackInFlight;
+    airFallbackInFlight=(async()=>{const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),9000);setLive('alsAirLive','warn','SYNCING · public ADS-B');try{
+      const r=await fetch('https://api.airplanes.live/v2/point/23.8103/90.4125/250',{cache:'no-store',signal:ctrl.signal});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();
+      const rows=(d.ac||[]).map(a=>({hex:a.hex||'',callsign:(a.flight||'').trim(),lat:a.lat==null||a.lat===''?NaN:Number(a.lat),lon:a.lon==null||a.lon===''?NaN:Number(a.lon),alt:a.alt_baro,speed:a.gs,track:a.track,reg:a.r,type:a.t,category:a.category,squawk:a.squawk,seen:a.seen_pos,baroRate:a.baro_rate}));
       window.__igersAirLastPayload=rows;window.__igersAirProvider='Airplanes.live';window.__igersAirLastSync=Date.now();window.dispatchEvent(new CustomEvent('igers:airtraffic',{detail:rows}));handleAirFeed(rows);
-    }catch(_){setLive('alsAirLive','offline','OFFLINE · public provider unavailable');setText('alsAirLast','Retry pending · '+nowTime());}
+    }catch(_){state.airSyncAt=0;setLive('alsAirLive','offline','OFFLINE · public provider unavailable');setText('alsAirLast','No successful public response · '+nowTime());}finally{clearTimeout(timer);airFallbackInFlight=null;}})();return airFallbackInFlight;
   }
 
   // ---------- Seismic / Plate ----------
@@ -372,15 +381,27 @@
     $('alsAdminLogout')?.addEventListener('click',()=>clearAdminSession());
   }
 
+  function bindAirMapControls(){
+    const canvas=$('alsAir3D');const filter=$('alsAirFilter');filter?.addEventListener('change',()=>{state.airFilter=filter.value;renderAirList3D();renderAirSelected();});
+    $('alsAirZoomIn')?.addEventListener('click',()=>{state.airZoom=Math.min(1.8,Number((state.airZoom+.15).toFixed(2)));});
+    $('alsAirZoomOut')?.addEventListener('click',()=>{state.airZoom=Math.max(.7,Number((state.airZoom-.15).toFixed(2)));});
+    $('alsAirResetView')?.addEventListener('click',()=>{state.airZoom=1;state.airRotation=0;state.airTilt=.22;});
+    $('alsAirFullscreen')?.addEventListener('click',()=>{const box=canvas?.closest('.als-canvas-wrap');if(box?.requestFullscreen)box.requestFullscreen().catch(()=>{});});
+    if(!canvas)return;let pointer=null;canvas.style.cursor='grab';
+    canvas.addEventListener('pointerdown',e=>{pointer={x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,moved:false};try{canvas.setPointerCapture(e.pointerId);}catch(_){};});
+    canvas.addEventListener('pointermove',e=>{if(!pointer)return;const dx=e.clientX-pointer.lastX,dy=e.clientY-pointer.lastY;if(Math.abs(e.clientX-pointer.x)+Math.abs(e.clientY-pointer.y)>5)pointer.moved=true;if(pointer.moved){state.airRotation+=dx*.008;state.airTilt=clamp(state.airTilt+dy*.006,-.85,.85);canvas.style.cursor='grabbing';}pointer.lastX=e.clientX;pointer.lastY=e.clientY;});
+    const endDrag=()=>{if(pointer?.moved){state.airJustDragged=true;setTimeout(()=>{state.airJustDragged=false;},180);}pointer=null;canvas.style.cursor='grab';};canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);
+    canvas.addEventListener('click',e=>{if(state.airJustDragged)return;const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,w=r.width,h=r.height,ry=state.airRotation+Math.sin(performance.now()/11000)*.015,rx=state.airTilt;let hit=null,best=22;for(const a of filteredAir()){const p=rotPoint(llxyz(Number(a.lat),Number(a.lon)),ry,rx);if(p.z<-.88)continue;const q=project(p,w,h,Math.min(w,h)*.29*state.airZoom/(Math.min(w,h)*.9));const d=Math.hypot(q.x-x,q.y-y);if(d<best){best=d;hit=a;}}if(hit){state.selectedAir=hit;renderAirList3D();renderAirSelected();}});
+  }
   function init(){
-    if(!$('alsAir3D'))return;
+    if(!$('alsAir3D'))return;bindAirMapControls();loadAirGeoBoundary();
     state.admin=sessionHasAdmin();syncAdminUI();
     $('alsGoogleKey').value=state.googleKey;
     initTowers();renderEmergency();computeConcept();
     bind();
     renderAir3D();renderQuake3D();renderConcept3D();animateTower3D();renderQibla3D();animateMarine3D();
     refreshAirFallback();loadQuakes();loadPlates();loadMarine();loadPrayerTimes();startPrayerAlertLoop();
-    setInterval(loadQuakes,60000);setInterval(loadMarine,900000);setInterval(()=>loadPrayerTimes(),3600000);
+    setInterval(loadQuakes,60000);setInterval(loadMarine,900000);setInterval(()=>loadPrayerTimes(),3600000);setInterval(updateAirFreshness,10000);
     window.addEventListener('online',()=>{renderTowers();refreshAirFallback();loadQuakes();loadMarine();loadPrayerTimes();});
     window.addEventListener('offline',()=>renderTowers());
   }
