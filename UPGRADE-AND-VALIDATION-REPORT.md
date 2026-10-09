@@ -169,3 +169,51 @@ This environment could not resolve external internet hosts, and browser-based re
 ### Runtime verification limitation
 
 - A real Chromium page-render/interaction test could not be completed because the workspace browser policy blocks local-site navigation (`ERR_BLOCKED_BY_ADMINISTRATOR`). The canvas/UI behavior was instead tested through a Node VM mock harness and the app was served locally for HTTP checks. Public ADS-B provider availability was not verified; live provider behavior remains dependent on external connectivity and returned fields.
+
+## 2026-10-09 · Sectioned navigation / synchronized app layout
+
+### Changes
+- Reorganized the existing navigation into six expandable categories: Overview; Environment & Live Data; Air & Border Operations; Infrastructure & Network; Energy & System Control; Safety & Support.
+- Kept all 26 pre-existing navigation destinations and their IDs. Additional links only point to already-present sections; optional modules that create their own sections append into the matching category if loaded.
+- Added `section-navigation.js` for mobile open/close, Escape-to-close, single-open category handling, and closing a category after selecting a panel. The theme toggle remains in the navigation.
+- Added responsive group-dropdown styles; no panel markup, calculation formulas, data-provider logic, admin controls or existing event handlers were deleted.
+- Bumped the design stylesheet, manifest, runway simulator asset query strings and service-worker revision so a deployed page requests the updated presentation assets.
+
+### Validation
+- Standalone JavaScript modules: 82/82 `node --check` passed across the website source and Android bundle.
+- Inline JavaScript: 13/13 passed `node --check`.
+- CSS: 5 standalone stylesheets and 15 embedded style blocks parsed without errors.
+- HTML: 444 IDs, zero duplicates; six navigation categories; all 31 static nav anchors have matching IDs.
+- Manifest and Bangladesh fallback GeoJSON parsed; 11 inspected local HTML references had no missing files.
+- Dependency-free static production build: passed. `dist/` contains all 84 website files, including `index.html`, grouped navigation controller, runway assets, service worker, manifest, GeoJSON and PWA icons.
+- Local HTTP smoke test: 15/15 routes returned HTTP 200.
+- The updated package retains all 82 original source ZIP paths; two new files (`section-navigation.js` and `SECTION-GROUPING-UPDATE.md`) were added.
+
+### Limitations
+- Chromium visual/browser-interaction test was unavailable in this workspace. Static, syntax, build-output and local HTTP tests passed, but they do not replace testing after actual GitHub Pages deployment.
+- GitHub Pages must finish publishing after commit; cached browser/PWA content may require refresh. Frontend code cannot make host deployment instant.
+
+
+## 2026-10-09 · Full-panel audit & disconnected-control repair (latest)
+
+### Fixes
+- Fixed desktop header layout so the grouped navigation occupies a real second row instead of competing with the brand inside a fixed-height header. Mobile keeps its 70px menu offset and collapsible category layout.
+- Added `system-master-control.js` and wired the previously unhandled `ALL SYSTEMS ON/OFF` buttons. It requires an existing IGERS admin-session flag; unauthenticated clicks leave the state unchanged. The display clearly identifies this as a local prototype UI state and does not claim to stop external feeds or actuate hardware.
+- Added a live `year` footer target for the existing year initializer.
+- Bumped active navigation CSS/JS URLs and the service-worker revision for cache revalidation after GitHub Pages publishes the new commit.
+- Updated `build.mjs` to exclude Python bytecode/cache and common temporary files from `dist/`.
+
+### Latest validation
+- `npm run build`: PASS using the included dependency-free static build path.
+- 44 standalone `.js` / `.mjs` files and 13 inline scripts: syntax checks PASS.
+- 5 CSS files and 15 inline style blocks: parse checks PASS.
+- HTML: 445 IDs, no duplicates; all 30 section IDs are represented by 30 unique navigation targets; 136 ID-bearing interactive controls have script references; no missing local links/assets.
+- JSON, web manifest, and GeoJSON: 4 files parsed; 93 GeoJSON features / 467 coordinate tuples; coordinate ranges valid.
+- Python: 4 scripts compile. PWA icons validated at 192×192 and 512×512.
+- Targeted interaction harnesses: section navigation PASS; master-control authorization and ON/OFF persistence PASS; airport/runway simulator selections, simulated route labeling, animation pause/resume, and invalid ADS-B coordinate filtering PASS.
+- Local HTTP smoke test: 15/15 key routes returned HTTP 200. Build output includes all required runtime assets and no `__pycache__` / `.pyc` artifacts.
+- Current source ZIP retained all original 84 file paths, added `system-master-control.js` and this audit report, and stays below the 98-file limit.
+
+### Limitations
+- The browser automation tool is blocked by workspace policy for both `file://` and localhost navigation (`ERR_BLOCKED_BY_ADMINISTRATOR`), so a real visual browser session could not be completed. The app was built and served locally, and page/resource routes plus targeted JavaScript interaction harnesses were tested.
+- Public weather/ADS-B/NASA/GIS provider availability could not be confirmed from this environment; external feed health must be checked after deployment on an ordinary internet connection.

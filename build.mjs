@@ -4,12 +4,12 @@ import { spawnSync } from 'node:child_process';
 
 const root = resolve(process.cwd());
 const dist = join(root, 'dist');
-const skip = new Set(['node_modules', 'dist', '.git']);
+const skip = new Set(['node_modules', 'dist', '.git', '__pycache__', '.pytest_cache', '.mypy_cache']);
 
 function copyTree(src, dst, onlyMissing = false) {
   mkdirSync(dst, { recursive: true });
   for (const name of readdirSync(src)) {
-    if (skip.has(name)) continue;
+    if (skip.has(name) || name === '.DS_Store' || name.endsWith('.pyc') || name.endsWith('.pyo') || name.endsWith('.tmp') || name.endsWith('.log')) continue;
     const from = join(src, name);
     const to = join(dst, name);
     const st = statSync(from);

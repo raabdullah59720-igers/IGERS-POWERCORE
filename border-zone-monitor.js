@@ -34,8 +34,9 @@
     const anchor=$('satelliteMonitor');
     if(!anchor||$('borderZoneMonitor'))return;
     const nav=document.querySelector('.navlinks');
-    if(nav&&!nav.querySelector('a[href="#borderZoneMonitor"]')){
-      const a=document.createElement('a');a.href='#borderZoneMonitor';a.textContent='Border Zone 3D';nav.appendChild(a);
+    const navGroup=nav?.querySelector('[data-nav-group="air-border"]')||nav;
+    if(navGroup&&!navGroup.querySelector('a[href="#borderZoneMonitor"]')){
+      const a=document.createElement('a');a.href='#borderZoneMonitor';a.textContent='Border Zone 3D';navGroup.appendChild(a);
     }
     const section=document.createElement('section');
     section.id='borderZoneMonitor';section.className='bzm-section';

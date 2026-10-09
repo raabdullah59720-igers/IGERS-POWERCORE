@@ -24,7 +24,7 @@ function saveState(){try{localStorage.setItem('igersNextGenStateV1',JSON.stringi
 function inject(){
   if($('engineeringLab'))return;
   const target=$('feedback')||$('inventor')||document.querySelector('main'); if(!target)return;
-  const nav=document.querySelector('.navlinks'); if(nav&&!nav.querySelector('a[href="#engineeringLab"]')){const a=document.createElement('a');a.href='#engineeringLab';a.textContent='Simulation Lab';nav.insertBefore(a,nav.querySelector('a[href="#feedback"]')||nav.lastElementChild)}
+  const nav=document.querySelector('.navlinks'); const navGroup=nav?.querySelector('[data-nav-group="engineering"]')||nav; if(navGroup&&!navGroup.querySelector('a[href="#engineeringLab"]')){const a=document.createElement('a');a.href='#engineeringLab';a.textContent='Simulation Lab';navGroup.appendChild(a)}
   const section=document.createElement('section'); section.id='engineeringLab'; section.innerHTML=`<div class="wrap nx-shell">
     <div class="nx-command">
       <article class="nx-panel">

@@ -5,11 +5,17 @@
   const nav=document.querySelector('.nav');
   const links=document.querySelector('.navlinks');
   if(nav&&links){
-    const btn=document.createElement('button');
-    btn.className='designer-menu'; btn.type='button'; btn.setAttribute('aria-label','Open navigation'); btn.setAttribute('aria-expanded','false'); btn.textContent='☰';
-    nav.querySelector('.navin')?.appendChild(btn);
-    btn.addEventListener('click',()=>{const open=links.classList.toggle('is-open');btn.setAttribute('aria-expanded',String(open));btn.textContent=open?'✕':'☰';});
-    links.addEventListener('click',e=>{if(e.target.closest('a')){links.classList.remove('is-open');btn.setAttribute('aria-expanded','false');btn.textContent='☰';}});
+    const hasDedicatedController=!!document.getElementById('navSectionToggle');
+    let btn=nav.querySelector('.designer-menu');
+    if(!btn){
+      btn=document.createElement('button');
+      btn.className='designer-menu'; btn.type='button'; btn.setAttribute('aria-label','Open navigation'); btn.setAttribute('aria-expanded','false'); btn.textContent='☰';
+      nav.querySelector('.navin')?.appendChild(btn);
+    }
+    if(!hasDedicatedController){
+      btn.addEventListener('click',()=>{const open=links.classList.toggle('is-open');btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'Close navigation':'Open navigation');btn.textContent=open?'×':'☰';});
+      links.addEventListener('click',e=>{const a=e.target.closest('a');if(a){a.closest('details.nav-group')?.removeAttribute('open');links.classList.remove('is-open');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-label','Open navigation');btn.textContent='☰';}});
+    }
   }
   const dock=document.createElement('div');
   dock.className='designer-dock';

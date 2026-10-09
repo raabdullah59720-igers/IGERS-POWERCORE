@@ -5,7 +5,17 @@
 Inventor & Author: Abdullah Al Rafi [BD]  
 Concept / Invention Date: 14 August 2026
 
-This is a static-first, GitHub Pages-compatible engineering dashboard. The page contains the pre-existing project modules plus additive improvements to the border monitor, 3D air-traffic view, combined air/ground/maritime visualization, NASA GIBS imagery viewer, and a presentation-only design system that standardizes navigation, spacing, typography, cards, controls and mobile behavior without replacing application features.
+This is a static-first, GitHub Pages-compatible engineering dashboard. All pre-existing project modules are retained. The navigation now groups related panels into six expandable categories (Overview; Environment & Live Data; Air & Border Operations; Infrastructure & Network; Energy & System Control; Safety & Support). The SYSTEM MASTER CONTROL ON/OFF buttons are wired to the existing admin-session flags and update a local UI simulation status only; they do not control physical hardware or interrupt live public-data feeds. Existing section IDs and feature handlers remain in place; the update changes navigation organization, styling, and mobile menu behavior rather than deleting panel functionality.
+
+## Navigation / section grouping
+
+- The same six categories organize the existing section destinations so related modules sit together.
+- The theme toggle remains available. On mobile, use the navigation button to open/close the groups; select a category and then a panel.
+- The browser cache-busting versions and service-worker revision have been bumped for this update. GitHub Pages still needs to finish deployment after commit; a frontend cannot make the hosting deployment instant.
+
+## Admin master state
+
+The `SYSTEM MASTER CONTROL` ON/OFF buttons are wired to the existing administrator session gate. They persist a **local prototype UI state** only; they do not stop public-data refreshes or actuate physical hardware. Unauthenticated clicks do not change state and guide the operator to the existing admin gate.
 
 ## Deploy to GitHub Pages
 
