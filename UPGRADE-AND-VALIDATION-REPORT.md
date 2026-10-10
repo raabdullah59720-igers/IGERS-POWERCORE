@@ -217,3 +217,53 @@ This environment could not resolve external internet hosts, and browser-based re
 ### Limitations
 - The browser automation tool is blocked by workspace policy for both `file://` and localhost navigation (`ERR_BLOCKED_BY_ADMINISTRATOR`), so a real visual browser session could not be completed. The app was built and served locally, and page/resource routes plus targeted JavaScript interaction harnesses were tested.
 - Public weather/ADS-B/NASA/GIS provider availability could not be confirmed from this environment; external feed health must be checked after deployment on an ordinary internet connection.
+
+
+## 2026-10-10 Real-world data reliability update
+
+- Consolidated weather/environment panels on a single timeout-bounded Open-Meteo forecast request with in-flight request coalescing and a 4-minute browser cache. Weather values are labelled model outputs, not station telemetry.
+- Corrected hourly rain probability and the next-rain estimate to start at the current model hour instead of index 0 (midnight). Missing numeric fields remain unavailable, never silently converted to zero.
+- Added an Open-Meteo/CAMS air-quality panel for US AQI, PM2.5, PM10, NO2 and ozone, showing model time and source limitations; it is explicitly not a ground-station reading. Refresh is bounded to 30 minutes, with a 12-second request timeout and honest offline/stale state.
+- Shared USGS all-hour GeoJSON between the main earthquake panel and the advanced seismic panel, coalescing concurrent refreshes and slowing the main polling interval to 60 seconds visible / 180 seconds hidden.
+- Corrected ADS-B coordinate and observation-age parsing for null/blank provider fields; selected-flight details show origin/destination only when the feed actually supplies them.
+- Hardened marine/seismic missing-value formatting, avoiding null-to-zero conversions, and corrected NASA legacy helper endpoints to direct public EONET v3, GIBS WMS and APOD WordPress API URLs.
+- GitHub Pages remains static hosting. Python relay scripts require a separately hosted server runtime; no local script is represented as running on GitHub Pages.
+- Browser visual end-to-end and external provider reachability could not be fully proven by static test alone; API status in the app remains the source of truth at runtime.
+
+
+### Data-freshness/polling refinements
+
+- Forecast panel refresh is now coalesced and bounded to a 10-minute cache / 15-minute foreground poll; air-quality model refresh has a 45-minute cache / 60-minute foreground poll. Open-Meteo notes its underlying models are generally updated every few hours, so rapid repeated requests do not imply newer measurements.
+- Hour labels are rendered in the provider's location timezone (rather than being silently reinterpreted in the device timezone). API/model time and browser retrieval time remain separate.
+- AQI provider status has distinct model, stale and offline styles. Failed coordinate changes cannot let a previous location's late response overwrite the new location's display.
+- Seismic status is marked degraded when only a source without a comparable generation timestamp is available; it no longer claims freshness is verified when the timestamp is unknown.
+
+
+### Source and hosting notes
+
+- Environmental weather values are labelled as Open-Meteo forecast-model output; the radar sweep/blips remain illustrative. Hour labels use the provider's timezone and are not reinterpreted in the device timezone.
+- Added CAMS ENSEMBLE via Open-Meteo Air Quality API (US AQI, PM2.5, PM10, NO2 and ozone). The UI states the gridded/global resolution and warns that it is not a ground-station measurement.
+- Main earthquake and advanced seismic views now share the USGS all-hour response when it is recent; source timestamp absence is degraded/unknown, not “freshness verified”.
+- A live query from this build workspace to Open-Meteo and NASA endpoints failed at DNS resolution, so those external service responses could not be independently verified here. The in-app API requests are direct public endpoints with timeout/error states; runtime provider badges remain authoritative. The USGS all-hour GeoJSON endpoint was independently reachable through the web verifier with HTTP 200 during this audit.
+- GitHub Pages is static hosting and does not run the bundled Python relay scripts as a server. Authorized toll/ITS and other private/credentialed feeds require a separately deployed server-side relay; the frontend does not fabricate such data.
+
+## 2026-10-10 · Final real-world data + failure-path audit
+
+- Extended the 12-second AbortController deadline to cover both HTTP fetch and JSON body parsing for Open-Meteo forecast and CAMS air-quality calls. A stalled response body can no longer keep these requests waiting indefinitely.
+- Weather and AQI data are explicitly model products, not local weather-station or air-quality sensor observations. The AQI UI credits Open-Meteo / CAMS ENSEMBLE and shows model time, retrieval/status state, pollutant units and unavailable/stale conditions.
+- Weather and environmental panels reuse a single keyed forecast promise/cache. Coordinate/location changes are guarded so a late response for an older location does not overwrite the new location. Missing/null/blank values stay unavailable, not fabricated zeros.
+- Hourly rain/precipitation display starts at the provider model hour at or after current model time, with provider-local ISO hour labels. Model timestamp and browser retrieval timestamp remain separate.
+- Shared USGS all-hour GeoJSON is reused by the main and advanced seismic views; missing comparable source-generation timestamps are reported as degraded/unknown rather than falsely verified as fresh.
+- NASA imagery uses the active GIBS tile integration. Legacy NASA helper URLs were changed away from the non-existent `/api/provider` relay path to direct public NASA endpoints where those public endpoints are documented; this does not imply a live API response was reachable from this build workspace.
+
+### Final verification performed
+- Clean static build: `node build.mjs` PASS; generated `dist/` contains the production static site and runtime assets.
+- JavaScript/MJS syntax: 46 files PASS. Python source parsing/compilation: 4 files PASS.
+- HTML check across 7 HTML files: 599 IDs, zero duplicate IDs; 16 inline scripts syntax-checked with zero parser errors; zero missing active local resources or internal fragment targets. Two optional integration snippets are documentation examples only and refer to future/unbundled sample modules; neither is loaded by `index.html`.
+- CSS parser: 7 stylesheets, zero parse errors. JSON, web manifest and GeoJSON parse without errors.
+- Shared weather/AQI mock runtime harness: 14 assertions PASS (request coalescing, coordinate race handling, current-hour alignment, model-source labelling, no null-to-zero, stale/offline status and failed refresh behavior).
+- Local HTTP smoke test against the generated production output: 25/25 key routes returned HTTP 200, including index, CSS, service worker, manifest, GeoJSON, NASA modules, Concept Lab SVG/JPG assets, PWA icons and legal/report pages.
+- Baseline archive comparison: all 98 original file paths are retained; no project paths were added or removed. Six existing files changed: `index.html`, `design-standard.css`, `advanced-live-suite.js`, `nasa-intel.js`, `sw.js` and this report.
+- External endpoint limitation: this workspace failed DNS resolution for Open-Meteo and NASA direct requests, so their live HTTP responses could not be validated here. The USGS all-hour GeoJSON endpoint returned HTTP 200 through the web verifier during this audit. Provider badges in the deployed app remain authoritative.
+- GitHub Pages is static hosting and does not execute bundled Python relay scripts as a server; toll/authorized infrastructure feeds require a separately hosted service endpoint.
+- Chromium visual end-to-end testing was not completed in this workspace. Static/build/runtime-mock/local-HTTP tests passed, but a post-deployment browser check is still recommended.

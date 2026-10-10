@@ -12,7 +12,7 @@
   const esc=v=>String(v??'').replace(/[&<>'"]/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[s]));
   const dayStr=offset=>new Date(Date.now()-offset*86400000).toISOString().slice(0,10);
   const geoTime=offset=>{const d=new Date(Date.now()-offset*10*60000);d.setUTCSeconds(0,0);d.setUTCMinutes(Math.floor(d.getUTCMinutes()/10)*10);return d.toISOString().replace(/\.000Z$/,'Z');};
-  function gibsUrl(layer,date){return '/api/provider?provider=gibs&SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1&LAYERS='+encodeURIComponent(layer)+'&STYLES=&FORMAT=image/jpeg&SRS=EPSG:4326&BBOX=88,20,93,27&WIDTH=1200&HEIGHT=780&TIME='+encodeURIComponent(date)+'&_='+Date.now();}
+  function gibsUrl(layer,date){const u=new URL('https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi');u.search=new URLSearchParams({SERVICE:'WMS',REQUEST:'GetMap',VERSION:'1.1.1',LAYERS:layer,STYLES:'',FORMAT:'image/jpeg',SRS:'EPSG:4326',BBOX:'88,20,93,27',WIDTH:'1200',HEIGHT:'780',TIME:date,'_':String(Date.now())}).toString();return u.toString();}
   function refreshGibs(){
     const img=$('nasaGibsImage'), ph=$('nasaGibsPlaceholder'); if(!img||!ph)return;
     state($('nasaGibsState'),'warn','CHECKING NASA GIBS'); ph.style.display='grid';img.style.display='none';
@@ -31,8 +31,8 @@
     try{
       const bbox='88,26.7,92.7,20.5';
       const [regionalResp,globalResp]=await Promise.all([
-        fetch('/api/provider?provider=eonet&status=open&bbox='+bbox,{cache:'no-store',signal:ctrl.signal}),
-        fetch('/api/provider?provider=eonet&status=open&limit=100',{cache:'no-store',signal:ctrl.signal})
+        fetch('https://eonet.gsfc.nasa.gov/api/v3/events/geojson?status=open&bbox='+bbox+'&limit=100',{cache:'no-store',signal:ctrl.signal}),
+        fetch('https://eonet.gsfc.nasa.gov/api/v3/events/geojson?status=open&limit=100',{cache:'no-store',signal:ctrl.signal})
       ]);
       if(!regionalResp.ok||!globalResp.ok)throw new Error('EONET HTTP failure');
       const regional=await regionalResp.json(),global=await globalResp.json();clearTimeout(timer);
@@ -51,7 +51,7 @@
     const now=new Date(),day=Math.floor((Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate())-Date.UTC(now.getUTCFullYear(),0,0))/86400000);const decl=23.44*Math.sin(Math.PI/180*(360/365*(day-81)));const lat=location.lat*Math.PI/180,decr=decl*Math.PI/180;const cosH=Math.max(-1,Math.min(1,(Math.cos(90.833*Math.PI/180)/(Math.cos(lat)*Math.cos(decr)))-Math.tan(lat)*Math.tan(decr)));const H=Math.acos(cosH)*180/Math.PI/15, noon=12-location.lon/15,rise=noon-H,set=noon+H;const mins=now.getHours()*60+now.getMinutes(),r=Math.round(rise*60),s=Math.round(set*60);let sky='DAYLIGHT';if(mins<r-30||mins>s+30)sky='NIGHT';else if(mins<r||mins>s)sky='TWILIGHT';$('nasaSolarState').textContent=sky;$('nasaSunrise').textContent=fmtHours(rise);$('nasaSunset').textContent=fmtHours(set);$('nasaDarkWindow').textContent=fmtHours(set+0.5)+' → '+fmtHours(rise-0.5);$('nasaAstroLocation').textContent=location.name+' · '+location.lat.toFixed(4)+'°, '+location.lon.toFixed(4)+'°';state($('nasaAstroState'),'ok','LOCATION AWARE');
   }
   async function loadApod(){
-    try{const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),9000);const r=await fetch('/api/provider?provider=nasa&api_key=DEMO_KEY',{cache:'no-store',signal:ctrl.signal});if(!r.ok)throw new Error('APOD');const d=await r.json();clearTimeout(timer);$('nasaApodTitle').textContent=d.title||'NASA Astronomy Picture of the Day';$('nasaApodDesc').textContent=(d.explanation||'NASA astronomy media.')+' ';window.__igersApodUrl=d.url||d.hdurl||'';if(d.media_type==='image'&&d.url){$('nasaApodImage').src=d.url;$('nasaApodImage').style.display='block';}state($('nasaAstroState'),'ok','NASA ASTRONOMY READY');stamp();}catch(_){$('nasaApodTitle').textContent='NASA astronomy media unavailable';state($('nasaAstroState'),'warn','LOCAL SKY READY');}
+    try{const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),9000);const r=await fetch('https://science.nasa.gov/wp-json/wp/v2/apod-basic',{cache:'no-store',signal:ctrl.signal,headers:{Accept:'application/json'}});if(!r.ok)throw new Error('APOD');const d=await r.json();clearTimeout(timer);$('nasaApodTitle').textContent=d.title||'NASA Astronomy Picture of the Day';$('nasaApodDesc').textContent=(d.explanation||'NASA astronomy media.')+' ';const apodImage=d.hdurl||d.image_url||'';window.__igersApodUrl=apodImage||d.permalink||d.url||'';if(d.media_type==='image'&&apodImage){$('nasaApodImage').src=apodImage;$('nasaApodImage').style.display='block';}else{$('nasaApodImage').style.display='none';}state($('nasaAstroState'),'ok','NASA ASTRONOMY READY');stamp();}catch(_){$('nasaApodTitle').textContent='NASA astronomy media unavailable';state($('nasaAstroState'),'warn','LOCAL SKY READY');}
   }
   const worldview=$('nasaWorldviewLocal');
   function buildWorldviewUrl(){const t=new Date().toISOString().replace(/\.000Z$/,'Z');const v=`${(location.lon-3).toFixed(3)},${(location.lat-3).toFixed(3)},${(location.lon+3).toFixed(3)},${(location.lat+3).toFixed(3)}`;const layers='Reference_Labels_15m%2CReference_Features_15m%2CCoastlines_15m%2CHimawari_AHI_Band13_Clean_Infrared%2CHimawari_AHI_Band3_Red_Visible_1km';return `https://worldview.earthdata.nasa.gov/?l=${layers}&lg=true&t=${encodeURIComponent(t)}&v=${encodeURIComponent(v)}`;}

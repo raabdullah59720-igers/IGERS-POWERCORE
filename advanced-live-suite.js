@@ -6,9 +6,10 @@
   const $ = (id) => document.getElementById(id);
   const esc = (v) => String(v ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const nowTime = () => new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  const fmtNum = (v,d=1) => Number.isFinite(Number(v)) ? Number(v).toFixed(d) : '—';
+  const fmtNum = (v,d=1) => (v===null||v===undefined||(typeof v==='string'&&!v.trim())) ? '—' : (Number.isFinite(Number(v)) ? Number(v).toFixed(d) : '—');
   const rad = (d)=>d*Math.PI/180, deg=(r)=>r*180/Math.PI;
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const optionalNumber=(v)=>v===null||v===undefined||(typeof v==='string'&&!v.trim())?null:(Number.isFinite(Number(v))?Number(v):null);
 
   const state = {
     air: [], selectedAir: null, airFilter:'all', airZoom:1, airRotation:0, airTilt:.22, airSyncAt:0, airGeoBoundary:[], quakes: [], marine: null, marineSite: 'chattogram',
@@ -232,14 +233,14 @@
     const url='https://marine-api.open-meteo.com/v1/marine?latitude='+s.lat+'&longitude='+s.lon+'&current=sea_level_height_msl,wave_height,wind_wave_height,swell_wave_height,sea_surface_temperature,ocean_current_velocity,ocean_current_direction&hourly=sea_level_height_msl,wave_height,ocean_current_velocity,ocean_current_direction,sea_surface_temperature&forecast_days=1&timezone=auto&wind_speed_unit=ms';
     try{
       const d=await fetchJson(url);state.marine={...d,site:s};const c=d.current||{};
-      const wave=Number(c.wave_height),cur=Number(c.ocean_current_velocity),sea=Number(c.sea_level_height_msl),sst=Number(c.sea_surface_temperature),dir=Number(c.ocean_current_direction);
+      const wave=optionalNumber(c.wave_height),cur=optionalNumber(c.ocean_current_velocity),sea=optionalNumber(c.sea_level_height_msl),sst=optionalNumber(c.sea_surface_temperature),dir=optionalNumber(c.ocean_current_direction);
       setText('alsSeaLevel',fmtNum(sea,2)+' m');setText('alsWave',fmtNum(wave,2)+' m');setText('alsCurrent',fmtNum(cur,2)+' m/s');setText('alsSst',fmtNum(sst,1)+' °C');setText('alsCurrentDir',Number.isFinite(dir)?Math.round(dir)+'°':'—');setText('alsMarineLast','Marine model sync · '+nowTime());
-      const danger=(Number.isFinite(wave)&&wave>=2.5)||(Number.isFinite(cur)&&cur>=1.5);setLive('alsMarineLive',danger?'warn':'','MODEL UPDATE · '+s.name);setText('alsMarineAlert',danger?'Screening threshold exceeded — verify with local maritime authority.':'No configured marine screening threshold exceeded.');
+      const danger=(wave!==null&&wave>=2.5)||(cur!==null&&cur>=1.5);setLive('alsMarineLive',danger?'warn':'','MODEL UPDATE · '+s.name);setText('alsMarineAlert',danger?'Screening threshold exceeded — verify with local maritime authority.':'No configured marine screening threshold exceeded.');
       renderMarine3D();
     }catch(_){setLive('alsMarineLive','offline','OFFLINE · marine model');setText('alsMarineLast','Feed retry · '+nowTime());}
   }
   function renderMarine3D(){
-    const c=state.marine?.current||{};const wave=Number(c.wave_height)||0;const cur=Number(c.ocean_current_velocity)||0;const objs=[];
+    const c=state.marine?.current||{};const wave=optionalNumber(c.wave_height)??0;const cur=optionalNumber(c.ocean_current_velocity)??0;const objs=[];
     for(let i=0;i<9;i++)objs.push({x:(i-4)/6,z:((i%3)-1)/4,y:(Math.sin(i+performance.now()/1000)+1)/5,color:'#55ddff',r:2.5,label:i===8?'SEA GRID':''});
     simpleGrid($('alsMarine3D'),{time:performance.now(),objects:objs,waveColor:wave>=2.5?'rgba(255,119,119,.28)':'rgba(85,221,255,.22)'});
     setText('alsMarineScene', 'Sea level '+fmtNum(c.sea_level_height_msl,2)+' m · wave '+fmtNum(wave,2)+' m · current '+fmtNum(cur,2)+' m/s');
