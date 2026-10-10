@@ -341,3 +341,216 @@
   } else if (playing) startLoop();
   else drawScene();
 })();
+
+
+/* FEAS footstep model: dimensionally consistent scenario estimate, never measured telemetry. */
+function calculateIGERSFEASModel(input) {
+  const ranges = {
+    footfalls: [10000, 1000000], forceN: [100, 1000], travelMm: [1, 10],
+    efficiencyPct: [5, 35], activeHours: [1, 24], capacityWh: [100, 50000], loadW: [1, 50]
+  };
+  const clean = {};
+  for (const [key, bounds] of Object.entries(ranges)) {
+    const value = Number(input[key]);
+    if (!Number.isFinite(value) || value < bounds[0] || value > bounds[1]) {
+      throw new RangeError(`${key} must be between ${bounds[0]} and ${bounds[1]}`);
+    }
+    clean[key] = value;
+  }
+  const mechanicalJPerStep = clean.forceN * (clean.travelMm / 1000);
+  const electricalJPerStep = mechanicalJPerStep * (clean.efficiencyPct / 100);
+  const electricalMWhPerStep = electricalJPerStep / 3.6;
+  const dailyWh = electricalJPerStep * clean.footfalls / 3600;
+  const activeAverageW = dailyWh / clean.activeHours;
+  const capacityEquivalentPctPerDay = dailyWh / clean.capacityWh * 100;
+  const localLoadDemandWh = clean.loadW * clean.activeHours;
+  const localLoadCoveragePct = dailyWh / localLoadDemandWh * 100;
+  return {
+    inputs: clean, mechanicalJPerStep, electricalJPerStep, electricalMWhPerStep,
+    dailyWh, dailyKWh: dailyWh / 1000, activeAverageW,
+    capacityEquivalentPctPerDay, localLoadDemandWh, localLoadCoveragePct,
+    classification: 'MODEL_ESTIMATE_NOT_MEASURED'
+  };
+}
+if (typeof window !== 'undefined') window.IGERSFEASModel = { calculate: calculateIGERSFEASModel };
+
+(() => {
+  const root = document.getElementById('feasConceptDemo');
+  if (!root || root.dataset.feasInitialized === '1') return;
+  root.dataset.feasInitialized = '1';
+  const byId = id => document.getElementById(id);
+  const svg = byId('feasModelSvg');
+  const photoDemo = byId('feasPhotoDemo');
+  const photoSvg = byId('feasPhotoFlowSvg');
+  const photoImage = byId('feasPhotoImage');
+  const photoImageTitle = byId('feasPhotoImageTitle');
+  const photoImageCaption = byId('feasPhotoImageCaption');
+  const photoFullImageLink = byId('feasPhotoFullImageLink');
+  const photoModeStatus = byId('feasPhotoModeStatus');
+  const photoPlaybackStatus = byId('feasPhotoPlaybackStatus');
+  const photoModeButtons = root.querySelectorAll('[data-feas-photo-mode]');
+  const status = byId('feasAnimationStatus');
+  const play = byId('feasPlayToggle');
+  const reset = byId('feasReset');
+  const speedSelect = byId('feasSpeed');
+  const modelStatus = byId('feasModelStatus');
+  const liveInputs = {
+    footfalls: byId('feasDailyFootfalls'), forceN: byId('feasStepForce'), travelMm: byId('feasStepTravel'),
+    efficiencyPct: byId('feasEfficiency'), activeHours: byId('feasActiveHours'), capacityWh: byId('feasStorageCapacity'), loadW: byId('feasLocalLoad')
+  };
+  const labels = {
+    footfalls: byId('feasDailyFootfallsOut'), forceN: byId('feasStepForceOut'), travelMm: byId('feasStepTravelOut'),
+    efficiencyPct: byId('feasEfficiencyOut'), activeHours: byId('feasActiveHoursOut'), capacityWh: byId('feasStorageCapacityOut'), loadW: byId('feasLocalLoadOut')
+  };
+  const outputIds = {
+    perStep: byId('feasPerStepResult'), daily: byId('feasDailyResult'), dailyKwh: byId('feasDailyKwh'), power: byId('feasPowerResult'),
+    mechanical: byId('feasMechanicalResult'), storage: byId('feasStorageResult'), storageBar: byId('feasStorageProgressBar'),
+    storageProgress: byId('feasStorageProgress'), coverage: byId('feasLoadCoverageResult'), demand: byId('feasLoadDemand')
+  };
+  const photoOutputs = {
+    dailyEnergy: byId('feasPhotoDailyEnergy'), perStep: byId('feasPhotoPerStep'),
+    capacity: byId('feasPhotoCapacityEquivalent'), capacityMeter: byId('feasPhotoCapacityMeter'),
+    capacityBar: byId('feasPhotoCapacityBar'), footfalls: byId('feasPhotoFootfallCount'), loadCoverage: byId('feasPhotoLoadCoverage'),
+    batteryFill: byId('feasPhotoBatteryFill')
+  };
+  const photoScenes = {
+    overview: { src: 'feas-footstep-overview.webp', title: 'FEAS overview · staircase and floor harvesting', caption: 'Reference poster paired with the animated energy-flow model.', status: 'SCENE 01 · OVERVIEW', alt: 'Footstep Energy Absorption System overview poster showing staircase pressure pads and proposed applications.' },
+    installation: { src: 'feas-footstep-installation.webp', title: 'Footstep cutaway · transducer and storage layers', caption: 'Installation reference paired with the animated transducer, converter and battery concept.', status: 'SCENE 02 · INSTALLATION CUTAWAY', alt: 'IGERS footstep energy harvesting installation poster with cutaway pressure pad, conversion layer and battery-storage concept.' }
+  };
+  const reducedMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let playing = !reducedMotion;
+  let speed = 1;
+  let elapsed = 0;
+  let lastFrame = 0;
+  let raf = 0;
+  const fmt = (n, digits = 2) => Number(n).toLocaleString('en-US', { maximumFractionDigits: digits, minimumFractionDigits: 0 });
+  const values = () => Object.fromEntries(Object.entries(liveInputs).map(([key, el]) => [key, Number(el && el.value)]));
+  function renderModel() {
+    try {
+      const result = calculateIGERSFEASModel(values());
+      if (labels.footfalls) labels.footfalls.textContent = fmt(result.inputs.footfalls, 0);
+      if (labels.forceN) labels.forceN.textContent = `${fmt(result.inputs.forceN, 0)} N`;
+      if (labels.travelMm) labels.travelMm.textContent = `${fmt(result.inputs.travelMm, 1)} mm`;
+      if (labels.efficiencyPct) labels.efficiencyPct.textContent = `${fmt(result.inputs.efficiencyPct, 0)}%`;
+      if (labels.activeHours) labels.activeHours.textContent = `${fmt(result.inputs.activeHours, 0)} h/day`;
+      if (labels.capacityWh) labels.capacityWh.textContent = `${fmt(result.inputs.capacityWh, 0)} Wh`;
+      if (labels.loadW) labels.loadW.textContent = `${fmt(result.inputs.loadW, 0)} W`;
+      if (outputIds.perStep) outputIds.perStep.textContent = `${fmt(result.electricalMWhPerStep, 4)} mWh`;
+      if (outputIds.daily) outputIds.daily.textContent = `${fmt(result.dailyWh, 2)} Wh/day`;
+      if (outputIds.dailyKwh) outputIds.dailyKwh.textContent = `${fmt(result.dailyKWh, 5)} kWh/day`;
+      if (outputIds.power) outputIds.power.textContent = `${fmt(result.activeAverageW, 3)} W`;
+      if (outputIds.mechanical) outputIds.mechanical.textContent = `Mechanical input: ${fmt(result.mechanicalJPerStep, 3)} J/event`;
+      if (outputIds.storage) outputIds.storage.textContent = `${fmt(result.capacityEquivalentPctPerDay, 3)}% / day`;
+      if (outputIds.storageBar) outputIds.storageBar.style.width = `${Math.max(0, Math.min(100, result.capacityEquivalentPctPerDay))}%`;
+      if (outputIds.storageProgress) outputIds.storageProgress.setAttribute('aria-valuenow', String(Math.max(0, Math.min(100, result.capacityEquivalentPctPerDay))));
+      if (outputIds.coverage) outputIds.coverage.textContent = `${fmt(result.localLoadCoveragePct, 1)}%`;
+      if (outputIds.demand) outputIds.demand.textContent = `Modelled load demand: ${fmt(result.localLoadDemandWh, 2)} Wh/day`;
+      if (photoOutputs.dailyEnergy) photoOutputs.dailyEnergy.textContent = `${fmt(result.dailyWh, 2)} Wh/day`;
+      if (photoOutputs.perStep) photoOutputs.perStep.textContent = `${fmt(result.electricalMWhPerStep, 4)} mWh/event`;
+      if (photoOutputs.capacity) photoOutputs.capacity.textContent = `${fmt(result.capacityEquivalentPctPerDay, 3)}% / day`;
+      if (photoOutputs.capacityBar) photoOutputs.capacityBar.style.width = `${Math.max(0, Math.min(100, result.capacityEquivalentPctPerDay))}%`;
+      if (photoOutputs.capacityMeter) photoOutputs.capacityMeter.setAttribute('aria-valuenow', String(Math.max(0, Math.min(100, result.capacityEquivalentPctPerDay))));
+      if (photoOutputs.footfalls) photoOutputs.footfalls.textContent = `${fmt(result.inputs.footfalls, 0)} / day`;
+      if (photoOutputs.loadCoverage) photoOutputs.loadCoverage.textContent = `${fmt(result.localLoadCoveragePct, 1)}%`;
+      // Illustrative battery fill in the SVG is an animation only. The measured/modelled numeric equivalent is reported separately above.
+      if (photoOutputs.batteryFill) {
+        const illustrativeFill = 8 + ((Math.sin(elapsed * 0.22) + 1) / 2) * 23;
+        photoOutputs.batteryFill.setAttribute('height', String(illustrativeFill));
+        photoOutputs.batteryFill.setAttribute('y', String(287 - illustrativeFill));
+      }
+      if (modelStatus) modelStatus.textContent = 'Model updated · no hardware telemetry connected';
+      return result;
+    } catch (error) {
+      if (modelStatus) modelStatus.textContent = 'Invalid model inputs · check ranges';
+      return null;
+    }
+  }
+  function setPlaybackState() {
+    root.dataset.feasPlaying = String(playing);
+    root.style.setProperty('--feas-flow-duration', `${1.4 / speed}s`);
+    if (play) { play.textContent = playing ? 'Pause flow' : 'Play flow'; play.setAttribute('aria-pressed', String(playing)); }
+    if (status) status.textContent = playing ? 'ANIMATION RUNNING' : (reducedMotion && elapsed === 0 ? 'PAUSED · REDUCED MOTION' : 'ANIMATION PAUSED');
+    if (playing) {
+      if (svg && typeof svg.unpauseAnimations === 'function') svg.unpauseAnimations();
+      if (photoSvg && typeof photoSvg.unpauseAnimations === 'function') photoSvg.unpauseAnimations();
+    } else {
+      if (svg && typeof svg.pauseAnimations === 'function') svg.pauseAnimations();
+      if (photoSvg && typeof photoSvg.pauseAnimations === 'function') photoSvg.pauseAnimations();
+    }
+    if (photoDemo) photoDemo.dataset.feasPlaying = String(playing);
+    if (photoPlaybackStatus) photoPlaybackStatus.textContent = playing ? 'FLOW RUNNING · SIMULATION' : 'FLOW PAUSED · SIMULATION';
+    if (playing) startLoop(); else stopLoop();
+  }
+  function tick(now) {
+    raf = 0;
+    if (!playing || document.hidden) return;
+    if (lastFrame) elapsed += Math.min(0.05, Math.max(0, now - lastFrame) / 1000) * speed;
+    lastFrame = now;
+    if (svg && typeof svg.setCurrentTime === 'function') svg.setCurrentTime(elapsed);
+    if (photoSvg && typeof photoSvg.setCurrentTime === 'function') photoSvg.setCurrentTime(elapsed);
+    if (photoOutputs.batteryFill) {
+      const illustrativeFill = 8 + ((Math.sin(elapsed * 0.22) + 1) / 2) * 23;
+      photoOutputs.batteryFill.setAttribute('height', String(illustrativeFill));
+      photoOutputs.batteryFill.setAttribute('y', String(287 - illustrativeFill));
+    }
+    raf = window.requestAnimationFrame(tick);
+  }
+  function startLoop() {
+    if (!playing || document.hidden || raf || !svg || typeof svg.setCurrentTime !== 'function' || typeof window.requestAnimationFrame !== 'function') return;
+    lastFrame = 0;
+    raf = window.requestAnimationFrame(tick);
+  }
+  function stopLoop() {
+    if (raf) window.cancelAnimationFrame(raf);
+    raf = 0;
+    lastFrame = 0;
+  }
+  Object.values(liveInputs).forEach(el => { if (el) el.addEventListener('input', renderModel); });
+  root.querySelectorAll('[data-feas-mode]').forEach(button => button.addEventListener('click', () => {
+    const mode = button.dataset.feasMode === 'floor' ? 'floor' : 'stairs';
+    root.dataset.feasLayout = mode;
+    root.querySelectorAll('[data-feas-mode]').forEach(other => other.setAttribute('aria-pressed', String(other === button)));
+    if (svg && typeof svg.setCurrentTime === 'function') svg.setCurrentTime(elapsed);
+  }));
+  function selectPhotoScene(requestedMode) {
+    const mode = requestedMode === 'installation' ? 'installation' : 'overview';
+    const scene = photoScenes[mode];
+    if (photoDemo) photoDemo.dataset.feasPhotoMode = mode;
+    photoModeButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.feasPhotoMode === mode)));
+    if (photoImage && photoImage.getAttribute('src') !== scene.src) photoImage.setAttribute('src', scene.src);
+    if (photoImage) photoImage.setAttribute('alt', scene.alt);
+    if (photoFullImageLink) photoFullImageLink.setAttribute('href', scene.src);
+    if (photoImageTitle) photoImageTitle.textContent = scene.title;
+    if (photoImageCaption) photoImageCaption.textContent = scene.caption;
+    if (photoModeStatus) photoModeStatus.textContent = scene.status;
+    if (photoSvg && typeof photoSvg.setCurrentTime === 'function') photoSvg.setCurrentTime(elapsed);
+  }
+  photoModeButtons.forEach(button => button.addEventListener('click', () => selectPhotoScene(button.dataset.feasPhotoMode)));
+  if (play) play.addEventListener('click', () => { playing = !playing; setPlaybackState(); });
+  if (reset) reset.addEventListener('click', () => {
+    elapsed = 0;
+    if (svg && typeof svg.setCurrentTime === 'function') svg.setCurrentTime(0);
+    if (photoSvg && typeof photoSvg.setCurrentTime === 'function') photoSvg.setCurrentTime(0);
+    if (photoOutputs.batteryFill) { photoOutputs.batteryFill.setAttribute('height', '20'); photoOutputs.batteryFill.setAttribute('y', '267'); }
+    if (modelStatus) modelStatus.textContent = 'Demo clock reset · model inputs unchanged';
+    if (playing) startLoop();
+  });
+  if (speedSelect) speedSelect.addEventListener('change', () => {
+    const candidate = Number(speedSelect.value);
+    speed = Number.isFinite(candidate) && candidate >= 0.5 && candidate <= 2 ? candidate : 1;
+    root.style.setProperty('--feas-flow-duration', `${1.4 / speed}s`);
+    if (modelStatus) modelStatus.textContent = `Animation ${fmt(speed, 1)}× · model remains an estimate`;
+  });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stopLoop(); else if (playing) startLoop(); });
+  window.addEventListener('pagehide', stopLoop, { once: true });
+  selectPhotoScene(photoDemo && photoDemo.dataset.feasPhotoMode);
+  renderModel();
+  setPlaybackState();
+  if (reducedMotion && modelStatus) modelStatus.textContent = 'Reduced-motion preference detected · press Play to animate';
+  if (!svg || typeof svg.setCurrentTime !== 'function' || typeof window.requestAnimationFrame !== 'function') {
+    stopLoop(); playing = false; setPlaybackState();
+    if (status) status.textContent = 'STATIC SCHEMATIC · SVG ANIMATION UNSUPPORTED';
+    if (photoPlaybackStatus) photoPlaybackStatus.textContent = 'STATIC CONCEPT · SVG ANIMATION UNSUPPORTED';
+    if (play) play.disabled = true;
+  }
+})();

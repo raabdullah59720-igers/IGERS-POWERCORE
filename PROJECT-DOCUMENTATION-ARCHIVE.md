@@ -5211,3 +5211,22 @@ This environment could not resolve external internet hosts, and browser-based re
 </script>
 
 ````
+
+
+---
+
+## Archived legacy template note (consolidated; not a runtime file)
+
+IGERS-BD-01 Lightweight Website Template
+========================================
+Open index.html in a browser, or upload the folder to GitHub Pages, Netlify, Vercel, or any static web host.
+
+Design goals:
+- Responsive
+- No external libraries
+- No external fonts
+- No image assets
+- Inline CSS/SVG-style conceptual visualization
+- Intended to stay far below 1 MB
+
+Replace/add validated project data, prototype images, calculations, and contact information as the research project develops.

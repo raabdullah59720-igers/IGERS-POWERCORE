@@ -48,7 +48,7 @@ const builtWithVite = runRealVite();
 // Copy root-relative runtime assets (including GeoJSON and image files) while excluding
 // source code, secrets, tests, documentation and deployment configuration from the public site.
 copyTree(root, dist, builtWithVite);
-const required = ['index.html', 'sw.js', 'manifest.webmanifest', 'company-operations-suite.js', 'company-operations-suite.css', 'data/bangladesh-boundary-fallback.geojson'];
+const required = ['index.html', 'sw.js', 'manifest.webmanifest', 'company-operations-suite.js', 'company-operations-suite.css', 'data/bangladesh-boundary-fallback.geojson', 'feas-footstep-overview.webp', 'feas-footstep-installation.webp'];
 const missing = required.filter((path) => !existsSync(join(dist, path)));
 if (missing.length) {
   console.error(`Build failed: required runtime assets missing: ${missing.join(', ')}`);
