@@ -1,12 +1,5 @@
-<!-- 1) Add this where you want the separate Journal/Magazine panel to appear. -->
-<div id="igers-journal-panel"></div>
+<!-- Put this stylesheet link inside <head>, after the existing styles. -->
+<link rel="stylesheet" href="./igers-language-addon.css?v=20261010-ja-ur-vi-3">
 
-<!-- 2) Load the module. Adjust the asset path to match your app. -->
-<link rel="stylesheet" href="igers-compact-bundle.css">
-<script src="journal/assets/igers-journal.js"></script>
-<script>
-  IGERSJournalPanel.mount('#igers-journal-panel', {
-    pdfUrl: 'journal/assets/IGERS-BD-01_Professional_Engineering_Magazine_Merged_3D.pdf',
-    coverUrl: 'journal/assets/cover.webp'
-  });
-</script>
+<!-- Put this script near the end of <body>, AFTER the app's original language runtime. -->
+<script defer src="./igers-language-addon.js?v=20261010-ja-ur-vi-3"></script>
