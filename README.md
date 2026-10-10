@@ -111,3 +111,21 @@ The existing Thesis Concept Lab now includes a Footstep Energy Absorption System
 The scenario model uses mechanical input per event = force (N) × effective pad travel (m), estimated electrical energy/event = mechanical input × user-selected assumed net efficiency, daily Wh = electrical J/event × daily footfall events ÷ 3600, average power over active hours = daily Wh ÷ active hours. These are simplified model estimates, not verified output. The poster's national potential, financial and carbon figures have not been independently verified and are not inputs to the model.
 
 Validation to run after upload: `python -m unittest discover -s tests -v`, `npm run build`, inspect GitHub Actions, then open Concept → Footstep Energy (FEAS) on desktop and phone. The animation is a visual simulation, not real sensor telemetry or a physics-validated 3D solver. The photo-backed battery fill and moving particles are illustrative; numeric Wh/day and capacity-equivalent values are model estimates only, not live battery state of charge.
+
+
+## Multilingual interface
+
+- The interface language selector supports automatic browser-language detection and English, Bangla, Hindi, Arabic (RTL), Simplified Chinese, Spanish, French, and Russian (Русский).
+- A user's explicit preference is saved locally in the current browser.
+- Core navigation, common controls, important panel titles, FEAS concepts, and Company Operations labels use curated translations.
+- Specialist provider responses or long technical text without a reviewed translation remain in English; calculations, units, original measurements, and API payloads are not altered by localization.
+- `i18n.js` is a required runtime asset. Keep it beside `index.html` when uploading the extracted project to GitHub Pages.
+
+
+## Multilingual interface update (2026-10-10)
+
+The interface now offers automatic browser-language detection plus English, Bangla, Hindi, Arabic (RTL), Simplified Chinese, Spanish, French, and Russian (Русский). A curated dictionary localizes the 238 existing core phrases into Russian as well as the existing supported languages, covering navigation, common controls, key panel headings, FEAS/Thesis Concept and Company Operations. The preference is stored in this browser. `i18n.js` is a required runtime asset and must remain beside `index.html`. The service-worker revision and CSS/JS query version were updated.
+
+**Translation scope:** untranslated specialist/provider messages and long technical text safely fall back to the original English. Calculations, units, measurements, API payloads and IDs are not changed by translation. Arabic switches the document to RTL while keeping map/canvas coordinate controls in their native order.
+
+**Validation summary:** the full Python/Node suite passed (28 tests); all JavaScript and inline scripts parsed; HTML IDs/anchors and local resources were checked; language auto-detection, Bangla/Spanish/Russian switching, Russian browser auto-detection, English restoration, placeholder translation and Arabic RTL were tested; the offline static build passed and excluded backend secrets/source; and the ZIP is verified. Browser visual E2E remains constrained by the environment, and live provider availability is network-dependent.
