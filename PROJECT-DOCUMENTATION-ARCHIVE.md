@@ -4664,3 +4664,646 @@ QA:
 - All inline script blocks pass Node syntax checking.
 - All standalone JavaScript files pass Node syntax checking.
 - Upgrade is additive and does not replace the existing Weather API/data flow.
+
+
+# Consolidated legacy handoff documents and snippets
+
+The following non-runtime documentation/sample files were consolidated into this archive on 2026-10-10 to keep the live GitHub project within the 98-file limit. Their historical text/source is retained below; these files were not used as runtime dependencies by index.html.
+
+
+---
+
+## Archived file: `BUGFIX-VERIFY-REPORT.md`
+
+# IGERS POWERCORE 12-Module Upgrade · Post-Audit Fix Report
+
+Date: 2026-10-09
+Package: `IGERS-POWERCORE-12-UPGRADE-GITHUB-PAGES.zip` (post-audit corrected build)
+
+## Bugs corrected in this pass
+
+1. **Simulation reset feedback:** Reset restored the scenario but immediately overwrote its confirmation text. Reset now redraws the scenario and then shows an accurate reset confirmation.
+2. **Map fallback status:** the unified map replaced GeoJSON load-failure details with a generic fallback message. The visible status now preserves the bundled GeoJSON load/error detail and separately names the schematic fallback.
+3. **Diagnostics robustness:** malformed percent-encoded hash links can no longer abort diagnostics; local resource probes time out after 8 seconds; unexpected errors are reported and the diagnostics busy lock is released in `finally`.
+4. **Command Center source count:** known simulation and local-model states are now counted as observed states.
+5. **Degraded/stale KPI:** runtime JavaScript errors are no longer incorrectly added to the degraded/stale provider count; runtime errors have their own counter and alert path.
+6. **Unknown status classification:** explicit `unknown`, `n/a`, `not exposed`, `not reported`, and `no data` labels stay `unknown` rather than being misclassified as warning.
+7. **Cache invalidation:** command-center script URL and service-worker revision were bumped to `powersuite12-v3`.
+
+## Validation plan/results
+
+Final run results: JavaScript/MJS 45/45 syntax checks passed; inline scripts 13/13; CSS 6/6 parse checks; HTML 563 IDs with no duplicates; 40/40 hash targets resolve; 14/14 local page references resolve; JSON/manifest/GeoJSON parse checks passed; Python 4/4 scripts compile; air-traffic relay self-test passed; physics/status/coordinate model tests 20/20; `npm run build` passed; local HTTP smoke test 22/22 routes returned HTTP 200; final ZIP integrity passed with 90 files, below the 98-file limit.
+
+Browser automation is blocked by the current workspace browser policy, so this report does not claim a completed full visual browser test or verified live public-provider connectivity.
+
+
+---
+
+## Archived file: `FULL-PANEL-AUDIT-REPORT.md`
+
+# IGERS POWERCORE · Full Panel Audit Report
+
+**Release candidate:** GitHub Pages source ZIP, October 9, 2026
+
+## What was audited
+
+- Main HTML page, all 30 section targets, grouped navigation, mobile navigation controller, theme control, section/menu IDs, forms and button/control references.
+- All loaded external JavaScript files and all executable inline scripts for syntax.
+- All website JavaScript/MJS files, Python utilities, CSS files, inline style blocks, JSON, web manifest, PWA icon dimensions, and bundled Bangladesh GeoJSON.
+- Main runtime asset references, CSS local URLs, static build output, service-worker revision, repository-root `index.html`, and local HTTP routes.
+- Targeted interaction behavior for section navigation, administrator-gated master UI state, and airport/runway simulation.
+
+## Bugs repaired in this pass
+
+1. The `SYSTEM MASTER CONTROL` ON/OFF buttons were present but had no handler in the active page. They now require one of the existing IGERS admin-session flags, preserve state when unauthorized, persist the local UI status, and explicitly state that public-data feeds and physical hardware are not controlled.
+2. Grouped navigation used a full-width row within a fixed 70px desktop header, creating a wrap/overlap risk at intermediate widths. Desktop now reserves a proper second row, while mobile menu placement remains 70px.
+3. The footer now contains the `year` element used by the existing year initializer.
+4. Cache-busting versions and the service-worker revision were updated so deployed clients can detect this version.
+5. `build.mjs` now skips Python bytecode/cache and common temporary files when producing `dist/`.
+
+## Automated checks
+
+| Check | Result |
+|---|---|
+| Production build (`npm run build`) | PASS, offline static build |
+| Standalone JS/MJS syntax | 44 files PASS |
+| Inline JavaScript syntax | 13 scripts PASS |
+| CSS parsing | 5 stylesheets + 15 inline style blocks PASS |
+| HTML IDs | 445 unique IDs, zero duplicates |
+| Panel navigation | 30 sections / 30 unique matching targets |
+| Interactive ID wiring | 136 controls referenced by loaded code; no disconnected ID-bearing control found |
+| Local HTML asset/anchor references | no missing targets or files |
+| JSON/manifest/GeoJSON | 4 files parsed |
+| GeoJSON coordinate validation | 93 features, 467 coordinate tuples, no out-of-range coordinates |
+| Python scripts | 4 compile PASS |
+| PWA icons | 192×192 and 512×512 verified |
+| Required build assets | all present; no `__pycache__` / `.pyc` files |
+| Local HTTP smoke test | 15/15 routes returned HTTP 200 |
+| Interaction test: navigation controller | PASS |
+| Interaction test: admin master controls | PASS |
+| Interaction test: airport/runway simulation | PASS |
+
+## Preserved project structure
+
+All 84 paths present in the starting website ZIP were retained. The update adds `system-master-control.js` and this audit report. The archive keeps `index.html` directly at the root and contains 86 files, below the 98-file limit. The original public-feed modules, calculators, legal pages, assets, PWA files, GeoJSON and airport simulation remain included.
+
+## What could not be fully verified
+
+- Chromium navigation was blocked by the workspace policy for both `file://` and localhost URLs (`ERR_BLOCKED_BY_ADMINISTRATOR`). The project was built and served locally and its routes/resources were tested, but a real visual browser session across every panel could not be completed.
+- External providers such as Airplanes.live, NASA GIBS, weather feeds and public GIS endpoints could not be guaranteed live from this environment. Their status must be checked once GitHub Pages finishes deployment on a normal internet connection.
+- GitHub Pages publishing is triggered by the repository commit and host configuration; this local ZIP cannot publish itself.
+
+## Upload notes
+
+Extract the ZIP and upload the extracted files to the root of the existing `IGERS-POWERCORE` repository, overwriting existing files. Keep `index.html` at the root and retain `data/bangladesh-boundary-fallback.geojson`. Do not upload the ZIP as a single file. Commit the changes, then wait for the existing GitHub Pages deployment to finish.
+
+
+---
+
+## Archived file: `POWERCORE-12-UPGRADE-REPORT.md`
+
+# IGERS POWERCORE · 12-Module Upgrade & Validation Report
+
+Build date: 2026-10-09 (post-audit bugfix pass)
+Baseline: `IGERS-POWERCORE-FULL-PANEL-AUDITED-GITHUB-READY.zip`
+
+## Added modules
+
+1. **Unified Command Center** — 3D-style animated globe, source-state KPIs and consolidated quick overview.
+2. **Live Data Integrity Center** — provider/source status, observation age where timestamp exists, and explicit unknown/fallback states.
+3. **Unified Bangladesh Map** — bundled GeoJSON boundary/rivers, airport reference markers and valid coordinates from the existing public ADS-B payload when exposed.
+4. **IGERS Energy Laboratory** — kinetic-energy reduction, wind, hydro and solar estimate models with visible assumptions and input validation.
+5. **Smart Alert Center** — local alerts derived from exposed offline/stale/error states and browser runtime errors; acknowledgement is device-local.
+6. **System Diagnostics** — internal hash links, duplicate IDs, required sections/scripts, core local resources and service-worker API checks.
+7. **Report Generator** — JSON and CSV snapshots plus browser Print / Save as PDF.
+8. **Personalized Dashboard** — locally pinned panel shortcuts and compact layout preference.
+9. **Mobile App Experience** — browser install prompt when available, standalone/service-worker/network status and Android installation guidance.
+10. **Simulation Training Lab** — 3D-style runway, energy-flow and map-scan visual scenarios with run/pause/reset/speed controls. Scenarios are labelled simulations.
+11. **Admin & Audit Center** — selected non-sensitive UI action log in local browser storage; it is not server-side security/audit.
+12. **Performance & Offline** — network/visibility/data-saving indicators, low-motion and compact-card controls, and local runtime error count.
+
+The three new workspaces are linked in navigation as **Command Center**, **Engineering & Simulation Lab**, and **Operations & App Health**. Existing menu groups and panel destinations remain available.
+
+## Calculation and data-integrity notes
+
+- Kinetic-energy reduction is displayed as **kJ/event**, not power; the annual energy estimate uses the user-entered events/year.
+- Wind output uses `P = 0.5 × ρ × A × v³ × Cp × η`; Cp is constrained to the ideal Betz limit of 0.593 and annual energy uses the entered operating hours.
+- Hydraulic output uses `P = ρ × g × Q × H × η`; annual energy uses entered operating hours.
+- Solar output uses `P = irradiance × area × module efficiency × system derate`; annual energy uses entered peak-sun-hours/day and days/year.
+- All new energy results are **assumption-based estimates**, not measured site readings or feasibility certification.
+- Unknown external provider statuses remain unknown. The dashboard does not convert missing data into healthy/live status.
+- Airport locations are reference markers. Aircraft are drawn only from valid coordinates already exposed by the public ADS-B payload. Simulated visuals never enter the live aircraft list.
+- Audit history, favorites, acknowledgement and interface settings are browser-local. Front-end session gating on static GitHub Pages is not production-grade authorization.
+
+## Regression and build validation
+
+- Original baseline paths: 86.
+- Removed original paths: 0.
+- Initial 12-module integration changed the existing `index.html` and `sw.js`; this post-audit fix pass additionally updates `powercore-command-center.js` for diagnostics, reset-feedback, map-status and KPI accuracy.
+- New runtime assets: `powercore-command-center.css` and `powercore-command-center.js`.
+- Validation report added: this file.
+- HTML IDs: 563; duplicate IDs: 0.
+- Internal hash links: 40; missing targets: 0.
+- Local asset references: no missing paths detected.
+- Inline JavaScript syntax: 13 blocks passed.
+- JavaScript/MJS syntax: 45 files passed.
+- CSS parser checks: 6 stylesheets passed.
+- JSON/package/manifest/GeoJSON: parsed successfully.
+- Pure-model/status/coordinate tests: 20/20 passed, including unit correction, energy formulas, annualization assumptions, Betz Cp limit, input bounds, coordinate validation, and stale/offline classification.
+- Static production build: `npm run build` passed using the repository's offline-safe `build.mjs` fallback because local Vite dependencies are not installed in this workspace.
+- Final local HTTP smoke test: 22/22 routes returned HTTP 200.
+- Final post-audit delivery ZIP: 90 files, below the 98-file repository limit. The only new path added during the final bug-fix pass is `BUGFIX-VERIFY-REPORT.md`.
+
+## Not verified in this workspace
+
+Chromium headless attempts timed out before producing a screenshot, so full browser visual/interaction testing was not completed. External APIs, NASA tile delivery and live aircraft/weather/seismic feeds were not independently confirmed live. Run **Operations & App Health → Run diagnostics** after deploying to GitHub Pages; then check each provider's own timestamp/status in its original panel.
+
+## GitHub Pages upload
+
+1. Extract the ZIP.
+2. Upload the extracted contents to the root of the existing `IGERS-POWERCORE` repository and overwrite files with the same names.
+3. Keep `index.html` in the repository root and keep the `data/` directory intact.
+4. Commit the changes and wait for GitHub Pages deployment to finish. The final command-center JavaScript query string and service-worker revision are `powersuite12-v3`; the command-center stylesheet query is `powersuite12-v2` for cache/update detection.
+5. Open the existing Pages URL and hard-refresh (`Ctrl+F5`) once after deployment.
+
+The ZIP is a website source/deployment package, not an Android APK.
+
+
+## Thesis 3D Concept Lab update (2026-10-09)
+
+Added an interactive, local SVG-based concept visualizer inside the existing `#concept` section with four isometric scenes: integrated source-to-storage architecture, roadway/kinetic recovery, controlled hydraulic recovery, and solar/airflow support. It preserves the existing IGERS `#concept` and `#concept3d` IDs and calculators. Each scene is explicitly marked as conceptual, not to scale, and not proof of measured output. Added responsive styling, accessible scene selectors, a conceptual energy-flow chain, and a service-worker revision bump.
+
+## Final thesis visual package verification (2026-10-09)
+
+- Added 4 local, original SVG concept illustrations: integrated IGERS architecture, road/kinetic recovery, controlled hydraulic recovery, and solar/airflow support.
+- Added `thesis-concept-lab.css` and `thesis-concept-lab.js`; the gallery is embedded inside the existing `#concept` section and uses accessible scene buttons plus keyboard arrow navigation.
+- Existing section IDs and existing calculator `#concept3d` remain intact. No remote image source or additional runtime library is required.
+- The illustrations are conceptual, not to scale, and do not imply measured performance, verified deployment or guaranteed recovery yield.
+- Checks: 571 unique HTML IDs; no duplicate IDs, broken internal anchors or missing local references; 13 inline scripts syntax checked; 46 JS/MJS files parsed; 7 CSS files parsed; JSON/manifest/GeoJSON parsed; 4 SVGs parsed and rendered for visual review; concept gallery interaction checks 7/7 passed; production static build succeeded; local HTTP smoke test 18/18 routes returned HTTP 200.
+- Full in-browser visual/interaction testing of the entire application was not available in this workspace. External live data provider availability was not verified by this package check.
+
+---
+
+## Follow-up bug-fix audit · 9 October 2026
+
+### Confirmed fix
+- Corrected malformed markup in the Weather section: an extra closing `div` had closed the responsive wrapper before the weather cards. The Weather digital stage and the detailed weather cards now remain inside the same `.wrap` container.
+- Bumped the Thesis Concept Lab CSS/JS query versions and service-worker revision from `thesis3d-v1` to `thesis3d-v2` so deployed clients can detect the updated release.
+
+### Validation performed
+- Production static build via `npm run build`: passed (offline static fallback mode; Vite dependencies were not installed in this environment).
+- JavaScript/MJS syntax: 46 files passed; service-worker syntax passed.
+- Inline JavaScript syntax: 13 scripts passed.
+- HTML parsing: 0 parser errors after the Weather wrapper correction.
+- HTML IDs and internal anchors: 571 IDs, no duplicate IDs; 41 internal anchors, no missing targets.
+- Local HTML asset references: no missing files.
+- CSS parsing: 7 stylesheets, no parser errors.
+- JSON, SVG and GeoJSON parsing: passed; Bangladesh fallback GeoJSON contains 93 features with no coordinate-range issues.
+- Python compilation: 4 scripts passed.
+- Concept Lab mock-runtime test: 15 assertions passed (default scene, four scene selections, ARIA selection, keyboard navigation, local image load/error states and initialization guard).
+- Local HTTP smoke test: 18/18 main routes returned HTTP 200, including all four thesis SVGs, CSS/JS, service worker, manifest, Bangladesh fallback GeoJSON, PWA icons and runway assets.
+
+### Limitations
+- Chromium screenshot/navigation timed out in this environment, so full visual browser testing was not confirmed.
+- External live-data providers were not exhaustively tested; their availability depends on network/provider status.
+- Final GitHub Pages publication has not been performed from this environment.
+
+## Thesis Concept Lab live-style visual layer update (2026-10-09, v3)
+
+- Added an animated canvas overlay on the four local isometric thesis illustrations. It draws scene-specific conceptual energy-flow paths, glowing particles/nodes and a subtle scan band. The overlay is explicitly labelled as a live concept simulation; it does not claim live sensor telemetry or measured kW output.
+- Added simulation controls: Play/Pause, Reset, 0.5x/1x/1.5x/2x speed, a simulation clock, active conceptual stage, and selected animation rate. Scene switching resets the simulation cycle and maintains accessible `aria-pressed` states.
+- Added subtle pointer-driven perspective tilt for fine-pointer devices, reduced-motion handling, pause while the document is hidden, and automatic resume when returning to the tab. If Canvas is unavailable, the static conceptual illustration remains and the control is disabled with a status explanation.
+- Retained all four local SVG scenes and the existing Thesis Concept Lab, calculator panels, and original navigation identifiers. No external image API or new runtime dependency was added.
+- Cache/update revision bumped to `igers-2026-10-09-thesis3d-v3`; concept CSS/JS URL query strings now use `thesis3d-v3`.
+
+### Validation
+- JavaScript/MJS syntax: 46 files passed; inline scripts: 13 passed.
+- HTML parsing: 0 parser errors; 582 IDs with no duplicates; 41 internal links with no missing targets; no missing local assets.
+- CSS: 7 stylesheets parsed without syntax/declaration errors; JSON, GeoJSON and SVG XML parsed.
+- Concept simulation mocked-runtime checks: 14/14 passed, including scene switches, ARIA state, pause, reset, speed, resume, hidden-tab pause/resume and keyboard navigation.
+- Production static build: `npm run build` passed; the built output contains the new Concept Lab files and matching v3 cache revision.
+- Local HTTP smoke test: 19/19 routes returned HTTP 200, including all four SVGs, Concept Lab CSS/JS, service worker, manifest, Bangladesh GeoJSON, PWA icons, command center assets, and runway simulator assets.
+- Source package remains 96 files, below the 98-file limit. Temporary `dist/` build output is excluded from the GitHub upload ZIP.
+
+### Limitations
+- This is a live-style 2.5D animated visualization layered over isometric conceptual illustrations, not a physical 3D engineering solver. Movement represents illustrative flow only, not measured energy or real sensor events.
+- Browser screenshot/visual test of the entire app could not be completed in this environment, and public external providers were not independently verified live.
+
+## Thesis Concept Lab animated 3D-style live visualization (v3 final verification)
+
+- Added a scene-synchronized Canvas overlay on top of each isometric concept SVG: animated dotted energy routes, glowing moving particles, pulsing junction nodes, and a subtle scanning band.
+- Added subtle pointer-based perspective tilt on fine-pointer devices. Reduced-motion preference starts the lab paused; the user can explicitly resume it. Animation pauses when the tab becomes hidden and resumes when visible again.
+- Added accessible Play/Pause, Reset, 0.5x/1x/1.5x/2x speed selection, simulation clock, active conceptual stage, and animation-rate readout. `aria-pressed`, keyboard scene navigation, and a screen-reader announcement region are wired.
+- Scene-specific paths were visually aligned against the integrated, roadway, hydraulic and solar SVG preview renders. Fixed the explicit `[hidden]` image-fallback styling so an unavailable scene illustration can actually be hidden while the status explains why.
+- Labels clearly say `LIVE CONCEPT SIMULATION`, `Illustrative animated paths · no sensor telemetry`, and `CONCEPT ONLY`; no fabricated energy output or sensor data is generated.
+- `thesis-concept-lab.css` and `thesis-concept-lab.js` query revisions are `thesis3d-v3`; service-worker revision is `igers-2026-10-09-thesis3d-v3`.
+
+### Final verification for this update
+- `npm run build`: passed using the repository's offline-safe static build fallback.
+- JavaScript/MJS syntax: 46 files passed; inline JavaScript: 13 scripts passed.
+- HTML: 0 parser errors; 582 unique IDs, no duplicate IDs; 41 internal links, no missing targets; no missing local assets.
+- CSS: 7 stylesheets parsed without errors. JSON/GeoJSON and all SVG XML assets parsed.
+- Concept gallery mocked-runtime checks: 14/14 passed (four scene switches, pause/resume, reset, speed, hidden-tab handling, keyboard navigation and ARIA selected state).
+- Local HTTP smoke test: 19/19 required routes returned HTTP 200.
+- Original project paths are preserved; source package remains 96 actual files and below the 98-file GitHub limit. Temporary `dist/` output is excluded from the upload ZIP.
+
+### Limitations
+- This is a layered isometric/2.5D animated illustration, not a physical 3D engineering solver or real sensor telemetry. The moving particles show conceptual pathways only.
+- Full in-browser rendering of the entire app and external live provider connectivity could not be independently verified in this environment.
+
+
+## Latest thesis visuals addition
+- Added the user-supplied sluice-gate and roadway energy-harvester images to Concept Lab as two selectable scenes.
+- Added animated canvas energy-path overlays and a clearly labelled simulated storage meter (not measured battery telemetry).
+- Preserved all prior project paths; two JPG assets are the only added files.
+- Service-worker revision bumped to v4 for update detection.
+- The image simulations are conceptual, not validated mechanical/electrical designs or sensor data.
+
+## User-supplied hydraulic and roadway concept visuals (v4)
+- Added `thesis-concept-sluice-gate.jpg` and `thesis-concept-road-harvester.jpg` as selectable Concept Lab scenes.
+- The six scene options are integrated ecosystem, road SVG concept, hydraulic SVG concept, solar/airflow SVG concept, supplied sluice-gate visual, and supplied road energy-harvester visual.
+- Canvas overlays animate illustrative flow / vehicle-associated recovery paths over both supplied images. The overlay runs locally and does not require new libraries or external image services.
+- Added a deterministic simulated storage-state indicator, explicitly labelled `SIMULATED · NOT MEASURED`; it is not battery telemetry or a measured charging profile. The 185W label present in the supplied road image remains part of that image and is not reported by the application as a live value.
+- Preserved the six scene choices, accessible selected state, Play/Pause, Reset, speed control, reduced-motion behavior, and hidden-tab animation pause/resume.
+- Fixed image-scene canvas resizing immediately after a scene switch; this prevents the previous scene's canvas dimensions from being temporarily reused when the supplied photos have different aspect ratios.
+- Bumped Concept Lab asset query strings and service-worker revision to v4.
+- Validation: 98 source files (the 96 baseline files retained plus 2 supplied image assets), 585 HTML IDs with no duplicates, no missing same-page anchors or local assets, 46 JS/MJS files parsed, 13 inline scripts parsed, 7 CSS files parsed, 4 Python files parsed, JSON/manifest/GeoJSON/SVG parsed, 30 Concept Lab runtime mock assertions passed, static build passed, 19/19 local HTTP routes returned 200, and ZIP integrity passed.
+- Browser visual automation was not available for full application-wide testing in this workspace; public feeds are not represented as measured energy telemetry in these concept scenes.
+
+
+---
+
+## Archived file: `UPGRADE-AND-VALIDATION-REPORT.md`
+
+# IGERS POWERCORE · Upgrade and validation report
+
+Release date: 2026-10-09
+
+## Implemented
+
+- Added `data/bangladesh-boundary-fallback.geojson`, generated from bundled low-resolution Basemap country-boundary/coastline and river data. The GeoJSON explicitly identifies it as an offline visualization fallback, not a survey-grade/legal boundary.
+- Border monitor: added map zoom/reset/fullscreen; independent toggles for outline, river context, public ADS-B markers, virtual nodes and radar sweep; selectable marker details; fixed reported ADS-B observation-age presentation; source fallback now resolves because the requested local GeoJSON exists.
+- 3D air traffic: added an ADS-B boundary overlay when local geography is available; interactive aircraft selection on the globe; filters for all positioned targets, the approximate Bangladesh region and identified callsigns; rotation/pan via drag, zoom, reset/fullscreen; observation timestamps/age and stale/offline labels; bounded request timeout and fallback request deduplication.
+- Combined air/ground/maritime panel: added accessible layer toggles, zoom in/out, drag-to-pan, reset/fullscreen and public-track marker details. Simulation versus public-feed distinctions remain visible.
+- NASA GIBS: added requested imagery date, bounded seven-day lookback from the selected date, per-tile load/failure accounting, partial/failure statuses, zoom, pan buttons and drag-pan, reset/fullscreen; window resize repositions loaded tiles without automatically refetching them.
+- Preserved existing `index.html`, PWA manifest/service worker, runtime scripts, assets, calculations, navigation, admin modules and existing panel layout. The shared public ADS-B loader now deduplicates concurrent requests; the time/weather refresh utility reuses its restored CSS asset and no longer fires duplicate refresh clicks.
+- Added `design-standard.css` as a presentation-only layer: cleaner two-row/scrollable navigation, consistent spacing and typography, a restrained navy/teal palette, standardized card/form treatment, improved focus visibility, responsive mobile layouts and reduced-motion support. Existing IDs, scripts, and interaction handlers were not edited for this design pass.
+- Consolidated historical docs/text into `PROJECT-DOCUMENTATION-ARCHIVE.md`, source styles into `STYLES-SOURCE-ARCHIVE.css`, and removed the unreferenced nested ZIP to meet the file cap without deleting runtime functionality.
+
+## Validation performed
+
+- Baseline ZIP integrity: passed. Baseline contained 183 actual files before consolidation.
+- Final package file count: **80 actual files**, below the strict 98-file maximum.
+- JavaScript syntax: all 39 bundled `.js` modules and 2 `.mjs` files passed `node --check`; all executable inline script blocks in `index.html` were rechecked after the request-deduplication patch.
+- Python: all project `.py` files compiled successfully; `python test_airtraffic_relay.py` passed its existing assert-based relay self-test. Pytest did not discover test functions in that script, so it was executed directly.
+- HTML: no duplicate IDs found; no missing local assets referenced by `index.html`.
+- JSON/manifest: all included JSON files parsed successfully; `manifest.webmanifest` and `sw.js` are retained.
+- Runtime stylesheets: `igers-compact-bundle.css` and the additive `design-standard.css` parsed without CSS syntax errors.
+- GeoJSON: parsed as a `FeatureCollection` with 93 features; the 154-vertex primary polygon passed Shapely validity checks and contains a point in Dhaka; 92 LineString features provide low-resolution river/delta context.
+- The existing relay self-test passed. The ZIP integrity and entry count were checked again after export. `time-weather-update.css` is included as a standalone file because its utility module dynamically loads it.
+
+## Checks blocked or not completed
+
+- `npm run build` could not execute because `node_modules` is absent and the `vite` executable is not installed (`vite: not found`). The delivered project is packaged as a static-first GitHub Pages site and retains `index.html` at the archive root.
+- Chromium automation was attempted, but sandbox policy returned `ERR_BLOCKED_BY_ADMINISTRATOR` for both localhost and `file://` navigation. No browser rendering / interaction test could be completed, and **no screenshots are included**. Controls are syntax/static-checked, but this is not a substitute for a deployed browser smoke test.
+- Direct public-network requests to geoBoundaries, Airplanes.live and NASA GIBS failed at DNS resolution in the packaging environment. Their live availability and returned content could not be verified from this session. The app should report provider offline/stale/partial states rather than imply these sources were confirmed working.
+
+## Consolidation summary
+
+- 70 Markdown/text records were consolidated into `PROJECT-DOCUMENTATION-ARCHIVE.md`, while `README.md` and `README_BN.txt` remain standalone.
+- Source stylesheets remain preserved in `STYLES-SOURCE-ARCHIVE.css`; active styles are consolidated in `igers-compact-bundle.css` and the intentional inline styles. `time-weather-update.css` is retained separately for the utility module’s dynamic load path.
+- The nested `IGERS-BD-01-App-Package.zip` was removed because no remaining project source refers to it; this avoids shipping a second full application archive inside the repository.
+- Runtime JavaScript, PNG/SVG assets, Python utilities, config, legal pages, PWA manifest/service worker, calculations, navigation, admin modules and panel markup were retained.
+## Blocked external verification
+
+Direct request attempts to geoBoundaries, Airplanes.live and NASA GIBS failed at DNS resolution in the packaging environment. Therefore this session did not verify fresh live aircraft data, live boundary replacement, or actual satellite tile availability. Code paths report offline/partial/stale states rather than claiming those integrations succeeded. Retry those checks from the deployed GitHub Pages site or another network with public endpoint access.
+
+## Follow-up deployment and PWA bug-fix pass (2026-10-09)
+
+- Changed `npm run build` to call the included `build.mjs`, allowing the documented static fallback when Vite is not installed.
+- Adjusted the Vite path to copy remaining static runtime assets into `dist/` without overwriting built output, including assets referenced through inline `fetch()` strings.
+- Added 192x192 and 512x512 PNG PWA icons and explicit relative `id`/`scope`, compatible with repository-subpath hosting.
+- Updated the service worker to use `waitUntil(skipWaiting())`, claim clients safely, request update checks on page load and every 60 seconds, and reload once after a worker-controller update. No stale Cache API shell is introduced.
+- Added versioned URLs for the manifest, design stylesheet, toll script, and NASA GIBS script. Removed duplicate registration with mismatched options from earthquake notification setup.
+- GitHub Pages publishing/CDN propagation remains controlled by GitHub; frontend code can detect a deployed update but cannot make deployment time zero.
+
+
+## Final validation snapshot (2026-10-09)
+
+- `npm run build`: PASS through the offline static-build fallback; `dist/` contains `index.html`, `sw.js`, the manifest, updated CSS/JS assets, PNG icons, and the bundled Bangladesh GeoJSON.
+- The Vite-installed branch was exercised with a controlled test executable: existing built `dist/index.html` was preserved while missing runtime assets were copied into `dist/`. The actual Vite binary is not installed in this workspace, so a real Vite compilation was not claimed.
+- Node syntax validation: all `.js`/`.mjs` files PASS; all 13 inline executable scripts PASS.
+- HTML static audit: 417 IDs, zero duplicate IDs, 55 local references, zero missing local references.
+- CSS parse: 4 CSS files PASS; package/manifest/GeoJSON JSON validation PASS; fallback GeoJSON contains 93 features.
+- Python compilation and `test_airtraffic_relay.py`: PASS.
+- Local HTTP smoke test: root page, service worker, versioned manifest/CSS/JS URLs, GeoJSON fallback and both PNG icons returned HTTP 200.
+- Final archive will retain all 80 original files and stay within the 98-file limit; no original path is intentionally removed.
+- Browser rendering/interaction screenshot: BLOCKED/UNVERIFIED. Chromium timed out in this workspace before the screenshot was produced. Live third-party provider availability is also not guaranteed by static tests.
+
+## 2026-10-09 · Border Online Map + Radar Sweep Update
+
+### Delivered changes
+
+- Reworked the existing `3D BORDER SURVEILLANCE & EARLY-WARNING PANEL` canvas to draw a real interactive OpenStreetMap raster basemap when visible tiles are available.
+- Plots the bundled Bangladesh ADM0 GeoJSON outline on top of the basemap; the existing boundary source refresh still runs and the bundled outline remains the fallback.
+- Added map pan (drag/touch), wheel zoom, Zoom +/- buttons, Reset view, and Fullscreen behavior without replacing existing control IDs.
+- Preserved the public ADS-B overlay and the illustrative virtual gateway layer; existing marker inspection and layer toggles now work in map coordinates when tiles are loaded.
+- Added an animated geographic radar-style sweep and range rings. The sweep is explicitly labeled **SIMULATED** and is not a real radar or sensor feed.
+- Added visible OpenStreetMap and geoBoundaries attribution, current viewport tile status, bounded retry (maximum two retries per failed tile), a configurable `window.IGERS_MAP_TILE_URL` template, and a local canvas fallback when the map tile provider is unavailable.
+- Fixed a performance issue in the existing border renderer by keeping one animation loop rather than spawning extra loops after repeated boundary refreshes.
+- Bumped the service-worker revision to `igers-2026-10-09-border-online-map-01` so GitHub Pages deployments can advertise the new app version to existing clients.
+
+### Validation performed
+
+- `node --check`: 41 JavaScript/MJS files passed.
+- Inline script syntax: 13 scripts passed; the inline border-monitor program exactly matches `border-monitor.js`.
+- HTML IDs: 418 IDs, no duplicates.
+- Local HTML references: 57 checked, no missing references.
+- CSS parser: 19 inline/external stylesheets, no top-level parse errors.
+- JSON/manifest and bundled GeoJSON parsing passed; bundled GeoJSON contains 93 features.
+- Python compilation: 4 files passed; air-traffic relay self-test passed.
+- `npm run build` passed via the repository's static fallback build (Vite dependencies are not installed in this build environment).
+- Local HTTP smoke test returned HTTP 200 for `/index.html`, `/sw.js`, `/data/bangladesh-boundary-fallback.geojson`, and `/border-monitor.js`.
+
+### Remaining verification limitation
+
+This environment could not resolve external internet hosts, and browser-based rendering did not complete. Therefore the OpenStreetMap tile endpoint and public ADS-B provider were not verified from this session. The app reports tile/provider errors and falls back to the bundled geographic visualization if online services are unreachable. The map tiles remain an external best-effort service, not an offline map pack.
+
+
+## Runtime audit follow-up (2026-10-09)
+
+- Fixed the border panel's Last Sync display so boundary-map refreshes cannot rewrite the actual last aircraft-feed sync time.
+- Added per-track observed-age text and an explicit `STALE OBS` label for public ADS-B observations older than 60 seconds.
+- Bumped the service-worker revision so deployed clients can detect this update.
+- Static validation: JavaScript and inline script syntax, CSS parsing, duplicate HTML IDs, local asset references, JSON/GeoJSON parsing, Python compilation, ADS-B relay self-test, build fallback, ZIP integrity and local HTTP endpoints.
+- Browser limitation: headless Chromium could not open local HTTP URLs because the workspace browser policy returned `ERR_BLOCKED_BY_ADMINISTRATOR`; an interactive browser rendering test could not be completed.
+
+### Final local verification results
+
+- `npm run build`: **PASS** using the offline static build path (Vite is not installed in this workspace, so the Vite-specific branch was not executed).
+- JavaScript/MJS syntax check: **PASS** for all checked `.js` and `.mjs` source files; all 13 inline scripts in `index.html` also pass Node syntax checks.
+- CSS parser: **PASS** for 4 `.css` files and 15 inline style blocks.
+- HTML IDs: **418 unique, 0 duplicates**. Local references: no missing referenced assets detected.
+- JSON/manifest and GeoJSON: **PASS**; bundled GeoJSON has 93 features and valid parsed geometry.
+- Python files: **4 compile successfully**. Air-traffic relay self-test: **PASS**. The file does not expose `unittest` cases, so unittest reported no tests.
+- Border track-renderer unit harness: **PASS** for fresh observed age, stale observation label, and unknown/missing age.
+- Local HTTP checks: all critical paths tested (index, border monitor script, CSS, bundled GeoJSON, manifest, service worker and PWA icon) returned **HTTP 200**.
+- ZIP integrity and root `index.html`: **PASS**; final archive is kept under the 98-file limit.
+- Browser rendering: **BLOCKED by the workspace browser policy** (`ERR_BLOCKED_BY_ADMINISTRATOR` for localhost/127.0.0.1). No visual screenshot or full interactive browser result is claimed.
+
+
+## 2026-10-09 · Bangladesh Airport / Runway Simulation Update
+
+### Delivered changes
+
+- Added an isolated airport-network and runway-simulation module to the existing `LIVE AIR TRAFFIC · 3D FLIGHT MONITOR` panel. Existing traffic globe, flight list, filters, zoom/fullscreen/refresh controls, other panels and admin modules are retained.
+- Added 16 listed Bangladesh airport/aerodrome site markers, classed as service-listed, limited/status-to-verify, or planned. Eight sites have a sourced runway reference; the remaining runways are intentionally schematic rather than invented. One proposed Bagerhat site marker is approximate.
+- Added an interactive Bangladesh airport network plot, selectable departure/arrival for a clearly labelled simulated airport-to-airport route, route pause/resume/reset, and airport selection.
+- Added animated runway taxi, landing and takeoff modes, direction reversal, pause/resume, runway references and source/reliability information. The runway drawing is schematic and not to scale.
+- Passed through origin/destination fields only when supplied by the public aircraft provider. Where not supplied, the live list explicitly reports that the public ADS-B response does not include a route. Nearest-airport distance is clearly labelled as proximity, not route origin. Simulated route is kept separate from real public-feed observations.
+- Added `airport-runway-sim.css` and `airport-runway-sim.js` as new isolated assets and bumped service-worker revision to `igers-2026-10-09-airport-runway-sim-01`.
+
+### Data notes
+
+- Runway references for Dhaka, Sylhet, Rajshahi, Jashore, Barishal and Cox's Bazar use CAAB AIP/AIP supplement references; Chattogram and Saidpur also use public airport/runway data where indicated in the module. Limited, unavailable, STOL or proposed sites do not receive fabricated runway dimensions.
+- This is an educational/engineering visualization, not flight dispatch, air-traffic control, or operational runway guidance. The actual live feed may not expose origin/destination, and the panel will not infer it.
+
+### Final validation snapshot · airport simulation package
+
+- `npm run build`: PASS via the static-first build script; `dist/` contains the new airport simulator JS/CSS, service worker, manifest and Bangladesh boundary GeoJSON.
+- JavaScript / MJS syntax: PASS for all project files; non-empty inline JavaScript blocks in `index.html` parse.
+- CSS: all 5 active `.css` files parse without errors.
+- HTML: 442 IDs, no duplicate IDs; all 20 direct element-ID references in the airport module match the HTML; 10 local source/link references checked, none missing.
+- JSON / manifest / GeoJSON: 4 files parsed successfully.
+- Node VM DOM/canvas mock: PASS for initialization, all 16 airport/aerodrome entries, selecting an airport, simulated route labeling, rendering provider-supplied origin/destination, not guessing missing routes, and displaying observation age.
+- Local HTTP smoke test: 8/8 routes returned HTTP 200 (root HTML, airport CSS/JS, service worker, manifest, Bangladesh fallback GeoJSON and both PWA icons).
+- Baseline comparison: all 80 original ZIP paths retained; two new airport simulator files added. Final root package count is 82 files, below the 98-file ceiling.
+- Browser screenshot / full interaction testing was not available in this execution environment. The Node VM harness validates logic paths but is not a substitute for deployed-browser rendering. Public ADS-B providers may omit route origin/destination fields; when missing the panel reports that limitation instead of inferring a route. Runway and demo route animation are explicitly schematic simulations.
+
+## 2026-10-09 · Final runtime bug-check pass (airport/runway panel)
+
+### Fixes applied
+
+- Stopped the airport network canvas from scheduling a continuous animation frame while the route animation is paused; resume restarts a single route loop.
+- Hardened public ADS-B record validation: null, blank, non-finite, and out-of-range latitude/longitude values are excluded rather than accidentally treated as coordinates such as 0,0.
+- Fixed observation-age display so missing/null age is shown as `Age n/a` instead of incorrectly appearing as `0 s old`.
+- Fixed runway Pause/Resume so the simulation clock freezes while paused and resumes from the frozen frame rather than jumping forward in time.
+- Bumped the airport JavaScript/CSS query version and service-worker revision to `airports02` / `airport-runway-sim-02` so deployed clients can discover the fix.
+
+### Final validation results
+
+- `npm run build`: **PASS**, using the project's offline-safe static production build path; the generated `dist/` contains `index.html`, airport simulator JS/CSS, service worker, manifest, bundled Bangladesh GeoJSON and both PWA icons.
+- JavaScript/MJS: **42 files passed** `node --check`.
+- Inline JavaScript: **13 scripts passed** syntax checking.
+- CSS: **5 files passed** brace/syntax-structure checks.
+- HTML: **442 IDs, zero duplicates**; 10 local relative references checked, none missing.
+- JSON / manifest / GeoJSON: **4 files parsed**; Bangladesh fallback GeoJSON contains **93 features**.
+- Python: **4 files parsed/compiled**; `python test_airtraffic_relay.py` self-test passed.
+- Airport runtime mock harness: **14 assertions passed**, including the 16 listed sites, airport selection, simulated-route labeling, pause/resume loop count, frozen runway state, invalid coordinate filtering, provided route display, missing route fallback, and unknown observation age.
+- Local HTTP smoke test: **12/12 routes returned HTTP 200**, including `index.html`, versioned airport JS/CSS, `sw.js`, manifest, GeoJSON, PWA icons, admin script and legal pages.
+- Final package: **82 files**, root `index.html`, ZIP integrity passed; all 82 baseline paths retained and only `index.html`, `airport-runway-sim.js`, `sw.js`, and this report changed.
+
+### Runtime verification limitation
+
+- A real Chromium page-render/interaction test could not be completed because the workspace browser policy blocks local-site navigation (`ERR_BLOCKED_BY_ADMINISTRATOR`). The canvas/UI behavior was instead tested through a Node VM mock harness and the app was served locally for HTTP checks. Public ADS-B provider availability was not verified; live provider behavior remains dependent on external connectivity and returned fields.
+
+## 2026-10-09 · Sectioned navigation / synchronized app layout
+
+### Changes
+- Reorganized the existing navigation into six expandable categories: Overview; Environment & Live Data; Air & Border Operations; Infrastructure & Network; Energy & System Control; Safety & Support.
+- Kept all 26 pre-existing navigation destinations and their IDs. Additional links only point to already-present sections; optional modules that create their own sections append into the matching category if loaded.
+- Added `section-navigation.js` for mobile open/close, Escape-to-close, single-open category handling, and closing a category after selecting a panel. The theme toggle remains in the navigation.
+- Added responsive group-dropdown styles; no panel markup, calculation formulas, data-provider logic, admin controls or existing event handlers were deleted.
+- Bumped the design stylesheet, manifest, runway simulator asset query strings and service-worker revision so a deployed page requests the updated presentation assets.
+
+### Validation
+- Standalone JavaScript modules: 82/82 `node --check` passed across the website source and Android bundle.
+- Inline JavaScript: 13/13 passed `node --check`.
+- CSS: 5 standalone stylesheets and 15 embedded style blocks parsed without errors.
+- HTML: 444 IDs, zero duplicates; six navigation categories; all 31 static nav anchors have matching IDs.
+- Manifest and Bangladesh fallback GeoJSON parsed; 11 inspected local HTML references had no missing files.
+- Dependency-free static production build: passed. `dist/` contains all 84 website files, including `index.html`, grouped navigation controller, runway assets, service worker, manifest, GeoJSON and PWA icons.
+- Local HTTP smoke test: 15/15 routes returned HTTP 200.
+- The updated package retains all 82 original source ZIP paths; two new files (`section-navigation.js` and `SECTION-GROUPING-UPDATE.md`) were added.
+
+### Limitations
+- Chromium visual/browser-interaction test was unavailable in this workspace. Static, syntax, build-output and local HTTP tests passed, but they do not replace testing after actual GitHub Pages deployment.
+- GitHub Pages must finish publishing after commit; cached browser/PWA content may require refresh. Frontend code cannot make host deployment instant.
+
+
+## 2026-10-09 · Full-panel audit & disconnected-control repair (latest)
+
+### Fixes
+- Fixed desktop header layout so the grouped navigation occupies a real second row instead of competing with the brand inside a fixed-height header. Mobile keeps its 70px menu offset and collapsible category layout.
+- Added `system-master-control.js` and wired the previously unhandled `ALL SYSTEMS ON/OFF` buttons. It requires an existing IGERS admin-session flag; unauthenticated clicks leave the state unchanged. The display clearly identifies this as a local prototype UI state and does not claim to stop external feeds or actuate hardware.
+- Added a live `year` footer target for the existing year initializer.
+- Bumped active navigation CSS/JS URLs and the service-worker revision for cache revalidation after GitHub Pages publishes the new commit.
+- Updated `build.mjs` to exclude Python bytecode/cache and common temporary files from `dist/`.
+
+### Latest validation
+- `npm run build`: PASS using the included dependency-free static build path.
+- 44 standalone `.js` / `.mjs` files and 13 inline scripts: syntax checks PASS.
+- 5 CSS files and 15 inline style blocks: parse checks PASS.
+- HTML: 445 IDs, no duplicates; all 30 section IDs are represented by 30 unique navigation targets; 136 ID-bearing interactive controls have script references; no missing local links/assets.
+- JSON, web manifest, and GeoJSON: 4 files parsed; 93 GeoJSON features / 467 coordinate tuples; coordinate ranges valid.
+- Python: 4 scripts compile. PWA icons validated at 192×192 and 512×512.
+- Targeted interaction harnesses: section navigation PASS; master-control authorization and ON/OFF persistence PASS; airport/runway simulator selections, simulated route labeling, animation pause/resume, and invalid ADS-B coordinate filtering PASS.
+- Local HTTP smoke test: 15/15 key routes returned HTTP 200. Build output includes all required runtime assets and no `__pycache__` / `.pyc` artifacts.
+- Current source ZIP retained all original 84 file paths, added `system-master-control.js` and this audit report, and stays below the 98-file limit.
+
+### Limitations
+- The browser automation tool is blocked by workspace policy for both `file://` and localhost navigation (`ERR_BLOCKED_BY_ADMINISTRATOR`), so a real visual browser session could not be completed. The app was built and served locally, and page/resource routes plus targeted JavaScript interaction harnesses were tested.
+- Public weather/ADS-B/NASA/GIS provider availability could not be confirmed from this environment; external feed health must be checked after deployment on an ordinary internet connection.
+
+
+## 2026-10-10 Real-world data reliability update
+
+- Consolidated weather/environment panels on a single timeout-bounded Open-Meteo forecast request with in-flight request coalescing and a 4-minute browser cache. Weather values are labelled model outputs, not station telemetry.
+- Corrected hourly rain probability and the next-rain estimate to start at the current model hour instead of index 0 (midnight). Missing numeric fields remain unavailable, never silently converted to zero.
+- Added an Open-Meteo/CAMS air-quality panel for US AQI, PM2.5, PM10, NO2 and ozone, showing model time and source limitations; it is explicitly not a ground-station reading. Refresh is bounded to 30 minutes, with a 12-second request timeout and honest offline/stale state.
+- Shared USGS all-hour GeoJSON between the main earthquake panel and the advanced seismic panel, coalescing concurrent refreshes and slowing the main polling interval to 60 seconds visible / 180 seconds hidden.
+- Corrected ADS-B coordinate and observation-age parsing for null/blank provider fields; selected-flight details show origin/destination only when the feed actually supplies them.
+- Hardened marine/seismic missing-value formatting, avoiding null-to-zero conversions, and corrected NASA legacy helper endpoints to direct public EONET v3, GIBS WMS and APOD WordPress API URLs.
+- GitHub Pages remains static hosting. Python relay scripts require a separately hosted server runtime; no local script is represented as running on GitHub Pages.
+- Browser visual end-to-end and external provider reachability could not be fully proven by static test alone; API status in the app remains the source of truth at runtime.
+
+
+### Data-freshness/polling refinements
+
+- Forecast panel refresh is now coalesced and bounded to a 10-minute cache / 15-minute foreground poll; air-quality model refresh has a 45-minute cache / 60-minute foreground poll. Open-Meteo notes its underlying models are generally updated every few hours, so rapid repeated requests do not imply newer measurements.
+- Hour labels are rendered in the provider's location timezone (rather than being silently reinterpreted in the device timezone). API/model time and browser retrieval time remain separate.
+- AQI provider status has distinct model, stale and offline styles. Failed coordinate changes cannot let a previous location's late response overwrite the new location's display.
+- Seismic status is marked degraded when only a source without a comparable generation timestamp is available; it no longer claims freshness is verified when the timestamp is unknown.
+
+
+### Source and hosting notes
+
+- Environmental weather values are labelled as Open-Meteo forecast-model output; the radar sweep/blips remain illustrative. Hour labels use the provider's timezone and are not reinterpreted in the device timezone.
+- Added CAMS ENSEMBLE via Open-Meteo Air Quality API (US AQI, PM2.5, PM10, NO2 and ozone). The UI states the gridded/global resolution and warns that it is not a ground-station measurement.
+- Main earthquake and advanced seismic views now share the USGS all-hour response when it is recent; source timestamp absence is degraded/unknown, not “freshness verified”.
+- A live query from this build workspace to Open-Meteo and NASA endpoints failed at DNS resolution, so those external service responses could not be independently verified here. The in-app API requests are direct public endpoints with timeout/error states; runtime provider badges remain authoritative. The USGS all-hour GeoJSON endpoint was independently reachable through the web verifier with HTTP 200 during this audit.
+- GitHub Pages is static hosting and does not run the bundled Python relay scripts as a server. Authorized toll/ITS and other private/credentialed feeds require a separately deployed server-side relay; the frontend does not fabricate such data.
+
+## 2026-10-10 · Final real-world data + failure-path audit
+
+- Extended the 12-second AbortController deadline to cover both HTTP fetch and JSON body parsing for Open-Meteo forecast and CAMS air-quality calls. A stalled response body can no longer keep these requests waiting indefinitely.
+- Weather and AQI data are explicitly model products, not local weather-station or air-quality sensor observations. The AQI UI credits Open-Meteo / CAMS ENSEMBLE and shows model time, retrieval/status state, pollutant units and unavailable/stale conditions.
+- Weather and environmental panels reuse a single keyed forecast promise/cache. Coordinate/location changes are guarded so a late response for an older location does not overwrite the new location. Missing/null/blank values stay unavailable, not fabricated zeros.
+- Hourly rain/precipitation display starts at the provider model hour at or after current model time, with provider-local ISO hour labels. Model timestamp and browser retrieval timestamp remain separate.
+- Shared USGS all-hour GeoJSON is reused by the main and advanced seismic views; missing comparable source-generation timestamps are reported as degraded/unknown rather than falsely verified as fresh.
+- NASA imagery uses the active GIBS tile integration. Legacy NASA helper URLs were changed away from the non-existent `/api/provider` relay path to direct public NASA endpoints where those public endpoints are documented; this does not imply a live API response was reachable from this build workspace.
+
+### Final verification performed
+- Clean static build: `node build.mjs` PASS; generated `dist/` contains the production static site and runtime assets.
+- JavaScript/MJS syntax: 46 files PASS. Python source parsing/compilation: 4 files PASS.
+- HTML check across 7 HTML files: 599 IDs, zero duplicate IDs; 16 inline scripts syntax-checked with zero parser errors; zero missing active local resources or internal fragment targets. Two optional integration snippets are documentation examples only and refer to future/unbundled sample modules; neither is loaded by `index.html`.
+- CSS parser: 7 stylesheets, zero parse errors. JSON, web manifest and GeoJSON parse without errors.
+- Shared weather/AQI mock runtime harness: 14 assertions PASS (request coalescing, coordinate race handling, current-hour alignment, model-source labelling, no null-to-zero, stale/offline status and failed refresh behavior).
+- Local HTTP smoke test against the generated production output: 25/25 key routes returned HTTP 200, including index, CSS, service worker, manifest, GeoJSON, NASA modules, Concept Lab SVG/JPG assets, PWA icons and legal/report pages.
+- Baseline archive comparison: all 98 original file paths are retained; no project paths were added or removed. Six existing files changed: `index.html`, `design-standard.css`, `advanced-live-suite.js`, `nasa-intel.js`, `sw.js` and this report.
+- External endpoint limitation: this workspace failed DNS resolution for Open-Meteo and NASA direct requests, so their live HTTP responses could not be validated here. The USGS all-hour GeoJSON endpoint returned HTTP 200 through the web verifier during this audit. Provider badges in the deployed app remain authoritative.
+- GitHub Pages is static hosting and does not execute bundled Python relay scripts as a server; toll/authorized infrastructure feeds require a separately hosted service endpoint.
+- Chromium visual end-to-end testing was not completed in this workspace. Static/build/runtime-mock/local-HTTP tests passed, but a post-deployment browser check is still recommended.
+
+
+---
+
+## Archived file: `SECTION-GROUPING-UPDATE.md`
+
+# IGERS POWERCORE · Section Navigation Update
+
+## Purpose
+Organize the existing dashboard without removing/rebuilding its modules. Related destinations are grouped into six expandable categories:
+
+1. **Overview**: Home, concept, energy sources, energy journey, applications, deployment, inventor, engineering limits.
+2. **Environment & Live Data**: environment, weather, live time, earthquake/seismic, marine/coastal, Salah/Qibla.
+3. **Air & Border Operations**: public air traffic, 3D flight monitor/runway simulation, airspace safety, early warning, border monitor.
+4. **Infrastructure & Network**: Sentinel Grid, toll intelligence, satellite monitor, Google 3D map, tower mesh.
+5. **Energy & System Control**: energy calculator, IGERS 3D lab, data analysis, system control.
+6. **Safety & Support**: emergency center, comments/customer care.
+
+## Compatibility measures
+- Existing section IDs used by the original navigation are retained. All 30 current section anchors are present in the navigation and resolve to matching HTML IDs.
+- `section-navigation.js` provides keyboard-friendly category handling, mobile open/close, Escape-to-close, and closes the selected category after navigation.
+- The six current categories explicitly cover all 30 section elements present in this version. Future dynamically injected sections must be given a matching navigation entry when introduced; the current controller does not auto-classify arbitrary future links.
+- Asset URLs and the service-worker revision were bumped to help clients pick up the new navigation after GitHub Pages completes deployment.
+- All existing page sections, calculations, module scripts, legal pages, PWA files, boundary data and runway simulation assets were preserved.
+
+## Verification
+- 445 HTML IDs after wiring the live copyright year; no duplicates.
+- Six category groups and all static navigation anchor targets resolve. The master-system ON/OFF buttons are now connected to the existing administrator-session gate.
+- 82 standalone `.js` files passed `node --check` across source and Android bundle.
+- 13 inline scripts passed `node --check`; five CSS files and 15 embedded style blocks parsed without syntax errors.
+- Web manifest and Bangladesh GeoJSON parse; local HTML asset references resolve.
+- Android launch-kit structural validator: 36/36 checks passed after synchronizing the bundle.
+
+A complete Chromium visual/interaction test and Android APK compilation were not available in this environment. The Android Launch Kit therefore contains source and an auto-build workflow, not a precompiled APK.
+
+
+---
+
+## Archived file: `border-status-integration-snippet.html`
+
+```html
+<!-- IGERS-BD-01 Border Resilience Public-Data Status Panel -->
+<link rel="stylesheet" href="igers-compact-bundle.css">
+<div id="igers-border-status-panel"></div>
+<script src="assets/igers-border-status.js"></script>
+<script>IGERSBorderStatusPanel.mount('#igers-border-status-panel');</script>
+```
+
+
+---
+
+## Archived file: `integration-snippet.html`
+
+```html
+<!-- 1) Add this where you want the separate Journal/Magazine panel to appear. -->
+<div id="igers-journal-panel"></div>
+
+<!-- 2) Load the module. Adjust the asset path to match your app. -->
+<link rel="stylesheet" href="igers-compact-bundle.css">
+<script src="journal/assets/igers-journal.js"></script>
+<script>
+  IGERSJournalPanel.mount('#igers-journal-panel', {
+    pdfUrl: 'journal/assets/IGERS-BD-01_Professional_Engineering_Magazine_Merged_3D.pdf',
+    coverUrl: 'journal/assets/cover.webp'
+  });
+</script>
+```
+
+
+---
+
+## Archived file: `README_BN.txt`
+
+```text
+IGERS SENTINEL GRID — Demo App
+
+এইটি একটি DEMO / prototype app। বাস্তব radar, CCTV, government network বা কোনো field equipment-এর সাথে এটি connected নয়। সব data simulated।
+
+ANDROID-এ সহজে demo চালানোর পদ্ধতি:
+1) ZIP extract করুন।
+2) folder-টি একটি HTTPS hosting-এ upload করুন, যেমন GitHub Pages / Netlify / Cloudflare Pages।
+3) Android Chrome-এ site open করুন।
+4) Chrome menu → Add to Home screen / Install app নির্বাচন করুন।
+
+বর্তমান demo screens:
+• Home dashboard
+• Network architecture
+• Sensor node status
+• Public & operations alerts
+• Field engineer installation workflow
+• NOC operator demo controls
+• 3D model views
+
+ভবিষ্যতে:
+• Real API/backend
+• User login & role management
+• PostgreSQL/Firebase/Supabase
+• Real weather/flood feeds
+• GIS map
+• Push notifications
+• Device telemetry
+• Android/iOS native app
+```

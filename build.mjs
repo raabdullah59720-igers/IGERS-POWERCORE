@@ -1,47 +1,56 @@
+/**
+ * IGERS POWERCORE static production build.
+ * The deployed site is the existing plain-HTML/CSS/JS application, not a Vite bundle.
+ * Keep runtime URLs stable and never publish backend secrets, tests or source reports.
+ */
 import { existsSync, rmSync, mkdirSync, cpSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { spawnSync } from 'node:child_process';
 
 const root = resolve(process.cwd());
 const dist = join(root, 'dist');
-const skip = new Set(['node_modules', 'dist', '.git', '__pycache__', '.pytest_cache', '.mypy_cache']);
+const skipDirectories = new Set([
+  'node_modules', 'dist', '.git', '__pycache__', '.pytest_cache', '.mypy_cache',
+  'backend', 'tests', '.github', 'var'
+]);
+const skipFiles = new Set([
+  '.gitignore', 'LICENSE', 'TEMPLATE', 'package.json', 'vercel.json',
+  'STYLES-SOURCE-ARCHIVE.css', 'README', 'README.md', 'README_BN.txt',
+  'border-status-integration-snippet.html', 'integration-snippet.html'
+]);
+const skipExtensions = new Set(['.md', '.txt', '.py', '.pyc', '.pyo', '.bat', '.mjs', '.jsx', '.sqlite3', '.db', '.log', '.tmp']);
 
-function copyTree(src, dst, onlyMissing = false) {
-  mkdirSync(dst, { recursive: true });
-  for (const name of readdirSync(src)) {
-    if (skip.has(name) || name === '.DS_Store' || name.endsWith('.pyc') || name.endsWith('.pyo') || name.endsWith('.tmp') || name.endsWith('.log')) continue;
-    const from = join(src, name);
-    const to = join(dst, name);
-    const st = statSync(from);
-    if (st.isDirectory()) copyTree(from, to, onlyMissing);
-    else if (!onlyMissing || !existsSync(to)) cpSync(from, to);
+function shouldSkipFile(name) {
+  if (skipFiles.has(name) || name === '.DS_Store') return true;
+  const ext = name.includes('.') ? name.slice(name.lastIndexOf('.')).toLowerCase() : '';
+  return skipExtensions.has(ext);
+}
+
+function copyRuntimeTree(source, target) {
+  mkdirSync(target, { recursive: true });
+  for (const name of readdirSync(source)) {
+    if (skipDirectories.has(name) || shouldSkipFile(name)) continue;
+    const from = join(source, name);
+    const to = join(target, name);
+    const stat = statSync(from);
+    if (stat.isDirectory()) copyRuntimeTree(from, to);
+    else cpSync(from, to);
   }
 }
 
-function runRealVite() {
-  const viteBin = process.platform === 'win32'
-    ? join(root, 'node_modules', '.bin', 'vite.cmd')
-    : join(root, 'node_modules', '.bin', 'vite');
-  if (!existsSync(viteBin)) return false;
-  const result = spawnSync(viteBin, ['build'], { stdio: 'inherit', shell: false });
-  if (result.error || result.status !== 0) {
-    process.exit(result.status ?? 1);
-  }
-  return true;
+if (!existsSync(join(root, 'index.html'))) {
+  throw new Error('index.html must exist at the repository root before building.');
 }
-
-if (runRealVite()) {
-  // Keep runtime files accessed through inline fetch()/dynamic URL construction.
-  // Vite cannot discover every such file from strings inside inline scripts.
-  copyTree(root, dist, true);
-  console.log('✓ Vite build complete; remaining static runtime assets copied into dist/.');
-  process.exit(0);
-}
-
-// Offline-safe fallback for this static-first deployment.
-// It preserves the exact website assets and HTML/JS/CSS without requiring a registry.
 if (existsSync(dist)) rmSync(dist, { recursive: true, force: true });
 mkdirSync(dist, { recursive: true });
+copyRuntimeTree(root, dist);
 
-copyTree(root, dist);
-console.log('✓ Offline static production build created in dist/');
+for (const required of [
+  'index.html', 'sw.js', 'manifest.webmanifest', 'company-operations.js',
+  'company-operations.css', 'data/bangladesh-boundary-fallback.geojson'
+]) {
+  if (!existsSync(join(dist, required))) throw new Error(`Required public runtime asset missing from dist/: ${required}`);
+}
+for (const forbidden of ['backend', 'tests', '.github', 'README.md', 'backend/server.py']) {
+  if (existsSync(join(dist, forbidden))) throw new Error(`Development-only path must not be published: ${forbidden}`);
+}
+console.log('✓ Static production build complete: public UI/assets included; backend, secrets configuration, tests and docs excluded.');

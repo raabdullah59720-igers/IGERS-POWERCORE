@@ -21,8 +21,9 @@ The `SYSTEM MASTER CONTROL` ON/OFF buttons are wired to the existing administrat
 
 1. Download and extract this ZIP. The archive stores project files directly at its root, including `index.html`.
 2. Upload all extracted files and the `data` folder to the root of the existing `IGERS-POWERCORE` repository. Do not put them inside an extra nested project folder. `index.html` must remain at the repository root.
-3. In GitHub, open **Settings → Pages** and confirm the existing source branch/folder that serves the site.
-4. Commit the uploaded files. GitHub Pages publishes automatically from the currently configured source; wait until its deployment finishes. The service worker checks for a new build on load and every 60 seconds while the app is open, then reloads a previously controlled page when the new worker activates. Versioned CSS/JS/manifest URLs also help bypass stale asset caches. A hard refresh (**Ctrl+F5**) is still a useful first check after replacing the package. GitHub Pages deployment/CDN propagation itself cannot be made instantaneous by frontend code.
+3. One-time requirement: in GitHub open **Settings → Pages → Build and deployment → Source** and select **GitHub Actions**. The included workflow validates and builds the app, then deploys `dist/` only from the repository's default branch. Keep `.github/workflows/deploy.yml` in the repository. The workflow validates pull requests but does not publish them.
+4. Commit the uploaded files. After the one-time Pages setting is changed, future default-branch commits automatically run validation/build/deploy. GitHub Pages publication and CDN propagation still take time after a commit; frontend code cannot make hosting deployment instantaneous. Versioned assets and the service worker help the open app detect a new release. A hard refresh (**Ctrl+F5**) is useful after the first replacement.
+5. If this existing repository still has the eight retired report/snippet files listed in `PROJECT-DOCUMENTATION-ARCHIVE.md`, you may leave them temporarily; the production build excludes those known legacy paths. They are not runtime assets. The downloadable source ZIP itself stays within the 98-file limit.
 
 ## Data honesty
 
@@ -37,3 +38,17 @@ The `SYSTEM MASTER CONTROL` ON/OFF buttons are wired to the existing administrat
 The package is kept below the requested 98-file maximum. Historical Markdown/text reports are consolidated into `PROJECT-DOCUMENTATION-ARCHIVE.md`; source CSS files are preserved in `STYLES-SOURCE-ARCHIVE.css`. `index.html` continues to use its existing `igers-compact-bundle.css` and inline scripts, with `design-standard.css` loaded afterward for visual consistency. The unused nested ZIP was removed to avoid shipping a second copy of the application inside the repository.
 
 The off-line boundary fallback is in `data/bangladesh-boundary-fallback.geojson`. It carries per-feature source/accuracy metadata. For the current authoritative boundary, verify geoBoundaries availability and attribution before promoting that source to the live layer.
+
+## Company Operations & Real Telemetry (2026-10-10)
+
+The new **Company Operations** workspace adds project/asset/site/work-order registers, design revisions, team tasks, service requests, finance scenarios, engineering site estimates, local audit export, and a secured API connection UI. Browser-local records are device-local only; they are not automatically shared between users or devices.
+
+### Automatic GitHub Pages validation and deploy
+
+The repository now includes `.github/workflows/deploy.yml`. On every push/pull request it checks JavaScript/MJS syntax, Python compilation, HTML IDs/internal anchors/local resources, backend authentication and telemetry validation, and the static production build. Only a validated default-branch push deploys the `dist/` artifact. To enable this workflow, open **Settings → Pages → Build and deployment → Source → GitHub Actions** once. Keep the `.github/workflows/deploy.yml` path when uploading. GitHub deployment/CDN propagation takes some time after commit; the page cannot update before GitHub finishes its deployment.
+
+### Real company data requires a backend
+
+GitHub Pages runs the public HTML/CSS/JavaScript only; it does not execute Python or collect physical-device measurements on its own. Optional FastAPI source is in `backend/`, with setup, environment-secret, CORS, storage and telemetry-ingest instructions in `COMPANY-OPERATIONS-SETUP.md`. Deploy it separately to an HTTPS Python-capable host before expecting multi-device records or gateway telemetry. Keep `IGERS_ADMIN_API_KEY` and `IGERS_INGEST_API_KEY` only in the backend host's secret settings.
+
+Never label model estimates, visual simulations or user-entered values as calibrated real-world measurements. Company Operations intentionally reports unavailable telemetry if no authenticated device gateway has submitted actual observations.
