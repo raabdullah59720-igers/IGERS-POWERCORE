@@ -4666,14 +4666,10 @@ QA:
 - Upgrade is additive and does not replace the existing Weather API/data flow.
 
 
-# Consolidated legacy handoff documents and snippets
-
-The following non-runtime documentation/sample files were consolidated into this archive on 2026-10-10 to keep the live GitHub project within the 98-file limit. Their historical text/source is retained below; these files were not used as runtime dependencies by index.html.
+# Consolidated legacy upgrade reports and integration snippets
 
 
----
-
-## Archived file: `BUGFIX-VERIFY-REPORT.md`
+## Archived source: BUGFIX-VERIFY-REPORT.md
 
 # IGERS POWERCORE 12-Module Upgrade · Post-Audit Fix Report
 
@@ -4697,9 +4693,8 @@ Final run results: JavaScript/MJS 45/45 syntax checks passed; inline scripts 13/
 Browser automation is blocked by the current workspace browser policy, so this report does not claim a completed full visual browser test or verified live public-provider connectivity.
 
 
----
 
-## Archived file: `FULL-PANEL-AUDIT-REPORT.md`
+## Archived source: FULL-PANEL-AUDIT-REPORT.md
 
 # IGERS POWERCORE · Full Panel Audit Report
 
@@ -4758,9 +4753,8 @@ All 84 paths present in the starting website ZIP were retained. The update adds 
 Extract the ZIP and upload the extracted files to the root of the existing `IGERS-POWERCORE` repository, overwriting existing files. Keep `index.html` at the root and retain `data/bangladesh-boundary-fallback.geojson`. Do not upload the ZIP as a single file. Commit the changes, then wait for the existing GitHub Pages deployment to finish.
 
 
----
 
-## Archived file: `POWERCORE-12-UPGRADE-REPORT.md`
+## Archived source: POWERCORE-12-UPGRADE-REPORT.md
 
 # IGERS POWERCORE · 12-Module Upgrade & Validation Report
 
@@ -4931,9 +4925,41 @@ Added an interactive, local SVG-based concept visualizer inside the existing `#c
 - Browser visual automation was not available for full application-wide testing in this workspace; public feeds are not represented as measured energy telemetry in these concept scenes.
 
 
----
 
-## Archived file: `UPGRADE-AND-VALIDATION-REPORT.md`
+## Archived source: SECTION-GROUPING-UPDATE.md
+
+# IGERS POWERCORE · Section Navigation Update
+
+## Purpose
+Organize the existing dashboard without removing/rebuilding its modules. Related destinations are grouped into six expandable categories:
+
+1. **Overview**: Home, concept, energy sources, energy journey, applications, deployment, inventor, engineering limits.
+2. **Environment & Live Data**: environment, weather, live time, earthquake/seismic, marine/coastal, Salah/Qibla.
+3. **Air & Border Operations**: public air traffic, 3D flight monitor/runway simulation, airspace safety, early warning, border monitor.
+4. **Infrastructure & Network**: Sentinel Grid, toll intelligence, satellite monitor, Google 3D map, tower mesh.
+5. **Energy & System Control**: energy calculator, IGERS 3D lab, data analysis, system control.
+6. **Safety & Support**: emergency center, comments/customer care.
+
+## Compatibility measures
+- Existing section IDs used by the original navigation are retained. All 30 current section anchors are present in the navigation and resolve to matching HTML IDs.
+- `section-navigation.js` provides keyboard-friendly category handling, mobile open/close, Escape-to-close, and closes the selected category after navigation.
+- The six current categories explicitly cover all 30 section elements present in this version. Future dynamically injected sections must be given a matching navigation entry when introduced; the current controller does not auto-classify arbitrary future links.
+- Asset URLs and the service-worker revision were bumped to help clients pick up the new navigation after GitHub Pages completes deployment.
+- All existing page sections, calculations, module scripts, legal pages, PWA files, boundary data and runway simulation assets were preserved.
+
+## Verification
+- 445 HTML IDs after wiring the live copyright year; no duplicates.
+- Six category groups and all static navigation anchor targets resolve. The master-system ON/OFF buttons are now connected to the existing administrator-session gate.
+- 82 standalone `.js` files passed `node --check` across source and Android bundle.
+- 13 inline scripts passed `node --check`; five CSS files and 15 embedded style blocks parsed without syntax errors.
+- Web manifest and Bangladesh GeoJSON parse; local HTML asset references resolve.
+- Android launch-kit structural validator: 36/36 checks passed after synchronizing the bundle.
+
+A complete Chromium visual/interaction test and Android APK compilation were not available in this environment. The Android Launch Kit therefore contains source and an auto-build workflow, not a precompiled APK.
+
+
+
+## Archived source: UPGRADE-AND-VALIDATION-REPORT.md
 
 # IGERS POWERCORE · Upgrade and validation report
 
@@ -5156,108 +5182,21 @@ This environment could not resolve external internet hosts, and browser-based re
 - Public weather/ADS-B/NASA/GIS provider availability could not be confirmed from this environment; external feed health must be checked after deployment on an ordinary internet connection.
 
 
-## 2026-10-10 Real-world data reliability update
 
-- Consolidated weather/environment panels on a single timeout-bounded Open-Meteo forecast request with in-flight request coalescing and a 4-minute browser cache. Weather values are labelled model outputs, not station telemetry.
-- Corrected hourly rain probability and the next-rain estimate to start at the current model hour instead of index 0 (midnight). Missing numeric fields remain unavailable, never silently converted to zero.
-- Added an Open-Meteo/CAMS air-quality panel for US AQI, PM2.5, PM10, NO2 and ozone, showing model time and source limitations; it is explicitly not a ground-station reading. Refresh is bounded to 30 minutes, with a 12-second request timeout and honest offline/stale state.
-- Shared USGS all-hour GeoJSON between the main earthquake panel and the advanced seismic panel, coalescing concurrent refreshes and slowing the main polling interval to 60 seconds visible / 180 seconds hidden.
-- Corrected ADS-B coordinate and observation-age parsing for null/blank provider fields; selected-flight details show origin/destination only when the feed actually supplies them.
-- Hardened marine/seismic missing-value formatting, avoiding null-to-zero conversions, and corrected NASA legacy helper endpoints to direct public EONET v3, GIBS WMS and APOD WordPress API URLs.
-- GitHub Pages remains static hosting. Python relay scripts require a separately hosted server runtime; no local script is represented as running on GitHub Pages.
-- Browser visual end-to-end and external provider reachability could not be fully proven by static test alone; API status in the app remains the source of truth at runtime.
+## Archived source: border-status-integration-snippet.html
 
-
-### Data-freshness/polling refinements
-
-- Forecast panel refresh is now coalesced and bounded to a 10-minute cache / 15-minute foreground poll; air-quality model refresh has a 45-minute cache / 60-minute foreground poll. Open-Meteo notes its underlying models are generally updated every few hours, so rapid repeated requests do not imply newer measurements.
-- Hour labels are rendered in the provider's location timezone (rather than being silently reinterpreted in the device timezone). API/model time and browser retrieval time remain separate.
-- AQI provider status has distinct model, stale and offline styles. Failed coordinate changes cannot let a previous location's late response overwrite the new location's display.
-- Seismic status is marked degraded when only a source without a comparable generation timestamp is available; it no longer claims freshness is verified when the timestamp is unknown.
-
-
-### Source and hosting notes
-
-- Environmental weather values are labelled as Open-Meteo forecast-model output; the radar sweep/blips remain illustrative. Hour labels use the provider's timezone and are not reinterpreted in the device timezone.
-- Added CAMS ENSEMBLE via Open-Meteo Air Quality API (US AQI, PM2.5, PM10, NO2 and ozone). The UI states the gridded/global resolution and warns that it is not a ground-station measurement.
-- Main earthquake and advanced seismic views now share the USGS all-hour response when it is recent; source timestamp absence is degraded/unknown, not “freshness verified”.
-- A live query from this build workspace to Open-Meteo and NASA endpoints failed at DNS resolution, so those external service responses could not be independently verified here. The in-app API requests are direct public endpoints with timeout/error states; runtime provider badges remain authoritative. The USGS all-hour GeoJSON endpoint was independently reachable through the web verifier with HTTP 200 during this audit.
-- GitHub Pages is static hosting and does not run the bundled Python relay scripts as a server. Authorized toll/ITS and other private/credentialed feeds require a separately deployed server-side relay; the frontend does not fabricate such data.
-
-## 2026-10-10 · Final real-world data + failure-path audit
-
-- Extended the 12-second AbortController deadline to cover both HTTP fetch and JSON body parsing for Open-Meteo forecast and CAMS air-quality calls. A stalled response body can no longer keep these requests waiting indefinitely.
-- Weather and AQI data are explicitly model products, not local weather-station or air-quality sensor observations. The AQI UI credits Open-Meteo / CAMS ENSEMBLE and shows model time, retrieval/status state, pollutant units and unavailable/stale conditions.
-- Weather and environmental panels reuse a single keyed forecast promise/cache. Coordinate/location changes are guarded so a late response for an older location does not overwrite the new location. Missing/null/blank values stay unavailable, not fabricated zeros.
-- Hourly rain/precipitation display starts at the provider model hour at or after current model time, with provider-local ISO hour labels. Model timestamp and browser retrieval timestamp remain separate.
-- Shared USGS all-hour GeoJSON is reused by the main and advanced seismic views; missing comparable source-generation timestamps are reported as degraded/unknown rather than falsely verified as fresh.
-- NASA imagery uses the active GIBS tile integration. Legacy NASA helper URLs were changed away from the non-existent `/api/provider` relay path to direct public NASA endpoints where those public endpoints are documented; this does not imply a live API response was reachable from this build workspace.
-
-### Final verification performed
-- Clean static build: `node build.mjs` PASS; generated `dist/` contains the production static site and runtime assets.
-- JavaScript/MJS syntax: 46 files PASS. Python source parsing/compilation: 4 files PASS.
-- HTML check across 7 HTML files: 599 IDs, zero duplicate IDs; 16 inline scripts syntax-checked with zero parser errors; zero missing active local resources or internal fragment targets. Two optional integration snippets are documentation examples only and refer to future/unbundled sample modules; neither is loaded by `index.html`.
-- CSS parser: 7 stylesheets, zero parse errors. JSON, web manifest and GeoJSON parse without errors.
-- Shared weather/AQI mock runtime harness: 14 assertions PASS (request coalescing, coordinate race handling, current-hour alignment, model-source labelling, no null-to-zero, stale/offline status and failed refresh behavior).
-- Local HTTP smoke test against the generated production output: 25/25 key routes returned HTTP 200, including index, CSS, service worker, manifest, GeoJSON, NASA modules, Concept Lab SVG/JPG assets, PWA icons and legal/report pages.
-- Baseline archive comparison: all 98 original file paths are retained; no project paths were added or removed. Six existing files changed: `index.html`, `design-standard.css`, `advanced-live-suite.js`, `nasa-intel.js`, `sw.js` and this report.
-- External endpoint limitation: this workspace failed DNS resolution for Open-Meteo and NASA direct requests, so their live HTTP responses could not be validated here. The USGS all-hour GeoJSON endpoint returned HTTP 200 through the web verifier during this audit. Provider badges in the deployed app remain authoritative.
-- GitHub Pages is static hosting and does not execute bundled Python relay scripts as a server; toll/authorized infrastructure feeds require a separately hosted service endpoint.
-- Chromium visual end-to-end testing was not completed in this workspace. Static/build/runtime-mock/local-HTTP tests passed, but a post-deployment browser check is still recommended.
-
-
----
-
-## Archived file: `SECTION-GROUPING-UPDATE.md`
-
-# IGERS POWERCORE · Section Navigation Update
-
-## Purpose
-Organize the existing dashboard without removing/rebuilding its modules. Related destinations are grouped into six expandable categories:
-
-1. **Overview**: Home, concept, energy sources, energy journey, applications, deployment, inventor, engineering limits.
-2. **Environment & Live Data**: environment, weather, live time, earthquake/seismic, marine/coastal, Salah/Qibla.
-3. **Air & Border Operations**: public air traffic, 3D flight monitor/runway simulation, airspace safety, early warning, border monitor.
-4. **Infrastructure & Network**: Sentinel Grid, toll intelligence, satellite monitor, Google 3D map, tower mesh.
-5. **Energy & System Control**: energy calculator, IGERS 3D lab, data analysis, system control.
-6. **Safety & Support**: emergency center, comments/customer care.
-
-## Compatibility measures
-- Existing section IDs used by the original navigation are retained. All 30 current section anchors are present in the navigation and resolve to matching HTML IDs.
-- `section-navigation.js` provides keyboard-friendly category handling, mobile open/close, Escape-to-close, and closes the selected category after navigation.
-- The six current categories explicitly cover all 30 section elements present in this version. Future dynamically injected sections must be given a matching navigation entry when introduced; the current controller does not auto-classify arbitrary future links.
-- Asset URLs and the service-worker revision were bumped to help clients pick up the new navigation after GitHub Pages completes deployment.
-- All existing page sections, calculations, module scripts, legal pages, PWA files, boundary data and runway simulation assets were preserved.
-
-## Verification
-- 445 HTML IDs after wiring the live copyright year; no duplicates.
-- Six category groups and all static navigation anchor targets resolve. The master-system ON/OFF buttons are now connected to the existing administrator-session gate.
-- 82 standalone `.js` files passed `node --check` across source and Android bundle.
-- 13 inline scripts passed `node --check`; five CSS files and 15 embedded style blocks parsed without syntax errors.
-- Web manifest and Bangladesh GeoJSON parse; local HTML asset references resolve.
-- Android launch-kit structural validator: 36/36 checks passed after synchronizing the bundle.
-
-A complete Chromium visual/interaction test and Android APK compilation were not available in this environment. The Android Launch Kit therefore contains source and an auto-build workflow, not a precompiled APK.
-
-
----
-
-## Archived file: `border-status-integration-snippet.html`
-
-```html
+````html
 <!-- IGERS-BD-01 Border Resilience Public-Data Status Panel -->
 <link rel="stylesheet" href="igers-compact-bundle.css">
 <div id="igers-border-status-panel"></div>
 <script src="assets/igers-border-status.js"></script>
 <script>IGERSBorderStatusPanel.mount('#igers-border-status-panel');</script>
-```
 
+````
 
----
+## Archived source: integration-snippet.html
 
-## Archived file: `integration-snippet.html`
-
-```html
+````html
 <!-- 1) Add this where you want the separate Journal/Magazine panel to appear. -->
 <div id="igers-journal-panel"></div>
 
@@ -5270,40 +5209,5 @@ A complete Chromium visual/interaction test and Android APK compilation were not
     coverUrl: 'journal/assets/cover.webp'
   });
 </script>
-```
 
-
----
-
-## Archived file: `README_BN.txt`
-
-```text
-IGERS SENTINEL GRID — Demo App
-
-এইটি একটি DEMO / prototype app। বাস্তব radar, CCTV, government network বা কোনো field equipment-এর সাথে এটি connected নয়। সব data simulated।
-
-ANDROID-এ সহজে demo চালানোর পদ্ধতি:
-1) ZIP extract করুন।
-2) folder-টি একটি HTTPS hosting-এ upload করুন, যেমন GitHub Pages / Netlify / Cloudflare Pages।
-3) Android Chrome-এ site open করুন।
-4) Chrome menu → Add to Home screen / Install app নির্বাচন করুন।
-
-বর্তমান demo screens:
-• Home dashboard
-• Network architecture
-• Sensor node status
-• Public & operations alerts
-• Field engineer installation workflow
-• NOC operator demo controls
-• 3D model views
-
-ভবিষ্যতে:
-• Real API/backend
-• User login & role management
-• PostgreSQL/Firebase/Supabase
-• Real weather/flood feeds
-• GIS map
-• Push notifications
-• Device telemetry
-• Android/iOS native app
-```
+````

@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: igers-powercore-company-api
+    runtime: python
+    plan: starter
+    buildCommand: python -m py_compile company_backend.py
+    startCommand: python company_backend.py
+    healthCheckPath: /health
+    disk:
+      name: igers-company-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: IGERS_DB_PATH
+        value: /var/data/igers-company.sqlite3
+      - key: IGERS_STORAGE_MODE
+        value: persistent
+      - key: IGERS_ADMIN_USERNAME
+        sync: false
+      - key: IGERS_ADMIN_PASSWORD
+        sync: false
+      - key: IGERS_AUTH_SECRET
+        generateValue: true
+      - key: IGERS_DEVICE_TOKEN
+        generateValue: true
+      - key: IGERS_ALLOWED_ORIGINS
+        sync: false

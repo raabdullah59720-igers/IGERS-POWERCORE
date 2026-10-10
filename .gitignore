@@ -53,11 +53,16 @@ dkms.conf
 
 # debug information files
 *.dwo
-
-# Company operations API runtime data and test/build artifacts
-backend/var/*.sqlite3
-backend/var/*.sqlite3-shm
-backend/var/*.sqlite3-wal
+# Python backend, test/runtime state and secrets
 __pycache__/
 *.py[cod]
+.venv/
+venv/
+dist/
+node_modules/
 .pytest_cache/
+*.sqlite3
+*.db
+.env
+.env.*
+!.env.example
