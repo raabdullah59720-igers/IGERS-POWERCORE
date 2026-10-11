@@ -127,8 +127,16 @@ body.igers-app-shell .theme-control{position:static!important;right:auto!importa
 @media(max-width:430px){body.igers-app-shell .navin{gap:7px}body.igers-app-shell .brand{flex-basis:180px}body.igers-app-shell .brand small{max-width:220px}body.igers-app-shell #igersAppBackButton{padding:8px 9px;font-size:9px}body.igers-app-shell .theme-control{position:static!important}}
 
 
-/* V4 stability pass: isolate every original panel, including modules with legacy force-visible CSS. */
-body.igers-app-shell[data-igers-view="panel"] #energyLiveUpdate:not([data-igers-active-panel="true"]){display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+/* V5 fix: Dynamic Recovery Model is one original panel, not a global overlay.
+   Legacy time-energy safeguards must never force it into dashboard/workspace or other panels. */
+body.igers-app-shell[data-igers-view="dashboard"] main>section#energyLiveUpdate,
+body.igers-app-shell[data-igers-view="category"] main>section#energyLiveUpdate,
+body.igers-app-shell[data-igers-view="panel"] main>section#energyLiveUpdate:not([data-igers-active-panel="true"]){
+  display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important
+}
+body.igers-app-shell[data-igers-view="panel"] main>section#energyLiveUpdate[data-igers-active-panel="true"]{
+  display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important
+}
 
 /* One brand mark per view: the app-shell header owns branding; the legacy header is a compact utility rail. */
 body.igers-app-shell .nav .brand{display:none!important}

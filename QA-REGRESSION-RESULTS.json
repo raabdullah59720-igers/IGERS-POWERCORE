@@ -1,0 +1,662 @@
+{
+  "total": 39,
+  "passed": 39,
+  "failed": 0,
+  "pageErrors": [],
+  "failures": [],
+  "results": [
+    {
+      "name": "Initial dashboard isolates dynamic recovery model",
+      "pass": true,
+      "detail": {
+        "view": "dashboard",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "igersAppDashboard"
+        ],
+        "activePanel": null,
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Energy workspace does not render model globally",
+      "pass": true,
+      "detail": {
+        "view": "category",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "igersAppDashboard"
+        ],
+        "activePanel": null,
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Dynamic Recovery Model appears when its own card opens",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "energyVisible": true,
+        "active": "true",
+        "visibleTopSections": [
+          "energyLiveUpdate"
+        ],
+        "activePanel": "energyLiveUpdate",
+        "viewCount": 1
+      }
+    },
+    {
+      "name": "Route isolation: home",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "home"
+        ],
+        "activePanel": "home",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: concept",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "concept"
+        ],
+        "activePanel": "concept",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: energy",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "energy"
+        ],
+        "activePanel": "energy",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: journey",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "journey"
+        ],
+        "activePanel": "journey",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: applications",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "applications"
+        ],
+        "activePanel": "applications",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: deployment",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "deployment"
+        ],
+        "activePanel": "deployment",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: inventor",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "inventor"
+        ],
+        "activePanel": "inventor",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: limits",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "limits"
+        ],
+        "activePanel": "limits",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: environment",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "environment"
+        ],
+        "activePanel": "environment",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: weather",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "weather"
+        ],
+        "activePanel": "weather",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: time",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "time"
+        ],
+        "activePanel": "time",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: seismic3d",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "seismic3d"
+        ],
+        "activePanel": "seismic3d",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: marine3d",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "marine3d"
+        ],
+        "activePanel": "marine3d",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: salah3d",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "salah3d"
+        ],
+        "activePanel": "salah3d",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: airtraffic",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "airtraffic"
+        ],
+        "activePanel": "airtraffic",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: liveTraffic3d",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "liveTraffic3d"
+        ],
+        "activePanel": "liveTraffic3d",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: airspaceSafety",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "airspaceSafety"
+        ],
+        "activePanel": "airspaceSafety",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: airDefense3d",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "airDefense3d"
+        ],
+        "activePanel": "airDefense3d",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: borderMonitor",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "borderMonitor"
+        ],
+        "activePanel": "borderMonitor",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: sentinel",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "sentinel"
+        ],
+        "activePanel": "sentinel",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: tollNationalPro",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "tollNationalPro"
+        ],
+        "activePanel": "tollNationalPro",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: satelliteMonitor",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "satelliteMonitor"
+        ],
+        "activePanel": "satelliteMonitor",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: google3dAir",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "google3dAir"
+        ],
+        "activePanel": "google3dAir",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: tower3d",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "tower3d"
+        ],
+        "activePanel": "tower3d",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: energyLiveUpdate",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "energyVisible": true,
+        "active": "true",
+        "visibleTopSections": [
+          "energyLiveUpdate"
+        ],
+        "activePanel": "energyLiveUpdate",
+        "viewCount": 1
+      }
+    },
+    {
+      "name": "Route isolation: concept3d",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "concept3d"
+        ],
+        "activePanel": "concept3d",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: analytics",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "analytics"
+        ],
+        "activePanel": "analytics",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: systemControl",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "systemControl"
+        ],
+        "activePanel": "systemControl",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: emergencyCenter",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "emergencyCenter"
+        ],
+        "activePanel": "emergencyCenter",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: feedback",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "feedback"
+        ],
+        "activePanel": "feedback",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: commandCenter",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "commandCenter"
+        ],
+        "activePanel": "commandCenter",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: engineeringLab",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "engineeringLab"
+        ],
+        "activePanel": "engineeringLab",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: operationsHealth",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "operationsHealth"
+        ],
+        "activePanel": "operationsHealth",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Route isolation: companyOperations",
+      "pass": true,
+      "detail": {
+        "view": "panel",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "companyOperations"
+        ],
+        "activePanel": "companyOperations",
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Back from model returns to workspace with model hidden",
+      "pass": true,
+      "detail": {
+        "view": "category",
+        "display": "none",
+        "visibility": "hidden",
+        "opacity": "0",
+        "energyVisible": false,
+        "active": null,
+        "visibleTopSections": [
+          "igersAppDashboard"
+        ],
+        "activePanel": null,
+        "viewCount": 0
+      }
+    },
+    {
+      "name": "Only one Dynamic Recovery Model markup instance",
+      "pass": true,
+      "detail": {
+        "titleNodes": 1
+      }
+    }
+  ]
+}

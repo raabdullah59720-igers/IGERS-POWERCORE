@@ -2,7 +2,7 @@
  * Keep this file intentionally network-light: no stale application cache is kept.
  * Bump REVISION whenever shipping an application update.
  */
-const REVISION = 'igers-2026-10-11-smart-app-v3-stability';
+const REVISION = 'igers-2026-10-11-dynamic-recovery-v5';
 self.addEventListener('install', event => {
   event.waitUntil(self.skipWaiting());
 });

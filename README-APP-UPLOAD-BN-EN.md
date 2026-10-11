@@ -1,30 +1,25 @@
-# IGERS POWERCORE Smart App V4 — Upload Guide
+# IGERS POWERCORE Smart App V5 — Dynamic Recovery Model Fix
 
-## বাংলা নির্দেশনা
+## বাংলা — আপলোডের নিয়ম
 
-এই ZIP-টি GitHub Pages-এর জন্য তৈরি। Extract করলে `index.html` root-এ থাকবে।
+1. এই ZIP extract করো। ZIP-এর ভেতরে `index.html`, JavaScript/CSS ফাইল ও asset-সহ একটি project folder থাকবে।
+2. ওই folder-এর **ভেতরের সব ফাইল ও ফোল্ডার** তোমার GitHub Pages repository-এর root-এ upload করো। `index.html` root-এ থাকতে হবে।
+3. একই নামের ফাইল overwrite করো; অন্য unrelated repository files মুছে ফেলো না।
+4. Deploy হওয়ার পরে Chrome-এ `Ctrl + Shift + R` দিয়ে hard refresh করো।
 
-1. ZIP extract করো।
-2. Extract করা সব ফাইল ও ফোল্ডার তোমার GitHub Pages repository-এর root-এ upload করো। শুধু ZIP-টি repository-তে রেখে দেবে না।
-3. একই নামের ফাইল overwrite করো; অন্য অপ্রাসঙ্গিক repository ফাইল মুছে ফেলো না।
-4. Commit/publish হওয়ার পর সাইট খুলে `Ctrl + Shift + R` দিয়ে hard refresh করো। পুরোনো version থাকলে DevTools → Application → Service Workers থেকে পুরোনো registration unregister করে আবার reload করা যেতে পারে।
-5. Dashboard → workspace → panel → Back flow পরীক্ষা করো।
+### V5-এ কী ঠিক হয়েছে
 
-V4-তে dashboard header আরও compact করা হয়েছে, panel isolation-এর একটি CSS conflict ঠিক করা হয়েছে এবং দ্রুত navigation-এর সময়ে global resize event debounce করা হয়েছে। Existing feature source রাখা হয়েছে।
+`Dynamic Recovery Model` section-কে জোর করে সবসময় দৃশ্যমান রাখার legacy CSS app-shell navigation-এর সঙ্গে সংঘর্ষ করছিল। এখন সেটি legacy mode-এ সীমাবদ্ধ, আর app-shell dashboard/workspace/অন্য panel-এ model-টি লুকিয়ে রাখে। শুধু `Energy Calculation` / `Dynamic Recovery Model` panel active থাকলে এটি দৃশ্যমান হয়। Original calculator content ও input fields রাখা হয়েছে।
 
-## English
+## English — Upload instructions
 
-This package is prepared for GitHub Pages. After extraction, `index.html` is at the package root.
+1. Extract this ZIP.
+2. Upload **the contents of the project folder** to the root of your GitHub Pages repository. Keep `index.html` at the repository root.
+3. Overwrite same-name files; do not delete unrelated repository files.
+4. After deployment, use **Ctrl + Shift + R** in Chrome to bypass the browser cache.
 
-1. Extract the ZIP.
-2. Upload all extracted files and folders to the root of the existing GitHub Pages repository. Do not upload only the ZIP archive.
-3. Replace files with matching names. Do not delete unrelated repository files.
-4. After publishing, hard refresh with `Ctrl + Shift + R`. If an older service-worker version persists, unregister the old worker in DevTools → Application → Service Workers and reload.
-5. Verify Dashboard → Workspace → Panel → Back.
+### V5 change
 
-V4 compacts the legacy header, fixes panel isolation against a legacy CSS override, and debounces layout refreshes during fast navigation. Existing source modules are retained.
+The legacy emergency CSS forced `#energyLiveUpdate` to remain visible and overrode app-shell panel isolation. The safeguard is now scoped to legacy mode. In the app shell, the Dynamic Recovery Model is hidden on the dashboard, workspace screen, and all unrelated panels, and shown only when its own panel is active. The original calculator inputs and content are retained.
 
-## Notes
-
-- The “ChatGPT” footer entry is an AI-assistance acknowledgement, not a statement of official partnership or endorsement.
-- Live external feeds depend on their providers, connectivity, CORS and any required credentials. UI tests do not certify live-provider freshness.
+See `QA-REPORT-2026-10-11-V5-DYNAMIC-RECOVERY.md` for test results and scope.
