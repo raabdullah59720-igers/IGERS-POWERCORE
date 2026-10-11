@@ -126,7 +126,7 @@
   dashboard.innerHTML = `
     <div class="ias-wrap">
       <header class="ias-topline">
-        <div class="ias-brandline"><span class="ias-brandmark" aria-hidden="true"><span>IG</span><i></i></span><span><strong>IGERS POWERCORE</strong><small>INTEGRATED SYSTEMS WORKSPACE</small></span></div>
+        <a class="ias-brandline" href="#igersAppDashboard" data-igers-home aria-label="Return to IGERS POWERCORE dashboard"><span class="ias-brandmark" aria-hidden="true"><span>IG</span><i></i></span><span><strong>IGERS POWERCORE</strong><small>INTEGRATED SYSTEMS WORKSPACE</small></span></a>
         <div class="ias-top-meta"><span class="ias-localstate"><i aria-hidden="true"></i><span>INTERFACE READY</span></span><span class="ias-id-chip">IGERS-BD-01</span></div>
       </header>
 
@@ -196,6 +196,17 @@
   const noFeatures = dashboard.querySelector('#iasNoFeatures');
   const STATE_KEY = 'igersAppShellV2';
   let currentState = null;
+  let panelResizeTimer = null;
+
+  // A panel reveal needs one layout notification for canvases/maps. Debounce it so
+  // rapid navigation cannot trigger repeated full-app resize work in hidden modules.
+  function schedulePanelLayoutRefresh() {
+    if (panelResizeTimer !== null) window.clearTimeout(panelResizeTimer);
+    panelResizeTimer = window.setTimeout(() => {
+      panelResizeTimer = null;
+      window.dispatchEvent(new Event('resize'));
+    }, 110);
+  }
 
   function createState(view, data = {}, index = 0, parentView = null) {
     return { ...data, [STATE_KEY]: true, view, index, parentView };
@@ -276,13 +287,10 @@
     if (shouldScroll) {
       requestAnimationFrame(() => {
         scrollToElement(target.element, 'auto');
-        requestAnimationFrame(() => {
-          window.dispatchEvent(new Event('resize'));
-          window.setTimeout(() => window.dispatchEvent(new Event('resize')), 160);
-        });
+        schedulePanelLayoutRefresh();
       });
     } else {
-      window.dispatchEvent(new Event('resize'));
+      schedulePanelLayoutRefresh();
     }
     return true;
   }
@@ -512,7 +520,7 @@
     history.replaceState(currentState, '', location.hash);
   }
   window.__igersAppShell = {
-    version: '2.0.0',
+    version: '2.1.0',
     categories: categoryData.map((category) => ({ title: category.title, features: category.links.length })),
     showDashboard: () => showDashboard(true),
     showCategory: (index) => showCategory(index, true),

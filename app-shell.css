@@ -125,3 +125,23 @@ body.igers-app-shell .navlinks .language-control{max-width:170px;min-height:34px
 body.igers-app-shell .theme-control{position:static!important;right:auto!important;top:auto!important;z-index:auto!important;min-height:34px;margin-left:2px;border-radius:10px;font-size:9px}
 @media(max-width:820px){body.igers-app-shell .navin{height:auto!important;min-height:70px;flex-wrap:wrap;align-content:center;row-gap:8px;padding-top:8px;padding-bottom:8px}body.igers-app-shell .brand{flex:1 1 200px;min-width:0}body.igers-app-shell #igersAppBackButton{flex:0 0 auto;order:2}body.igers-app-shell #navSectionToggle{flex:0 0 40px;order:3}body.igers-app-shell #igersNavLinks{top:100%;max-width:none;padding:12px;background:rgba(3,11,17,.98);border:1px solid rgba(97,230,255,.2);border-top:0;border-radius:0 0 16px 16px;box-shadow:0 22px 50px rgba(0,0,0,.38)}body.igers-app-shell #igersNavLinks.is-open{display:grid;grid-template-columns:1fr;gap:10px}body.igers-app-shell #igersNavLinks .igers-language-label{display:block}body.igers-app-shell #igersNavLinks .language-control{width:100%;max-width:none}body.igers-app-shell #igersNavLinks .theme-control{display:inline-flex;width:max-content}}
 @media(max-width:430px){body.igers-app-shell .navin{gap:7px}body.igers-app-shell .brand{flex-basis:180px}body.igers-app-shell .brand small{max-width:220px}body.igers-app-shell #igersAppBackButton{padding:8px 9px;font-size:9px}body.igers-app-shell .theme-control{position:static!important}}
+
+
+/* V4 stability pass: isolate every original panel, including modules with legacy force-visible CSS. */
+body.igers-app-shell[data-igers-view="panel"] #energyLiveUpdate:not([data-igers-active-panel="true"]){display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+
+/* One brand mark per view: the app-shell header owns branding; the legacy header is a compact utility rail. */
+body.igers-app-shell .nav .brand{display:none!important}
+body.igers-app-shell .nav .navin{height:auto!important;min-height:48px!important;justify-content:flex-end!important;align-items:center!important;flex-wrap:nowrap!important;gap:10px!important;padding-top:5px!important;padding-bottom:5px!important}
+body.igers-app-shell .nav .navlinks{margin-left:auto;align-items:center;justify-content:flex-end;flex:0 1 auto;gap:9px}
+body.igers-app-shell .ias-brandline{text-decoration:none!important;cursor:pointer}
+body.igers-app-shell .ias-brandline:hover{filter:brightness(1.08)}
+body.igers-app-shell[data-igers-view="panel"] .nav .navin:before{content:"IGERS POWERCORE";margin-right:auto;color:#88aab8;font-size:9px;font-weight:900;letter-spacing:.14em;white-space:nowrap}
+@media(max-width:820px){
+  body.igers-app-shell .nav .navin{height:auto!important;min-height:50px!important;justify-content:flex-end!important;align-items:center!important;flex-wrap:nowrap!important;align-content:center!important;row-gap:0!important;padding-top:5px!important;padding-bottom:5px!important}
+  body.igers-app-shell #igersAppBackButton{order:1;flex:0 0 auto}
+  body.igers-app-shell #navSectionToggle{order:2;flex:0 0 40px}
+  body.igers-app-shell .navlinks{margin-left:0}
+  body.igers-app-shell[data-igers-view="panel"] .nav .navin:before{font-size:8px;letter-spacing:.08em}
+}
+@media(max-width:360px){body.igers-app-shell[data-igers-view="panel"] .nav .navin:before{display:none}}

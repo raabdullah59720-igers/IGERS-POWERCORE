@@ -1,0 +1,105 @@
+{
+  "tests": [
+    {
+      "name": "full original DOM initializes dashboard",
+      "pass": true,
+      "detail": "{'view': 'dashboard', 'activePanel': None, 'targetId': None, 'category': None, 'categoryCount': 7, 'featureCount': 34, 'historyIndex': 0}"
+    },
+    {
+      "name": "seven workspaces",
+      "pass": true,
+      "detail": "7"
+    },
+    {
+      "name": "one visible section on dashboard",
+      "pass": true,
+      "detail": "['igersAppDashboard']"
+    },
+    {
+      "name": "one visible shell brand",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no duplicate IDs after runtime dashboard injection",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "name": "34 unique destinations",
+      "pass": true,
+      "detail": "34"
+    },
+    {
+      "name": "every original section isolates under complete CSS cascade",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "name": "workspace click opens category",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "panel entry isolates one original section",
+      "pass": true,
+      "detail": "{'s': {'view': 'panel', 'activePanel': 'airtraffic', 'targetId': 'airtraffic', 'category': None, 'categoryCount': 7, 'featureCount': 34, 'historyIndex': 3}, 'v': ['airtraffic']}"
+    },
+    {
+      "name": "Back returns to workspace",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Back returns to dashboard",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "browser Back restores workspace",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "browser Forward restores panel",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "direct in-app hash opens original section",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "direct deep-link Back falls back safely to dashboard",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Ctrl+K focuses global search",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "all 34 routes show one panel without UI errors",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "name": "no horizontal overflow 320\u20131440px",
+      "pass": true,
+      "detail": "{320: {'doc': 320, 'inner': 320, 'nav': 51}, 360: {'doc': 360, 'inner': 360, 'nav': 51}, 390: {'doc': 390, 'inner': 390, 'nav': 51}, 430: {'doc': 430, 'inner': 430, 'nav': 51}, 768: {'doc': 768, 'inner': 768, 'nav': 51}, 820: {'doc': 820, 'inner': 820, 'nav': 51}, 1024: {'doc': 1024, 'inner': 1024, 'nav': 88}, 1366: {'doc': 1366, 'inner': 1366, 'nav': 88}, 1440: {'doc': 1440, 'inner': 1440, 'nav': 88}}"
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "passed": 18,
+    "total": 18,
+    "all_passed": true,
+    "original_sections_checked": 34,
+    "routes_checked": 34,
+    "route_failures": [],
+    "style_failures": [],
+    "page_errors": []
+  }
+}
