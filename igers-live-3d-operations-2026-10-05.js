@@ -8,7 +8,7 @@ const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const fmt=(v,d=2)=>Number(v).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d});
 function calculations(){
   const m=Math.max(0,num('energyMass',900)), v1=Math.max(0,num('energyV1',20))/3.6, v2=Math.max(0,num('energyV2',15))/3.6, etaE=clamp(num('energyRecovery',20)/100,0,1), loc=Math.max(0,num('energyLocations',100000)), veh=Math.max(0,num('energyVehicles',210000));
-  const grossJ=.5*m*Math.max(0,v1*v1-v2*v2), netJ=grossJ*etaE, netWh=netJ/3600, annualKWh=netWh*loc*veh, annualGWh=annualKWh/1e6, avgKW=annualKWh/8760;
+  const grossJ=.5*m*Math.max(0,v1*v1-v2*v2), netJ=grossJ*etaE, netWh=netJ/3600, annualKWh=netWh*loc*veh/1000, annualGWh=annualKWh/1e6, avgKW=annualKWh/8760;
   const q=Math.max(0,num('waterFlow',500))/1000, head=Math.max(0,num('waterHead',1.5)), etaW=clamp(num('waterEff',70)/100,0,1), wh=Math.max(0,num('waterHours',12)), ws=Math.max(0,num('waterSites',10));
   const waterGrossW=1000*9.81*q*head, waterNetW=waterGrossW*etaW, waterAnnualKWh=waterNetW/1000*wh*365*ws, waterGWh=waterAnnualKWh/1e6, waterAvgKW=waterAnnualKWh/8760;
   const force=Math.max(0,num('footForce',600)), stroke=Math.max(0,num('footStroke',8))/1000, etaF=clamp(num('footEff',35)/100,0,1), steps=Math.max(0,num('footSteps',3000)), pads=Math.max(0,num('footPads',100));
