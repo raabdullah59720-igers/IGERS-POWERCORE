@@ -45,7 +45,8 @@
       if (msg) msg.textContent = 'Administrator authorization required. Unlock the existing gate in the 3D Air · Ground · Maritime panel first. No state was changed.';
       const gate = $('ad3dAdminPassword');
       if (gate) {
-        $('airDefense3d')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (window.__igersAppShell?.openFeature) window.__igersAppShell.openFeature('airDefense3d');
+        else $('airDefense3d')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         window.setTimeout(() => gate.focus(), 250);
       }
       return;

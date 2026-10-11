@@ -8,7 +8,7 @@ const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const fmt=(v,d=2)=>Number(v).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d});
 function calculations(){
   const m=Math.max(0,num('energyMass',900)), v1=Math.max(0,num('energyV1',20))/3.6, v2=Math.max(0,num('energyV2',15))/3.6, etaE=clamp(num('energyRecovery',20)/100,0,1), loc=Math.max(0,num('energyLocations',100000)), veh=Math.max(0,num('energyVehicles',210000));
-  const grossJ=.5*m*Math.max(0,v1*v1-v2*v2), netJ=grossJ*etaE, netWh=netJ/3600, annualKWh=netWh*loc*veh/1000, annualGWh=annualKWh/1e6, avgKW=annualKWh/8760;
+  const grossJ=.5*m*Math.max(0,v1*v1-v2*v2), netJ=grossJ*etaE, netWh=netJ/3600, annualKWh=netWh*loc*veh, annualGWh=annualKWh/1e6, avgKW=annualKWh/8760;
   const q=Math.max(0,num('waterFlow',500))/1000, head=Math.max(0,num('waterHead',1.5)), etaW=clamp(num('waterEff',70)/100,0,1), wh=Math.max(0,num('waterHours',12)), ws=Math.max(0,num('waterSites',10));
   const waterGrossW=1000*9.81*q*head, waterNetW=waterGrossW*etaW, waterAnnualKWh=waterNetW/1000*wh*365*ws, waterGWh=waterAnnualKWh/1e6, waterAvgKW=waterAnnualKWh/8760;
   const force=Math.max(0,num('footForce',600)), stroke=Math.max(0,num('footStroke',8))/1000, etaF=clamp(num('footEff',35)/100,0,1), steps=Math.max(0,num('footSteps',3000)), pads=Math.max(0,num('footPads',100));
@@ -44,10 +44,9 @@ function ensure3DMonitor(){
 }
 function set(id,v){const e=$(id);if(e)e.textContent=v}
 function valid(){
-  const raw=id=>{const e=$(id);if(!e||String(e.value??'').trim()==='')return NaN;const v=Number(e.value);return Number.isFinite(v)?v:NaN;};
-  const v={m:raw('energyMass'),v1:raw('energyV1'),v2:raw('energyV2'),er:raw('energyRecovery'),loc:raw('energyLocations'),veh:raw('energyVehicles'),flow:raw('waterFlow'),head:raw('waterHead'),we:raw('waterEff'),hours:raw('waterHours'),sites:raw('waterSites'),force:raw('footForce'),stroke:raw('footStroke'),fe:raw('footEff'),steps:raw('footSteps'),pads:raw('footPads')};
-  if(Object.values(v).some(x=>!Number.isFinite(x)))return false;
-  return v.m>0&&v.m<=1e7&&v.v1>=0&&v.v1<=500&&v.v2>=0&&v.v2<=v.v1&&v.er>=0&&v.er<=100&&v.loc>=0&&v.loc<=1e12&&v.veh>=0&&v.veh<=1e12&&v.flow>=0&&v.flow<=1e8&&v.head>=0&&v.head<=10000&&v.we>=0&&v.we<=100&&v.hours>=0&&v.hours<=24&&v.sites>=0&&v.sites<=1e9&&v.force>=0&&v.force<=1e7&&v.stroke>=0&&v.stroke<=10000&&v.fe>=0&&v.fe<=100&&v.steps>=0&&v.steps<=1e9&&v.pads>=0&&v.pads<=1e8;
+  const checks=[['energyMass',0],['energyV1',0],['energyV2',0],['energyRecovery',0],['energyLocations',0],['energyVehicles',0],['waterFlow',0],['waterHead',0],['waterEff',0],['waterHours',0],['waterSites',0],['footForce',0],['footStroke',0],['footEff',0],['footSteps',0],['footPads',0]];
+  for(const [id,min] of checks){const v=Number($(id)?.value);if(!Number.isFinite(v)||v<min)return false;}
+  return true;
 }
 function renderResults(snapshot){
   const ok=valid();if(!ok){set('ilersInputCheck','CHECK INPUTS');set('ilersCalcStatus','One or more inputs are invalid.');return;}
@@ -56,9 +55,7 @@ function renderResults(snapshot){
 }
 let lastFrame=performance.now(),frames=0,lastFrameSample=performance.now(),lastResultRender=0;
 function frame(){
-  const now=performance.now(), dt=Math.max(0,now-lastFrame);lastFrame=now;frames++;
-  if(!valid()){set('ilersInputCheck','CHECK INPUTS');set('ilersCalcStatus','One or more model inputs are blank or outside supported limits. Values are withheld until corrected.');set('ilersSnapshot','Invalid input state · no engineering output displayed.');['ilersEnergyResult','ilersWaterResult','ilersFootResult','ilersCombinedResult','ilersPowerResult'].forEach(id=>set(id,'CHECK INPUTS'));requestAnimationFrame(frame);return;}
-  const c=calculations();
+  const now=performance.now(), dt=Math.max(0,now-lastFrame);lastFrame=now;frames++;const c=calculations();
   const energyPct=clamp((c.energy.avgKW/(c.energy.avgKW+Math.max(1,c.water.avgKW)+Math.max(0,c.foot.avgW/1000)))*100,0,100);
   const waterPct=clamp(c.water.netW/5000*100,0,100),footPct=clamp(c.foot.avgW/100*100,0,100),combinedPct=clamp(c.combined.avgKW/20*100,0,100),temp=Number.parseFloat(txt('temp','0'));const weatherPct=Number.isFinite(temp)?clamp((temp+10)/55*100,0,100):50;
   set('ilersClock',new Date().toLocaleTimeString('en-GB',{hour12:false})+'.'+String(Math.floor((now%1000))).padStart(3,'0'));

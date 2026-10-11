@@ -1,0 +1,75 @@
+/* IGERS POWERCORE · additive app-shell presentation layer (no legacy panel styles removed) */
+:root{--app-accent:#63e5ff;--app-accent2:#8af3bf;--app-surface:rgba(8,20,29,.92);--app-line:rgba(103,199,226,.2)}
+body.igers-app-shell{background:radial-gradient(ellipse at 8% -8%,rgba(25,106,139,.28),transparent 36%),radial-gradient(ellipse at 95% 18%,rgba(27,102,83,.14),transparent 28%),#040a10}
+body.igers-app-shell .nav{border-bottom-color:rgba(99,229,255,.2);box-shadow:0 10px 35px rgba(0,0,0,.2)}
+body.igers-app-shell .brand{display:flex;flex-direction:column;line-height:1.25;gap:5px}
+body.igers-app-shell .brand:before{content:"POWERCORE TECHNOLOGIES";font-size:8px;font-weight:800;letter-spacing:.22em;color:var(--app-accent2)}
+body.igers-app-shell .brand small{font-size:9px;letter-spacing:.1em}
+body.igers-app-shell .nav-section-toggle{border:1px solid var(--app-line);border-radius:12px;background:rgba(8,22,31,.94);color:var(--app-accent);min-width:42px;min-height:40px}
+#igersAppBackButton{display:none;align-items:center;gap:8px;border:1px solid var(--app-line);border-radius:11px;background:rgba(8,22,31,.9);color:#d8f5fc;padding:9px 12px;font:inherit;font-size:11px;font-weight:700;line-height:1.2;cursor:pointer;white-space:nowrap}
+body.igers-app-shell[data-igers-view="panel"] #igersAppBackButton{display:inline-flex}
+#igersAppDashboard{padding:34px 0 70px;min-height:calc(100vh - 70px);position:relative;isolation:isolate}
+#igersAppDashboard:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(87,174,205,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(87,174,205,.035) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,#000,transparent 86%)}
+.ias-wrap{width:min(1280px,calc(100% - 38px));margin:0 auto}
+.ias-topline{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:0 0 18px}
+.ias-brandline{display:flex;align-items:center;gap:11px;color:#a9c2cf;font-size:10px;letter-spacing:.15em;text-transform:uppercase}
+.ias-brandmark{display:grid;place-items:center;width:38px;height:38px;border:1px solid rgba(99,229,255,.4);border-radius:13px;background:linear-gradient(145deg,rgba(99,229,255,.15),rgba(138,243,191,.04));color:var(--app-accent);font-weight:950;font-size:13px;box-shadow:0 0 28px rgba(99,229,255,.08)}
+.ias-localstate{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(138,243,191,.22);border-radius:999px;padding:7px 11px;color:#bcebd7;background:rgba(9,29,25,.55);font-size:10px;font-weight:800;letter-spacing:.05em}
+.ias-localstate i{width:7px;height:7px;border-radius:50%;background:#8af3bf;box-shadow:0 0 12px #8af3bf;display:inline-block}
+.ias-hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(250px,.7fr);gap:20px;align-items:stretch;margin-bottom:25px}
+.ias-hero-copy,.ias-hero-visual{position:relative;overflow:hidden;border:1px solid var(--app-line);border-radius:25px;background:linear-gradient(135deg,rgba(13,34,47,.94),rgba(5,14,22,.96));box-shadow:0 20px 65px rgba(0,0,0,.23)}
+.ias-hero-copy{padding:clamp(23px,4vw,44px)}
+.ias-kicker{display:inline-flex;align-items:center;gap:8px;color:var(--app-accent2);font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:900}
+.ias-kicker:before{content:"";width:19px;height:1px;background:currentColor}
+.ias-title{font-size:clamp(32px,5vw,61px);line-height:1.02;letter-spacing:-.045em;margin:17px 0 13px;max-width:760px}
+.ias-title span{color:var(--app-accent)}
+.ias-lead{max-width:700px;color:#a8bfcc;font-size:14px;line-height:1.75;margin:0}
+.ias-statrow{display:flex;gap:9px;flex-wrap:wrap;margin-top:23px}
+.ias-stat{border:1px solid rgba(111,184,208,.17);border-radius:12px;background:rgba(4,13,20,.48);padding:10px 13px;min-width:112px}
+.ias-stat strong{display:block;font-size:17px;line-height:1.25;color:#e7f8fd;font-variant-numeric:tabular-nums}
+.ias-stat span{display:block;color:#819eac;font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-top:4px}
+.ias-hero-visual{min-height:270px;display:grid;place-items:center}
+.ias-orbit{width:min(220px,68%);aspect-ratio:1;border:1px solid rgba(99,229,255,.35);border-radius:50%;position:relative;display:grid;place-items:center;box-shadow:0 0 70px rgba(99,229,255,.08),inset 0 0 55px rgba(99,229,255,.06)}
+.ias-orbit:before,.ias-orbit:after{content:"";position:absolute;inset:13%;border:1px dashed rgba(138,243,191,.32);border-radius:50%;transform:rotate(38deg) scaleX(1.55)}
+.ias-orbit:after{transform:rotate(-38deg) scaleX(1.55);border-color:rgba(99,229,255,.22)}
+.ias-core{z-index:1;width:42%;aspect-ratio:1;border-radius:25%;display:grid;place-items:center;text-align:center;background:radial-gradient(circle at 30% 20%,#194657,#07141d 72%);border:1px solid rgba(99,229,255,.55);box-shadow:0 0 35px rgba(99,229,255,.14);font-size:11px;font-weight:950;letter-spacing:.1em;color:#e6fbff}
+.ias-orbit-node{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--app-accent);box-shadow:0 0 18px var(--app-accent)}.ias-orbit-node.n1{top:7%;left:48%}.ias-orbit-node.n2{right:7%;top:48%;background:var(--app-accent2);box-shadow:0 0 18px var(--app-accent2)}.ias-orbit-node.n3{bottom:7%;left:48%}.ias-orbit-node.n4{left:7%;top:48%;background:#ffd37a;box-shadow:0 0 18px #ffd37a}
+.ias-sectionhead{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:25px 0 14px}
+.ias-sectionhead h2{font-size:21px;letter-spacing:-.025em;margin:0;color:#eaf8fc}
+.ias-sectionhead p{font-size:11px;color:#819eac;margin:5px 0 0}
+.ias-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.ias-category{min-width:0;text-align:left;position:relative;overflow:hidden;border:1px solid rgba(105,184,207,.19);border-radius:18px;padding:18px;background:linear-gradient(145deg,rgba(12,30,42,.96),rgba(5,13,20,.97));color:#e9f8fc;cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;display:flex;flex-direction:column;gap:12px;min-height:176px}
+.ias-category:after{content:"";position:absolute;width:130px;height:130px;border-radius:50%;right:-55px;top:-70px;background:rgba(99,229,255,.07);filter:blur(1px);pointer-events:none}
+.ias-category:hover,.ias-category:focus-visible{transform:translateY(-3px);border-color:rgba(99,229,255,.6);box-shadow:0 16px 42px rgba(0,0,0,.24);outline:none}
+.ias-category-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ias-icon{width:42px;height:42px;border:1px solid rgba(99,229,255,.24);border-radius:13px;display:grid;place-items:center;background:rgba(99,229,255,.07);font-size:20px}
+.ias-count{font-size:9px;color:#8ea9b6;border:1px solid rgba(105,184,207,.16);border-radius:999px;padding:5px 8px;white-space:nowrap}
+.ias-category h3{font-size:14px;margin:0 0 4px;letter-spacing:.01em}
+.ias-category p{font-size:11px;line-height:1.55;color:#91aab7;margin:0}
+.ias-open{margin-top:auto;display:flex;align-items:center;justify-content:space-between;color:var(--app-accent);font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.ias-open span:last-child{font-size:17px;transition:transform .18s ease}.ias-category:hover .ias-open span:last-child{transform:translateX(4px)}
+.ias-quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.ias-quick a{display:flex;align-items:center;gap:10px;min-width:0;border:1px solid rgba(105,184,207,.16);border-radius:13px;padding:12px;background:rgba(7,18,26,.75);color:#cce4ed;font-size:11px;font-weight:750;transition:border-color .15s ease,background .15s ease}
+.ias-quick a:hover{border-color:rgba(99,229,255,.55);background:rgba(11,32,44,.95)}.ias-quick .ias-qicon{font-size:16px;color:var(--app-accent)}
+.ias-category-view{display:none}.ias-category-view.is-active{display:block;animation:iasFade .2s ease both}
+.ias-back{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--app-line);border-radius:11px;background:rgba(8,22,31,.88);color:#c9eaf2;padding:10px 13px;font:inherit;font-size:11px;font-weight:700;line-height:1.2;cursor:pointer;margin-bottom:17px}
+.ias-view-title{font-size:clamp(26px,4vw,42px);margin:0 0 8px;letter-spacing:-.035em}.ias-view-desc{color:#90aab7;font-size:12px;margin:0 0 20px}
+.ias-feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.ias-feature{display:flex;align-items:center;gap:12px;min-width:0;text-align:left;border:1px solid rgba(105,184,207,.18);border-radius:14px;background:linear-gradient(145deg,rgba(11,28,39,.96),rgba(5,13,20,.96));color:#e4f4f8;padding:15px;min-height:70px;cursor:pointer;transition:border-color .15s ease,transform .15s ease}
+.ias-feature:hover,.ias-feature:focus-visible{border-color:rgba(99,229,255,.6);transform:translateY(-2px);outline:none}
+.ias-feature-icon{flex:0 0 34px;height:34px;display:grid;place-items:center;border-radius:10px;background:rgba(99,229,255,.08);border:1px solid rgba(99,229,255,.18);font-size:15px}
+.ias-feature-name{font-size:11px;font-weight:850;line-height:1.45}.ias-feature-target{display:block;font-size:8px;color:#7894a2;letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+.ias-footnote{margin-top:25px;padding-top:13px;border-top:1px solid rgba(105,184,207,.13);color:#718b98;font-size:9px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+body.igers-app-shell[data-igers-view="dashboard"] main>section:not(#igersAppDashboard){display:none!important}
+body.igers-app-shell[data-igers-view="panel"] main>section:not([data-igers-active-panel="true"]){display:none!important}
+body.igers-app-shell[data-igers-view="panel"] #igersAppDashboard{display:none!important}
+body.igers-app-shell[data-igers-view="dashboard"] #igersAppDashboard{display:block!important}
+body.igers-app-shell[data-igers-view="panel"] main>section[data-igers-active-panel="true"]{display:block!important}
+body.igers-app-shell[data-igers-view="panel"] main>section[data-igers-active-panel="true"]{padding-top:38px}
+body.igers-app-shell[data-igers-view="panel"] main>section[data-igers-active-panel="true"]>.wrap{scroll-margin-top:86px}
+body.igers-app-shell[data-igers-view="panel"] main>section[data-igers-active-panel="true"] h2{scroll-margin-top:90px}
+@keyframes iasFade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1000px){.ias-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ias-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ias-quick{grid-template-columns:repeat(2,minmax(0,1fr))}.ias-hero{grid-template-columns:minmax(0,1fr) minmax(220px,.65fr)}}
+@media(max-width:720px){.ias-wrap{width:min(100% - 24px,600px)}#igersAppDashboard{padding-top:20px}.ias-hero{grid-template-columns:1fr}.ias-hero-visual{min-height:220px}.ias-grid{grid-template-columns:1fr}.ias-category{min-height:145px}.ias-feature-grid{grid-template-columns:1fr}.ias-quick{grid-template-columns:1fr 1fr}.ias-sectionhead{align-items:flex-start;flex-direction:column}.ias-stat{flex:1 1 105px}.ias-brandline{font-size:8px}#igersAppBackButton{font-size:0;padding:10px}#igersAppBackButton:after{content:"Modules";font-size:10px}}
+@media(max-width:420px){.ias-quick{grid-template-columns:1fr}.ias-hero-copy{padding:23px 19px}.ias-title{font-size:35px}.ias-stat{min-width:calc(50% - 8px)}}
+@media(prefers-reduced-motion:reduce){.ias-category,.ias-feature,.ias-open span:last-child{transition:none}#igersAppDashboard *{animation:none!important;scroll-behavior:auto!important}}

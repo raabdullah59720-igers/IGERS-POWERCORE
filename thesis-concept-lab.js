@@ -359,16 +359,14 @@ function calculateIGERSFEASModel(input) {
   }
   const mechanicalJPerStep = clean.forceN * (clean.travelMm / 1000);
   const electricalJPerStep = mechanicalJPerStep * (clean.efficiencyPct / 100);
-  // Joules divided by 3.6 gives milli-watt-hours (mWh), not megawatt-hours (MWh).
-  const electricalMilliWhPerStep = electricalJPerStep / 3.6;
-  const electricalMWhPerStep = electricalMilliWhPerStep; // legacy API alias; label remains mWh/event.
+  const electricalMWhPerStep = electricalJPerStep / 3.6;
   const dailyWh = electricalJPerStep * clean.footfalls / 3600;
   const activeAverageW = dailyWh / clean.activeHours;
   const capacityEquivalentPctPerDay = dailyWh / clean.capacityWh * 100;
   const localLoadDemandWh = clean.loadW * clean.activeHours;
   const localLoadCoveragePct = dailyWh / localLoadDemandWh * 100;
   return {
-    inputs: clean, mechanicalJPerStep, electricalJPerStep, electricalMilliWhPerStep, electricalMWhPerStep,
+    inputs: clean, mechanicalJPerStep, electricalJPerStep, electricalMWhPerStep,
     dailyWh, dailyKWh: dailyWh / 1000, activeAverageW,
     capacityEquivalentPctPerDay, localLoadDemandWh, localLoadCoveragePct,
     classification: 'MODEL_ESTIMATE_NOT_MEASURED'

@@ -267,7 +267,7 @@
     let primaryValue = NaN, primaryUnit = '', primaryLabel = '', annual = NaN, formula = '', basis = '', detail = '';
     if (mode === 'kinetic') {
       const mass = p.pcMass, vin = p.pcVin, vout = p.pcVout, eff = p.pcEffKinetic / 100, events = p.pcAnnualEvents;
-      if ([mass, vin, vout, eff, events].some((x) => !Number.isFinite(x) || x < 0) || mass <= 0 || mass > 1e7 || vin > 500 || vout > vin || eff > 1 || events > 1e12) return { ok: false, error: 'Use a positive mass ≤ 10,000,000 kg, entry speed 0–500 km/h, exit speed no greater than entry speed, efficiency 0–100%, and annual events ≤ 1e12. If the vehicle accelerates, this braking-recovery model is not applicable.' };
+      if ([mass, vin, vout, eff, events].some((x) => !Number.isFinite(x) || x < 0) || vin > 500 || vout > 500 || eff > 1) return { ok: false, error: 'Inputs must be finite and non-negative; vehicle speeds must be ≤ 500 km/h and efficiency must be 0–100%.' };
       const vi = vin / 3.6, vo = vout / 3.6;
       const grossJ = Math.max(0, .5 * mass * (vi * vi - vo * vo));
       const netJ = grossJ * eff;
@@ -277,22 +277,22 @@
       detail = `Gross kinetic-energy reduction ${fmt(grossJ / 1000)} kJ/event; estimated recovered ${fmt(primaryValue)} kJ/event at ${fmt(eff * 100, 1)}% net efficiency, with ${fmt(events)} assumed events/year. ${vout > vin ? 'Exit speed exceeds entry speed; recoverable deceleration energy is set to zero.' : ''}`;
     } else if (mode === 'wind') {
       const area = p.pcWindArea, rho = p.pcAirDensity, v = p.pcWindSpeed, cp = p.pcCp, eff = p.pcEffWind / 100, hours = p.pcWindHours;
-      if ([area, rho, v, cp, eff, hours].some((x) => !Number.isFinite(x) || x < 0) || area > 1e8 || rho <= 0 || rho > 2 || v > 120 || cp > .593 || eff > 1 || hours > 8760) return { ok: false, error: 'Check wind inputs: area ≤ 1e8 m², air density > 0 and ≤ 2 kg/m³, speed ≤ 120 m/s, Cp ≤ 0.593 (Betz limit), efficiency 0–100%, and operating hours ≤ 8760/year.' };
+      if ([area, rho, v, cp, eff, hours].some((x) => !Number.isFinite(x) || x < 0) || rho > 2 || v > 120 || cp > .593 || eff > 1 || hours > 8760) return { ok: false, error: 'Check wind inputs. Air density must be ≤ 2 kg/m³, Cp is capped at 0.593 (ideal Betz limit), efficiency must be 0–100% and hours/year ≤ 8760.' };
       primaryValue = .5 * rho * area * v ** 3 * cp * eff / 1000; primaryUnit = 'kW'; primaryLabel = 'Estimated electrical power'; annual = primaryValue * hours; formula = 'P = ½ρAv³Cpη'; basis = 'kW at entered wind speed';
       detail = `Using air density ${fmt(rho, 3)} kg/m³, area ${fmt(area)} m², speed ${fmt(v)} m/s, Cp ${fmt(cp, 3)}, electrical efficiency ${fmt(eff * 100, 1)}% and assumed operating hours ${fmt(hours)} h/year.`;
     } else if (mode === 'hydro') {
       const q = p.pcFlow, head = p.pcHead, eff = p.pcEffHydro / 100, rho = p.pcWaterDensity, hours = p.pcHydroHours;
-      if ([q, head, eff, rho, hours].some((x) => !Number.isFinite(x) || x < 0) || q > 100000 || head > 10000 || rho < 900 || rho > 1200 || eff > 1 || hours > 8760) return { ok: false, error: 'Hydraulic inputs out of range: flow 0–100,000 m³/s, net head 0–10,000 m, water density 900–1,200 kg/m³, efficiency 0–100%, and operating hours ≤ 8760/year.' };
+      if ([q, head, eff, rho, hours].some((x) => !Number.isFinite(x) || x < 0) || eff > 1 || hours > 8760) return { ok: false, error: 'Hydraulic inputs must be non-negative; efficiency must be 0–100% and operating hours/year ≤ 8760.' };
       primaryValue = rho * 9.80665 * q * head * eff / 1000; primaryUnit = 'kW'; primaryLabel = 'Estimated electrical power'; annual = primaryValue * hours; formula = 'P = ρgQHη'; basis = 'kW at entered flow/head';
       detail = `Using ρ=${fmt(rho)} kg/m³, g=9.80665 m/s², Q=${fmt(q, 4)} m³/s, net head ${fmt(head)} m, efficiency ${fmt(eff * 100, 1)}% and assumed operating hours ${fmt(hours)} h/year.`;
     } else if (mode === 'solar') {
       const irradiance = p.pcIrradiance, area = p.pcSolarArea, eff = p.pcSolarEff / 100, derate = p.pcSolarDerate / 100, sunHours = p.pcSunHours, days = p.pcSolarDays;
-      if ([irradiance, area, eff, derate, sunHours, days].some((x) => !Number.isFinite(x) || x < 0) || irradiance > 1600 || area > 1e8 || eff > 1 || derate > 1 || sunHours > 24 || days > 366 || sunHours * days > 8760) return { ok: false, error: 'Solar inputs out of range: irradiance ≤ 1,600 W/m², area ≤ 1e8 m², efficiency/derate 0–100%, peak-sun-hours ≤ 24/day, and annual equivalent sun hours ≤ 8,760.' };
+      if ([irradiance, area, eff, derate, sunHours, days].some((x) => !Number.isFinite(x) || x < 0) || irradiance > 1600 || eff > 1 || derate > 1 || sunHours > 24 || days > 366) return { ok: false, error: 'Solar inputs must be non-negative; efficiencies/derate must be 0–100%, sun hours/day ≤ 24 and days/year ≤ 366.' };
       primaryValue = irradiance * area * eff * derate / 1000; primaryUnit = 'kW'; primaryLabel = 'Estimated DC-equivalent power'; annual = primaryValue * sunHours * days; formula = 'P = G × A × ηmodule × derate'; basis = 'kW at entered irradiance';
       detail = `Using irradiance ${fmt(irradiance)} W/m², area ${fmt(area)} m², module efficiency ${fmt(eff * 100, 1)}%, system derate ${fmt(derate * 100, 1)}%, ${fmt(sunHours, 2)} assumed peak-sun-hours/day × ${fmt(days)} days/year.`;
     } else return { ok: false, error: 'Choose a supported model.' };
     if (!Number.isFinite(primaryValue) || !Number.isFinite(annual)) return { ok: false, error: 'Output is outside the supported numeric range. Reduce inputs and retry.' };
-    return { ok: true, mode, primaryValue, primaryUnit, primaryLabel, estimatedAnnualKWh: annual, formula, basis, detail, dataClass: 'user-input model estimate; not measured telemetry', resultBasis: mode === 'kinetic' ? 'kJ/event and annual kWh from uniform annual-event assumption' : mode === 'wind' ? 'Power at one entered wind speed; not a wind-distribution yield model' : mode === 'hydro' ? 'Power at entered flow and net head; seasonal/part-load changes excluded' : 'Power at entered irradiance and equivalent peak-sun-hours' };
+    return { ok: true, mode, primaryValue, primaryUnit, primaryLabel, estimatedAnnualKWh: annual, formula, basis, detail, dataClass: 'user-input model estimate; not measured telemetry' };
   }
 
   function calculateEnergy() {
@@ -330,14 +330,13 @@
     catch (error) { setText('pcReportState', `Download could not be started: ${error.message}`); return false; }
   }
   function snapshot() {
-    const snapshot = { application: 'IGERS POWERCORE', generatedAt: nowISO(), version: 'powercore-field-calibration-v2', browser: { online: navigator.onLine !== false, standalone: !!window.matchMedia?.('(display-mode: standalone)').matches, visibility: document.visibilityState }, integrity: currentServices.map((s) => ({ name: s.name, state: s.state, label: s.stateLabel, source: s.source, detail: s.detail, observedAt: s.observedAt ? new Date(s.observedAt).toISOString() : null, ageMilliseconds: s.age })), alerts: getAlerts().map((a) => ({ level: a.level, title: a.title, message: a.message, acknowledged: a.acknowledged, source: a.source })), energyModel: lastEnergy || { state: 'not calculated yet' }, fieldValidation: { scope: 'browser-local', metrics: fieldMetrics(readFieldRecords()), records: readFieldRecords() }, diagnostics: { runtimeErrors: runtimeErrors.slice(-20), localResourcesOnly: true }, notes: ['Unknown data sources are not classified as healthy.', 'Simulations are not live telemetry.', 'No credentials or form contents are included.'] };
+    const snapshot = { application: 'IGERS POWERCORE', generatedAt: nowISO(), version: 'powercore-12-upgrades-v2', browser: { online: navigator.onLine !== false, standalone: !!window.matchMedia?.('(display-mode: standalone)').matches, visibility: document.visibilityState }, integrity: currentServices.map((s) => ({ name: s.name, state: s.state, label: s.stateLabel, source: s.source, detail: s.detail, observedAt: s.observedAt ? new Date(s.observedAt).toISOString() : null, ageMilliseconds: s.age })), alerts: getAlerts().map((a) => ({ level: a.level, title: a.title, message: a.message, acknowledged: a.acknowledged, source: a.source })), energyModel: lastEnergy || { state: 'not calculated yet' }, diagnostics: { runtimeErrors: runtimeErrors.slice(-20), localResourcesOnly: true }, notes: ['Unknown data sources are not classified as healthy.', 'Simulations are not live telemetry.', 'No credentials or form contents are included.'] };
     writeStore(prefKeys.last, snapshot); setText('pcReportGenerated', timeLabel()); return snapshot;
   }
   function reportJSON() { const snap = snapshot(); const ok = download(`igers-powercore-snapshot-${new Date().toISOString().replace(/[:.]/g, '-')}.json`, 'application/json;charset=utf-8', JSON.stringify(snap, null, 2)); setText('pcReportState', ok ? 'JSON snapshot download started. Includes data class, timestamps, unknown states and assumptions.' : 'Download unavailable in this browser.'); audit('report exported', 'JSON status snapshot'); }
   function reportCSV() {
     const snap = snapshot(); const rows = [['Type','Name','State','Source','Detail','Observed At','Age ms']]; snap.integrity.forEach((s) => rows.push(['source',s.name,s.label,s.source,s.detail,s.observedAt || '',s.ageMilliseconds ?? ''])); snap.alerts.forEach((a) => rows.push(['alert',a.title,a.acknowledged ? 'acknowledged' : a.level,a.source,a.message,'','']));
     if (snap.energyModel && !snap.energyModel.error) rows.push(['model',snap.energyModel.mode,snap.energyModel.dataClass,'user inputs',`${snap.energyModel.formula}; ${snap.energyModel.detail || ''}`,snap.energyModel.generatedAt || '', '']);
-    (snap.fieldValidation?.records || []).forEach((r) => rows.push(['field-validation',r.site,r.model,'user-entered measured/predicted',`predicted=${r.predictedKwh} kWh; measured=${r.measuredKwh} kWh; signed_error=${r.signedErrorKwh} kWh; relative_error=${r.relativeErrorPct ?? 'undefined'}%; duration=${r.durationHours} h; basis=${r.measurementBasis}`,r.savedAt || '', '']));
     const csv = rows.map((r) => r.map((v) => { const text = String(v == null ? '' : v); return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text; }).join(',')).join('\r\n');
     const ok = download(`igers-powercore-snapshot-${new Date().toISOString().replace(/[:.]/g, '-')}.csv`, 'text/csv;charset=utf-8', csv); setText('pcReportState', ok ? 'CSV snapshot download started.' : 'Download unavailable in this browser.'); audit('report exported', 'CSV status snapshot');
   }
@@ -346,152 +345,6 @@
     document.body.classList.add('pc-printing-report'); audit('print report opened', section?.id || 'current section');
     const clean = () => { document.body.classList.remove('pc-printing-report'); $$('main>section[data-pc-print-active="true"]').forEach((el) => el.removeAttribute('data-pc-print-active')); window.removeEventListener('afterprint', clean); };
     window.addEventListener('afterprint', clean, { once: true }); window.print(); setTimeout(clean, 30000);
-  }
-
-  // Browser-local field validation: explicit measured-vs-predicted records with transparent error statistics.
-  const FIELD_CALIBRATION_KEY = 'igersPcFieldCalibrationV1';
-  const FIELD_CALIBRATION_LIMIT = 250;
-  function readFieldRecords() {
-    const raw = readStore(FIELD_CALIBRATION_KEY, []);
-    if (!Array.isArray(raw)) return [];
-    return raw.filter((r) => r && typeof r === 'object' && typeof r.site === 'string' && Number.isFinite(Number(r.predictedKwh)) && Number(r.predictedKwh) >= 0 && Number.isFinite(Number(r.measuredKwh)) && Number(r.measuredKwh) >= 0 && Number.isFinite(Number(r.durationHours)) && Number(r.durationHours) > 0).slice(0, FIELD_CALIBRATION_LIMIT);
-  }
-  function fieldMetrics(records) {
-    const rows = Array.isArray(records) ? records : [];
-    if (!rows.length) return { count: 0, maeKwh: null, rmseKwh: null, meanBiasKwh: null, mapePct: null, mapeCount: 0, aggregateBiasPct: null, absErrorSumKwh: 0, predictedSumKwh: 0, measuredSumKwh: 0 };
-    const errors = rows.map((r) => Number(r.measuredKwh) - Number(r.predictedKwh));
-    const absolute = errors.map(Math.abs);
-    const squared = errors.map((e) => e * e);
-    const mapes = rows.map((r, i) => Number(r.predictedKwh) > 0 ? Math.abs(errors[i]) / Number(r.predictedKwh) * 100 : null).filter((v) => Number.isFinite(v));
-    const predictedSumKwh = rows.reduce((sum, r) => sum + Number(r.predictedKwh), 0);
-    const measuredSumKwh = rows.reduce((sum, r) => sum + Number(r.measuredKwh), 0);
-    const absErrorSumKwh = absolute.reduce((sum, value) => sum + value, 0);
-    return {
-      count: rows.length,
-      maeKwh: absolute.reduce((sum, value) => sum + value, 0) / rows.length,
-      rmseKwh: Math.sqrt(squared.reduce((sum, value) => sum + value, 0) / rows.length),
-      meanBiasKwh: errors.reduce((sum, value) => sum + value, 0) / rows.length,
-      mapePct: mapes.length ? mapes.reduce((sum, value) => sum + value, 0) / mapes.length : null,
-      mapeCount: mapes.length,
-      aggregateBiasPct: predictedSumKwh > 0 ? (measuredSumKwh - predictedSumKwh) / predictedSumKwh * 100 : null,
-      absErrorSumKwh,
-      predictedSumKwh,
-      measuredSumKwh,
-      maeKw: rows.filter((r) => Number.isFinite(Number(r.durationHours)) && Number(r.durationHours) > 0).length ? rows.filter((r) => Number.isFinite(Number(r.durationHours)) && Number(r.durationHours) > 0).reduce((sum, r) => sum + Math.abs(Number(r.measuredKwh) - Number(r.predictedKwh)) / Number(r.durationHours), 0) / rows.filter((r) => Number.isFinite(Number(r.durationHours)) && Number(r.durationHours) > 0).length : null,
-      rmseKw: rows.filter((r) => Number.isFinite(Number(r.durationHours)) && Number(r.durationHours) > 0).length ? Math.sqrt(rows.filter((r) => Number.isFinite(Number(r.durationHours)) && Number(r.durationHours) > 0).reduce((sum, r) => sum + ((Number(r.measuredKwh) - Number(r.predictedKwh)) / Number(r.durationHours)) ** 2, 0) / rows.filter((r) => Number.isFinite(Number(r.durationHours)) && Number(r.durationHours) > 0).length) : null,
-      meanBiasKw: rows.filter((r) => Number.isFinite(Number(r.durationHours)) && Number(r.durationHours) > 0).length ? rows.filter((r) => Number.isFinite(Number(r.durationHours)) && Number(r.durationHours) > 0).reduce((sum, r) => sum + (Number(r.measuredKwh) - Number(r.predictedKwh)) / Number(r.durationHours), 0) / rows.filter((r) => Number.isFinite(Number(r.durationHours)) && Number(r.durationHours) > 0).length : null
-    };
-  }
-  function fmtMetric(value, digits = 3) { return Number.isFinite(value) ? value.toLocaleString(undefined, { maximumFractionDigits: digits, minimumFractionDigits: 0 }) : '—'; }
-  function setTodayDate() {
-    const input = $('pcFieldDate');
-    if (!input || input.value) return;
-    const d = new Date();
-    input.value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  }
-  function filteredFieldRecords(source = readFieldRecords()) {
-    const selectedModel = $('pcFieldMetricModel')?.value || 'kinetic';
-    const selectedSite = String($('pcFieldMetricSite')?.value || '').trim().toLocaleLowerCase('en');
-    return source.filter((r) => (selectedModel === 'all' || String(r.model || 'other') === selectedModel) && (!selectedSite || String(r.site || '').trim().toLocaleLowerCase('en') === selectedSite));
-  }
-  function renderFieldCalibration() {
-    const allRecords = readFieldRecords();
-    const records = filteredFieldRecords(allRecords);
-    const metrics = fieldMetrics(records);
-    setText('pcFieldRecordCount', `${metrics.count} / ${allRecords.length}`);
-    setText('pcFieldMae', metrics.maeKwh == null ? '— kWh' : `${fmtMetric(metrics.maeKwh)} kWh`);
-    setText('pcFieldRmse', metrics.rmseKwh == null ? '— kWh' : `${fmtMetric(metrics.rmseKwh)} kWh`);
-    setText('pcFieldBias', metrics.meanBiasKwh == null ? '— kWh' : `${metrics.meanBiasKwh > 0 ? '+' : ''}${fmtMetric(metrics.meanBiasKwh)} kWh`);
-    setText('pcFieldMape', metrics.mapePct == null ? '—' : `${fmtMetric(metrics.mapePct, 2)}% (${metrics.mapeCount})`);
-    setText('pcFieldBiasPct', metrics.aggregateBiasPct == null ? '—' : `${metrics.aggregateBiasPct > 0 ? '+' : ''}${fmtMetric(metrics.aggregateBiasPct, 2)}%`);
-    setText('pcFieldMaeKw', metrics.maeKw == null ? '— kW' : `${fmtMetric(metrics.maeKw)} kW`);
-    setText('pcFieldRmseKw', metrics.rmseKw == null ? '— kW' : `${fmtMetric(metrics.rmseKw)} kW`);
-    setText('pcFieldBiasKw', metrics.meanBiasKw == null ? '— kW' : `${metrics.meanBiasKw > 0 ? '+' : ''}${fmtMetric(metrics.meanBiasKw)} kW`);
-    const target = $('pcFieldValidationHistory');
-    if (!target) return;
-    if (!records.length) {
-      target.innerHTML = allRecords.length ? '<div class="pc-empty">No records match this model/site filter. Change the filter to inspect other saved tests.</div>' : '<div class="pc-empty">No field-validation records saved yet. A measured dataset is required before model accuracy can be assessed.</div>';
-      return;
-    }
-    target.innerHTML = records.slice(0, 30).map((r) => {
-      const error = Number(r.measuredKwh) - Number(r.predictedKwh);
-      const rel = Number(r.predictedKwh) > 0 ? error / Number(r.predictedKwh) * 100 : null;
-      const model = String(r.model || 'other').toUpperCase();
-      return `<div class="pc-field-record"><div><strong>${esc(r.site)}</strong><small>${esc(r.testDate || 'Date not entered')} · ${esc(model)} · ${fmtMetric(Number(r.durationHours), 3)} h</small><p>${esc(r.conditions || 'No extra test conditions recorded')}${r.uncertaintyPct == null ? '' : ` · Meter uncertainty ${fmtMetric(Number(r.uncertaintyPct), 2)}%`}</p></div><div class="pc-field-record-values">Predicted ${fmtMetric(Number(r.predictedKwh), 6)} kWh<br>Measured ${fmtMetric(Number(r.measuredKwh), 6)} kWh<br>Δ ${error > 0 ? '+' : ''}${fmtMetric(error, 6)} kWh${rel == null ? '' : ` · ${rel > 0 ? '+' : ''}${fmtMetric(rel, 2)}%`}</div><button type="button" class="pc-btn pc-field-remove" data-field-record-remove="${esc(r.id)}" aria-label="Remove record ${esc(r.site)}">Remove</button></div>`;
-    }).join('');
-    if (records.length > 30) target.insertAdjacentHTML('beforeend', `<div class="pc-note">Showing 30 newest matching records; metrics use all ${records.length} records in the current filter. ${allRecords.length} total record(s) are saved in this browser.</div>`);
-  }
-  function fieldCSV(records) {
-    const cols = ['id','testDate','site','model','durationHours','predictedKwh','measuredKwh','absoluteErrorKwh','signedErrorKwh','relativeErrorPct','uncertaintyPct','conditions','savedAt'];
-    const csvCell = (value) => { const text = String(value == null ? '' : value); return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text; };
-    return [cols, ...records.map((r) => cols.map((k) => r[k] ?? ''))].map((row) => row.map(csvCell).join(',')).join('\r\n');
-  }
-  function exportFieldRecords(kind) {
-    const records = filteredFieldRecords();
-    if (!records.length) { setText('pcFieldValidationMessage', 'No field records to export. Add a valid measured-versus-predicted record first.'); return; }
-    const date = new Date().toISOString().replace(/[:.]/g, '-');
-    const content = kind === 'csv'
-      ? fieldCSV(records)
-      : JSON.stringify({ application: 'IGERS POWERCORE', format: 'igers-field-calibration-v1', exportedAt: nowISO(), scope: { storage: 'browser-local records', model: $('pcFieldMetricModel')?.value || 'kinetic', site: String($('pcFieldMetricSite')?.value || '').trim() }, recordCount: records.length, metrics: fieldMetrics(records), interpretation: 'Metrics describe the imported/saved test set only. They are not certification or a guarantee of future field performance.', records }, null, 2);
-    const ok = download(`igers-field-calibration-${date}.${kind}`, kind === 'csv' ? 'text/csv;charset=utf-8' : 'application/json;charset=utf-8', content);
-    setText('pcFieldValidationMessage', ok ? `${records.length} field record(s) matching the current filter exported as ${kind.toUpperCase()}. Choose “All models” and leave site blank to export all records. Keep the file as your field-test evidence; local browser storage is not a shared backup.` : 'Export could not be started in this browser.');
-    audit('field calibration exported', `${records.length} records as ${kind.toUpperCase()}`);
-  }
-  function saveFieldRecord(event) {
-    event.preventDefault();
-    const form = $('pcFieldValidationForm');
-    if (!form || !form.reportValidity()) return;
-    const get = (name) => form.elements.namedItem(name);
-    const site = String(get('site')?.value || '').trim();
-    const model = String(get('model')?.value || 'other');
-    const testDate = String(get('testDate')?.value || '');
-    const durationHours = Number(get('durationHours')?.value);
-    const predictedKwh = Number(get('predictedKwh')?.value);
-    const measuredKwh = Number(get('measuredKwh')?.value);
-    const rawUncertainty = String(get('uncertaintyPct')?.value || '').trim();
-    const uncertaintyPct = rawUncertainty === '' ? null : Number(rawUncertainty);
-    const conditions = String(get('conditions')?.value || '').trim().slice(0, 600);
-    if (!site || !Number.isFinite(durationHours) || durationHours <= 0 || durationHours > 8760 || !Number.isFinite(predictedKwh) || predictedKwh < 0 || predictedKwh > 1e12 || !Number.isFinite(measuredKwh) || measuredKwh < 0 || measuredKwh > 1e12 || (uncertaintyPct !== null && (!Number.isFinite(uncertaintyPct) || uncertaintyPct < 0 || uncertaintyPct > 100))) {
-      setText('pcFieldValidationMessage', 'Record rejected: verify required values, energy in kWh, duration > 0 and ≤ 8760 h, energy ≤ 1e12 kWh, and meter uncertainty from 0–100%.'); return;
-    }
-    const errorKwh = measuredKwh - predictedKwh;
-    const record = {
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
-      savedAt: nowISO(), testDate, site, model, durationHours, predictedKwh, measuredKwh,
-      absoluteErrorKwh: Math.abs(errorKwh), signedErrorKwh: errorKwh,
-      relativeErrorPct: predictedKwh > 0 ? errorKwh / predictedKwh * 100 : null,
-      uncertaintyPct, conditions,
-      measurementBasis: 'user-entered field measurement; instrument and operating conditions not independently verified'
-    };
-    const records = [record, ...readFieldRecords()].slice(0, FIELD_CALIBRATION_LIMIT);
-    if (!writeStore(FIELD_CALIBRATION_KEY, records)) { setText('pcFieldValidationMessage', 'Could not save: this browser storage is unavailable or full. Export older records, free storage, or use a browser with local storage enabled.'); return; }
-    if ($('pcFieldMetricModel')) $('pcFieldMetricModel').value = model;
-    if ($('pcFieldMetricSite')) $('pcFieldMetricSite').value = '';
-    renderFieldCalibration();
-    form.reset(); setTodayDate();
-    setText('pcFieldValidationMessage', `Saved ${site}: absolute error ${fmtMetric(record.absoluteErrorKwh, 6)} kWh${record.relativeErrorPct == null ? ' (relative error undefined because predicted energy is zero)' : `; signed deviation ${record.relativeErrorPct > 0 ? '+' : ''}${fmtMetric(record.relativeErrorPct, 2)}%`}. Metrics are calculated across ${records.length} stored record(s). Records stay in this browser until exported or cleared.`);
-    audit('field calibration record saved', `${model} · ${record.absoluteErrorKwh} kWh absolute error`);
-  }
-  function bindFieldCalibration() {
-    setTodayDate();
-    $('pcFieldMetricModel')?.addEventListener('change', renderFieldCalibration);
-    $('pcFieldMetricSite')?.addEventListener('input', renderFieldCalibration);
-    $('pcFieldValidationForm')?.addEventListener('submit', saveFieldRecord);
-    $('pcFieldExportCsv')?.addEventListener('click', () => exportFieldRecords('csv'));
-    $('pcFieldExportJson')?.addEventListener('click', () => exportFieldRecords('json'));
-    $('pcFieldClear')?.addEventListener('click', () => {
-      if (!readFieldRecords().length) { setText('pcFieldValidationMessage', 'No field records to clear.'); return; }
-      if (!window.confirm('Delete all locally saved field-validation records from this browser? Export them first if they are needed for your engineering log.')) return;
-      removeStore(FIELD_CALIBRATION_KEY); renderFieldCalibration(); setText('pcFieldValidationMessage', 'All local field-validation records were cleared. Previously exported files are not affected.'); audit('field calibration records cleared', 'Local browser records');
-    });
-    $('pcFieldValidationHistory')?.addEventListener('click', (event) => {
-      const button = event.target.closest('[data-field-record-remove]');
-      if (!button) return;
-      const id = button.getAttribute('data-field-record-remove');
-      const records = readFieldRecords().filter((record) => record.id !== id);
-      writeStore(FIELD_CALIBRATION_KEY, records); renderFieldCalibration(); setText('pcFieldValidationMessage', 'Selected field record removed from this browser only.');
-    });
-    renderFieldCalibration();
   }
 
   const favoriteOptions = [
@@ -574,7 +427,7 @@
 
       const duplicateIds = [...document.querySelectorAll('[id]')].map((el) => el.id).filter((id, i, arr) => arr.indexOf(id) !== i);
       checks.push({ name: 'Unique DOM IDs', state: duplicateIds.length ? 'bad' : 'good', detail: duplicateIds.length ? [...new Set(duplicateIds)].slice(0, 5).join(', ') : 'No duplicate IDs detected' });
-      const criticalSections = ['home','weather','seismic3d','airtraffic','liveTraffic3d','airDefense3d','borderMonitor','satelliteMonitor','energyLiveUpdate','analytics','systemControl','commandCenter','engineeringLab','igxMagazine','operationsHealth'];
+      const criticalSections = ['home','weather','seismic3d','airtraffic','liveTraffic3d','airDefense3d','borderMonitor','satelliteMonitor','energyLiveUpdate','analytics','systemControl','commandCenter','engineeringLab','operationsHealth'];
       const absent = criticalSections.filter((id) => !$(id));
       checks.push({ name: 'Core / upgrade sections', state: absent.length ? 'bad' : 'good', detail: absent.length ? `Missing: ${absent.join(', ')}` : `${criticalSections.length} sections present` });
       const scriptNames = ['section-navigation.js','airport-runway-sim.js','border-monitor.js','nasa-gibs-bd.js','system-master-control.js','powercore-command-center.js'];
@@ -583,7 +436,7 @@
       }));
       checks.push({ name: 'Core script references', state: missingScripts.length ? 'bad' : 'good', detail: missingScripts.length ? `Missing tags: ${missingScripts.join(', ')}` : `${scriptNames.length} required script tags present` });
 
-      const sameOriginFiles = ['powercore-command-center.css','powercore-command-center.js','data/bangladesh-boundary-fallback.geojson','sw.js','manifest.webmanifest','magazine/IGERS-BD-01_Professional_Engineering_Magazine.pdf'];
+      const sameOriginFiles = ['powercore-command-center.css','powercore-command-center.js','data/bangladesh-boundary-fallback.geojson','sw.js','manifest.webmanifest'];
       const results = await Promise.all(sameOriginFiles.map(async (file) => {
         const controller = typeof AbortController === 'function' ? new AbortController() : null;
         const timer = window.setTimeout(() => controller?.abort(), 8000);
@@ -595,8 +448,6 @@
         } finally { window.clearTimeout(timer); }
       }));
       results.forEach((result) => checks.push({ name: `Local resource: ${result.file}`, state: result.ok ? 'good' : 'bad', detail: result.ok ? `HTTP ${result.status}` : `Request failed (${result.status})` }));
-      const modelTests = runCalculationSelfTests();
-      checks.push({ name: 'Engineering calculation self-tests', state: modelTests.failed ? 'bad' : 'good', detail: `${modelTests.passed}/${modelTests.total} deterministic unit/value tests passed${modelTests.failed ? `; failed: ${modelTests.failed}` : ''}. These validate formulas, not field accuracy.` });
       const swSupported = 'serviceWorker' in navigator;
       checks.push({ name: 'Service Worker API', state: swSupported ? 'good' : 'warn', detail: swSupported ? 'Browser supports the API; registration result is checked separately.' : 'This context cannot register a service worker.' });
       checks.push({ name: 'External provider status', state: 'unknown', detail: 'Not probed by this static check; inspect each panel’s own source / freshness indicator.' });
@@ -657,7 +508,6 @@
     ['pcMass','pcVin','pcVout','pcEffKinetic','pcAnnualEvents','pcWindArea','pcAirDensity','pcWindSpeed','pcCp','pcEffWind','pcWindHours','pcFlow','pcHead','pcEffHydro','pcWaterDensity','pcHydroHours','pcIrradiance','pcSolarArea','pcSolarEff','pcSolarDerate','pcSunHours','pcSolarDays'].forEach((id) => $(id)?.addEventListener('input', () => { setText('pcEnergyConfidence', 'INPUTS CHANGED · RECALCULATE'); }));
     $('pcCalculateEnergy')?.addEventListener('click', calculateEnergy); $('pcResetEnergy')?.addEventListener('click', resetEnergyInputs);
     $('pcReportJson')?.addEventListener('click', reportJSON); $('pcReportCsv')?.addEventListener('click', reportCSV); $('pcReportPrint')?.addEventListener('click', (e) => printReport(e.currentTarget));
-    $('igxMagFullscreen')?.addEventListener('click', async () => { const frame = $('igxMagazineFrame'); if (!frame) return; try { if (frame.requestFullscreen) await frame.requestFullscreen(); else window.open(frame.src, '_blank', 'noopener,noreferrer'); } catch (_) { window.open(frame.src, '_blank', 'noopener,noreferrer'); } audit('magazine reader opened fullscreen', 'PDF viewer; no data changed'); });
     $('pcPinFavorite')?.addEventListener('click', pinFavorite);
     $('pcClearFavorites')?.addEventListener('click', () => { removeStore(prefKeys.favorites); renderFavorites([]); setText('pcPersonalizeState', 'Pinned panels cleared from this browser.'); audit('favorites cleared', 'Local preferences'); });
     const applyCompact = (enabled) => { document.body.classList.toggle('pc-compact-ui', !!enabled); if ($('pcCompactToggle')) { $('pcCompactToggle').setAttribute('aria-pressed', String(!!enabled)); $('pcCompactToggle').textContent = enabled ? 'Disable compact layout' : 'Enable compact layout'; } if ($('pcCompactModeToggle')) $('pcCompactModeToggle').checked = !!enabled; writeStore(prefKeys.compact, !!enabled); };
@@ -707,28 +557,12 @@
     drawMap();
   }
 
-  function runCalculationSelfTests() {
-    const cases = [
-      { name: 'kinetic unit conversion', mode: 'kinetic', p: { pcMass: 1000, pcVin: 36, pcVout: 0, pcEffKinetic: 100, pcAnnualEvents: 1 }, check: (r) => r.ok && Math.abs(r.primaryValue - 50) < 1e-9 && Math.abs(r.estimatedAnnualKWh - (50000 / 3600000)) < 1e-12 },
-      { name: 'wind power units', mode: 'wind', p: { pcWindArea: 1, pcAirDensity: 1, pcWindSpeed: 2, pcCp: .5, pcEffWind: 100, pcWindHours: 8760 }, check: (r) => r.ok && Math.abs(r.primaryValue - .002) < 1e-12 && Math.abs(r.estimatedAnnualKWh - 17.52) < 1e-9 },
-      { name: 'hydro power units', mode: 'hydro', p: { pcFlow: .001, pcHead: 10, pcEffHydro: 100, pcWaterDensity: 1000, pcHydroHours: 1 }, check: (r) => r.ok && Math.abs(r.primaryValue - .0980665) < 1e-9 && Math.abs(r.estimatedAnnualKWh - .0980665) < 1e-9 },
-      { name: 'solar equivalent hours', mode: 'solar', p: { pcIrradiance: 1000, pcSolarArea: 1, pcSolarEff: 20, pcSolarDerate: 100, pcSunHours: 1, pcSolarDays: 365 }, check: (r) => r.ok && Math.abs(r.primaryValue - .2) < 1e-12 && Math.abs(r.estimatedAnnualKWh - 73) < 1e-9 },
-      { name: 'reject kinetic acceleration input', mode: 'kinetic', p: { pcMass: 1000, pcVin: 10, pcVout: 20, pcEffKinetic: 50, pcAnnualEvents: 1 }, check: (r) => !r.ok },
-      { name: 'reject super-Betz Cp', mode: 'wind', p: { pcWindArea: 2, pcAirDensity: 1.225, pcWindSpeed: 5, pcCp: .7, pcEffWind: 80, pcWindHours: 100 }, check: (r) => !r.ok },
-      { name: 'reject invalid water density', mode: 'hydro', p: { pcFlow: .1, pcHead: 2, pcEffHydro: 70, pcWaterDensity: 1300, pcHydroHours: 200 }, check: (r) => !r.ok },
-      { name: 'field error metrics', mode: 'metric', check: () => { const m = fieldMetrics([{predictedKwh: 10, measuredKwh: 12, durationHours: 2}, {predictedKwh: 20, measuredKwh: 18, durationHours: 1}]); return Math.abs(m.maeKwh - 2) < 1e-12 && Math.abs(m.rmseKwh - 2) < 1e-12 && Math.abs(m.meanBiasKwh) < 1e-12 && Math.abs(m.mapePct - 15) < 1e-12 && Math.abs(m.maeKw - 1.5) < 1e-12 && Math.abs(m.meanBiasKw + .5) < 1e-12; } }
-    ];
-    let passed = 0; const failed = [];
-    cases.forEach((test) => { try { const result = test.mode === 'metric' ? null : calculatePowerModel(test.mode, test.p); if (test.check(result)) passed += 1; else failed.push(test.name); } catch (_) { failed.push(test.name); } });
-    return { total: cases.length, passed, failed: failed.join(', ') };
-  }
-
-  // Safe read-only helpers: no credentials or mutable internals exposed. Values here are model/test outputs, not sensor telemetry.
-  window.IGERSPowercoreSuite = Object.freeze({ version: 'powercore-field-calibration-v2', classifyText, calculatePowerModel, calculateFieldMetrics: fieldMetrics, runCalculationSelfTests, validateCoordinate: (row) => { const lat = row && (row.lat ?? row.latitude ?? row.lat_deg); const lon = row && (row.lon ?? row.lng ?? row.longitude ?? row.lon_deg); return validNum(lat) && validNum(lon) && Number(lat) >= -90 && Number(lat) <= 90 && Number(lon) >= -180 && Number(lon) <= 180; } });
+  // Safe read-only helpers: useful for diagnostics/testing; no provider credentials or mutable module internals exposed.
+  window.IGERSPowercoreSuite = Object.freeze({ version: 'powercore-12-upgrades-v2', classifyText, calculatePowerModel, validateCoordinate: (row) => { const lat = row && (row.lat ?? row.latitude ?? row.lat_deg); const lon = row && (row.lon ?? row.lng ?? row.longitude ?? row.lon_deg); return validNum(lat) && validNum(lon) && Number(lat) >= -90 && Number(lat) <= 90 && Number(lon) >= -180 && Number(lon) <= 180; } });
 
   function init() {
     if (!$('commandCenter') || !$('engineeringLab') || !$('operationsHealth')) return;
-    bindEvents(); bindFieldCalibration(); collectServices(); loadFavorites(); renderAuditOnStart(); updateRuntimeStatus(); updateServiceWorkerState(); drawSimulationState(); calculateEnergy(); loadGeography();
+    bindEvents(); collectServices(); loadFavorites(); renderAuditOnStart(); updateRuntimeStatus(); updateServiceWorkerState(); drawSimulationState(); calculateEnergy(); loadGeography();
     const observer = ('IntersectionObserver' in window) ? new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.target.id === 'pcGlobeCanvas') {
