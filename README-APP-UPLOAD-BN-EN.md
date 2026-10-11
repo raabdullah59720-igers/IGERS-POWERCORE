@@ -1,35 +1,39 @@
-# IGERS POWERCORE — Smart App Shell Update (2026-10-11)
+# IGERS POWERCORE — Smart App V2
 
-## বাংলা: GitHub-এ আপলোড
+**Release:** 2026-10-11 · App shell `2.0.0`
 
-এই প্যাকেজে মূল অ্যাপের বিদ্যমান প্যানেল ও JavaScript মডিউল রেখে নতুন app-style dashboard, workspace/category view, focused panel navigation এবং responsive styling যোগ করা হয়েছে। মূল প্যানেল/কন্ট্রোল সরানো হয়নি।
+## বাংলা: GitHub Pages-এ আপলোড
 
-1. ZIP ফাইলটি কম্পিউটারে Extract করুন।
-2. Extract করা ফোল্ডারের **সব ফাইল ও ফোল্ডার** একসঙ্গে GitHub repository-এর root-এ আপলোড করুন। ZIP ফাইলটিকে নিজে repository-তে রেখে দিলেই ওয়েবসাইট আপডেট হবে না।
-3. একই নামের ফাইল overwrite করার সময় GitHub-এর পরিবর্তন নিশ্চিত করুন। Repository-এর অন্য অপ্রাসঙ্গিক ফাইল মুছবেন না।
-4. GitHub repository → **Settings → Pages**-এ গিয়ে `Deploy from a branch`, branch `main`, folder `/ (root)` নির্বাচন করুন—যদি ইতিমধ্যে এভাবেই সেট করা থাকে, পরিবর্তনের প্রয়োজন নেই।
-5. Deploy শেষ হলে hard refresh করুন (`Ctrl + Shift + R`)। Service-worker revision-ও আপডেট করা হয়েছে।
+এই সংস্করণে মূল অ্যাপের ওপর premium responsive dashboard, ৭টি workspace, unique panel list, global panel search এবং one-level Back navigation যোগ করা হয়েছে। এটি নতুন করে বানানো আলাদা অ্যাপ নয়—মূল `IGERS-POWERCORE-main (14).zip`-এর ওপর করা সংযোজন।
 
-এই deploy package-এ **৮৫টি ফাইল** আছে—browser uploader-এর ১০০-ফাইল সীমার নিচে।
+1. ZIP extract করুন। Extract করা ZIP-এর ভেতরের **সব ফাইল ও ফোল্ডার** repository-এর root-এ আপলোড করুন; `index.html` যেন root-এই থাকে।
+2. একই নামের ফাইল overwrite করুন। Repository-এর অন্য কোনো অপ্রাসঙ্গিক ফাইল মুছবেন না।
+3. GitHub → **Settings → Pages**-এ বর্তমান deployment configuration ঠিক থাকলে সেটি অপরিবর্তিত রাখুন। সাধারণ GitHub Pages setup হলে `main` branch এবং `/ (root)` ব্যবহার করুন।
+4. Deployment শেষ হলে browser-এ hard refresh দিন: `Ctrl + Shift + R`। পুরোনো UI দেখালে site tab বন্ধ করে পুনরায় খুলুন, কারণ browser/service worker পুরোনো asset ধরে রাখতে পারে।
 
-## English: Upload instructions
+এই package-এ **৮৫টি ফাইল** আছে—এটি ১০০-ফাইলের upload সীমার নিচে। ZIP ফাইলটিকে repository-তে একা রেখে দিলে deploy হবে না; extract করা contents upload করতে হবে।
 
-1. Extract this ZIP locally.
-2. Upload **all files and folders inside the extracted folder** to the root of your existing GitHub Pages repository. Uploading the ZIP as a file alone will not deploy the site.
-3. Overwrite matching filenames when prompted, but do not delete unrelated repository files.
-4. In **Settings → Pages**, use `Deploy from a branch` → `main` → `/ (root)` if that is your existing setup.
-5. After deployment, hard-refresh with `Ctrl + Shift + R`.
+## নেভিগেশন
 
-## What changed
+- Dashboard-এ ৭টি workspace আছে; workspace খুললে তার panel list দেখা যাবে।
+- একই top-level panel একাধিক পুরোনো menu anchor-এ থাকলে সেটি একবারই দেখানো হয়। যেমন Concept-এর ভেতরের Thesis 3D Lab ও Footstep Energy (FEAS) alias একই card-এ group করা হয়েছে, এবং global search দিয়ে নির্দিষ্ট sub-view-এ যাওয়া যায়।
+- **Back** প্যানেল থেকে আগের workspace বা আগের panel-এ ফেরে; workspace থেকে dashboard-এ ফেরে। Direct panel URL খুললে Back অ্যাপের dashboard-এ ফেরে। Browser Back/Forward-ও state restore করে।
+- Dashboard finder-এ `Ctrl + K` (Mac-এ `Cmd + K`) চাপুন; `/`-ও finder focus করে।
+- Language/theme controls রাখা হয়েছে। ছোট পর্দায় menu button চাপলে controls খুলবে।
 
-- Added a modern, responsive launcher dashboard.
-- Grouped existing navigation into seven workspaces.
-- Added feature lists inside each workspace and a back-to-workspaces control.
-- Existing panels, original IDs, calculations, module scripts, theme and access-gate code are retained.
-- Shared access password remains `MIM2005` in the existing client-side gate code.
+## কী রাখা হয়েছে
 
-## Important limitations
+- মূল HTML sections, IDs, panel content, JavaScript modules, calculations, map/monitor modules, settings controls, legal pages এবং access-gate code source-এ রাখা হয়েছে।
+- Existing modules সরানো বা নতুন করে প্রতিস্থাপন করা হয়নি। App shell মূল section-গুলো hide/show ও navigation করে; source content মুছে না।
+- Service-worker revision bump করা হয়েছে, যাতে নতুন UI cache refresh পায়।
 
-- The original archive referenced a missing Bangladesh boundary fallback file. A **generalized Natural Earth 1:110m public-domain outline** has been supplied so the build and map fallback can load. It is for broad visual context only—not legal border demarcation, navigation or operational decisions.
-- Live external feeds depend on each provider, network, browser CORS policy and any required API configuration. A green/live status should only be trusted when the panel itself confirms a successful provider response.
-- Static checks passed, but a full interactive Chromium click-through could not be completed in the build environment. Review the app in your own browser after deployment.
+## সীমাবদ্ধতা ও গুরুত্বপূর্ণ নোট
+
+- Original archive-এর map fallback path-এ অনুপস্থিত থাকা `data/bangladesh-boundary-fallback.geojson` যোগ করা হয়েছে। এটি generalized Natural Earth 1:110m outline—শুধু broad visual context-এর জন্য; legal boundary, navigation বা operational decision-এর জন্য নয়।
+- Live feeds প্রতিটি provider, network, CORS/API configuration এবং data freshness-এর ওপর নির্ভর করে। Dashboard-এর `INTERFACE READY` শুধু UI shell বোঝায়, সব external feed live—এমন দাবি নয়।
+- Access gate client-side UI gate; এটি server-side authentication-এর বিকল্প নয়।
+- পাশে দেওয়া পূর্ণ source backup: `IGERS-POWERCORE-FULL-SOURCE-V2-2026-10-11.zip`। QA details এই package-এর `QA-REPORT-2026-10-11.md`-এ আছে।
+
+## English
+
+Extract this ZIP and upload all contents into the root of your existing GitHub Pages repository (the `index.html` file must be at the repository root). Overwrite matching filenames, but do not delete unrelated repository files. Keep your existing Pages configuration and hard-refresh after deployment. This compact deploy ZIP contains 85 files. The full editable source backup is provided separately.
