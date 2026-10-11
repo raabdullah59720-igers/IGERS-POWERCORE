@@ -75,6 +75,61 @@
         { p:[520,430,565,455,650,486,760,516], c:'#8af3bf', n:5, o:.12 },
         { p:[760,516,822,516,870,492,918,462], c:'#54ddff', n:4, o:.32 }
       ], nodes:[[135,333,'#54ddff'],[965,334,'#78efff'],[520,430,'#54ddff'],[760,516,'#8af3bf'],[918,462,'#8af3bf']]
+    },
+    bridge: {
+      src: 'thesis-concept-bridge-toll.svg', title: 'Bridge, overpass and toll-plaza recovery node',
+      label: 'CIVIL INFRASTRUCTURE · SITE-SPECIFIC', desc: 'Concept-stage arrangement for selected bridge, overpass or toll-plaza points: possible low-profile recovery interface, conditioned electrical output and local lighting/monitoring loads. Structural, road-safety and net-energy effects require independent validation.',
+      model: 'BRIDGE / TOLL CONCEPT', phases: ['TRAFFIC MOVEMENT → INTERFACE', 'INTERFACE → CONVERSION', 'CONVERSION → POWER CONDITIONING', 'CONDITIONING → STORAGE', 'STORAGE → LOCAL LOADS'],
+      paths: [
+        { p:[180,260,260,275,332,322,422,360], c:'#54ddff', n:5, o:0 },
+        { p:[420,360,520,398,664,385,770,340], c:'#78efff', n:4, o:.19 },
+        { p:[770,340,835,335,891,367,952,385], c:'#8af3bf', n:4, o:.38 },
+        { p:[952,385,966,338,975,278,985,223], c:'#54ddff', n:3, o:.12 }
+      ], nodes:[[180,260,'#54ddff'],[422,360,'#78efff'],[770,340,'#8af3bf'],[952,385,'#8af3bf'],[985,223,'#54ddff']]
+    },
+    footstep: {
+      src: 'thesis-concept-footstep.svg', title: 'Footstep energy and pedestrian-load concept',
+      label: 'LOW-POWER SOURCE · FIELD TEST REQUIRED', desc: 'Illustrates modular pedestrian tiles linked to a transducer, power conditioning and storage for carefully selected low-power loads such as pathway lights or signage. Yield, accessibility, trip risk, durability and maintenance must be tested.',
+      model: 'FOOTSTEP / FEAS CONCEPT', phases: ['FOOTSTEP → TILE DISPLACEMENT', 'TILE → TRANSDUCER', 'TRANSDUCER → CONDITIONING', 'CONDITIONING → STORAGE', 'STORAGE → LOW-POWER LOADS'],
+      paths: [
+        { p:[285,315,350,325,408,365,488,385], c:'#54ddff', n:5, o:0 },
+        { p:[488,385,561,400,652,390,730,351], c:'#78efff', n:4, o:.2 },
+        { p:[730,351,806,360,874,388,941,400], c:'#8af3bf', n:4, o:.4 },
+        { p:[941,400,954,350,966,306,980,263], c:'#54ddff', n:3, o:.13 }
+      ], nodes:[[285,315,'#54ddff'],[488,385,'#78efff'],[730,351,'#8af3bf'],[941,400,'#8af3bf'],[980,263,'#54ddff']]
+    },
+    thermal: {
+      src: 'thesis-concept-thermal-canopy.svg', title: 'Solar canopy and heat-mitigation concept',
+      label: 'SOLAR + PASSIVE THERMAL DESIGN', desc: 'Combines photovoltaic shade, reflective/shaded surfaces, airflow and optional storage near a roadside shelter. Heat mitigation depends on materials, orientation, shading and site conditions; heat absorption alone is not treated as electrical generation.',
+      model: 'SOLAR / THERMAL CONCEPT', phases: ['SOLAR RADIATION → PV / SHADE', 'PV → POWER CONDITIONING', 'SHADE + SURFACES → THERMAL MITIGATION', 'CONDITIONING → STORAGE', 'STORAGE → LOCAL LOADS'],
+      paths: [
+        { p:[845,160,785,205,716,245,650,287], c:'#ffbf73', n:4, o:0 },
+        { p:[650,287,605,310,570,343,535,372], c:'#54ddff', n:4, o:.23 },
+        { p:[535,372,626,395,716,395,823,385], c:'#8af3bf', n:4, o:.12 },
+        { p:[823,385,897,360,952,307,980,257], c:'#54ddff', n:3, o:.36 }
+      ], nodes:[[845,160,'#ffbf73'],[650,287,'#54ddff'],[535,372,'#54ddff'],[823,385,'#8af3bf'],[980,257,'#8af3bf']]
+    },
+    vibration: {
+      src: 'thesis-concept-vibration.svg', title: 'Bridge vibration and noise-mitigation concept',
+      label: 'MONITORING + SEPARATE ACOUSTIC DESIGN', desc: 'Illustrates structural vibration monitoring, a possible low-power transducer, conditioning and storage. Noise reduction requires an independently validated acoustic design; vibration-energy recovery must be measured to establish whether it is worthwhile.',
+      model: 'VIBRATION / RESILIENCE CONCEPT', phases: ['STRUCTURAL VIBRATION → SENSOR', 'SENSOR / TRANSDUCER → SIGNAL', 'SIGNAL → CONDITIONING', 'CONDITIONING → STORAGE', 'STORAGE → MONITORING LOADS'],
+      paths: [
+        { p:[390,175,432,190,467,225,520,255], c:'#ffbf73', n:4, o:0 },
+        { p:[520,255,530,307,549,354,590,385], c:'#54ddff', n:4, o:.2 },
+        { p:[590,385,662,405,735,395,805,365], c:'#78efff', n:4, o:.34 },
+        { p:[805,365,870,362,922,389,975,413], c:'#8af3bf', n:4, o:.1 }
+      ], nodes:[[390,175,'#ffbf73'],[520,255,'#54ddff'],[590,385,'#78efff'],[805,365,'#8af3bf'],[975,413,'#8af3bf']]
+    },
+    station: {
+      src: 'thesis-concept-resilience-station.svg', title: 'Border-side radar and inspection-drone station concept',
+      label: 'HIGH-LEVEL CONCEPT · NON-OPERATIONAL', desc: 'A conceptual border-side infrastructure service station combining solar-assisted power, storage, a generic radar/sensor mast and an inspection-drone dock for civil infrastructure inspection and environmental monitoring. This is not a live feed, tactical deployment plan or coverage model.',
+      model: 'RESILIENCE / SERVICE NODE', phases: ['PV / RECOVERED INPUT → CONDITIONING', 'CONDITIONING → BESS', 'BESS → SENSORS / COMMS', 'INSPECTION ASSET → SERVICE DOCK', 'MONITORING → MAINTENANCE WORKFLOW'],
+      paths: [
+        { p:[430,220,460,257,495,300,537,338], c:'#54ddff', n:4, o:0 },
+        { p:[537,338,620,363,691,350,761,330], c:'#8af3bf', n:4, o:.2 },
+        { p:[761,330,810,341,860,365,905,383], c:'#54ddff', n:4, o:.34 },
+        { p:[704,182,727,218,746,254,762,286], c:'#78efff', n:3, o:.1 }
+      ], nodes:[[430,220,'#54ddff'],[537,338,'#54ddff'],[761,330,'#8af3bf'],[905,383,'#8af3bf'],[704,182,'#78efff']]
     }
   };
 

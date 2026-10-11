@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 620" role="img" aria-labelledby="title desc">
+<title id="title">IGERS roadway, bridge and toll recovery concept</title><desc id="desc">Concept illustration of bridge and toll-plaza vehicle movement, a possible low-profile recovery interface, protected power conversion and local storage. Illustrative only; road safety and net energy must be validated.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0c2635"/><stop offset="1" stop-color="#061018"/></linearGradient>
+ <linearGradient id="deck" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#526b78"/><stop offset="1" stop-color="#243b49"/></linearGradient>
+ <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8cf4ff"/><stop offset="1" stop-color="#168fb7"/></linearGradient>
+ <linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a5ffd4"/><stop offset="1" stop-color="#228f79"/></linearGradient>
+ <linearGradient id="pv" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#43e7ff"/><stop offset="1" stop-color="#174a80"/></linearGradient>
+ <linearGradient id="warm" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe2a0"/><stop offset="1" stop-color="#ff8f58"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <pattern id="grid" width="42" height="42" patternUnits="userSpaceOnUse"><path d="M42 0H0V42" fill="none" stroke="#3e8ca0" stroke-opacity=".22" stroke-width="1"/></pattern>
+</defs>
+<rect width="1100" height="620" rx="26" fill="url(#bg)"/><rect width="1100" height="620" rx="26" fill="url(#grid)"/>
+<g opacity=".3" stroke="#347184" fill="none"><path d="M35 480L390 270 760 480 410 610Z"/><path d="M35 420L390 210 760 420 410 550Z"/><path d="M35 360L390 150 760 360 410 490Z"/></g>
+<!-- bridge deck -->
+<g transform="translate(45 165)"><polygon points="0 135 395 -48 665 85 270 270" fill="#334d5a" stroke="#6de8ff" stroke-width="2"/><polygon points="0 135 270 270 270 304 0 169" fill="#172d39"/><polygon points="270 270 665 85 665 119 270 304" fill="#223c49"/><path d="M32 140L267 258M120 99L354 217M210 58L443 176M300 17L532 134M390 -23L622 94" stroke="#d8eff4" stroke-opacity=".62" stroke-width="4" stroke-dasharray="20 18"/><path d="M90 90L90 230M580 35L580 159" stroke="#6f919d" stroke-width="12"/><path d="M90 230L580 159" stroke="#305968" stroke-width="8"/>
+<!-- recovery modules -->
+<g transform="translate(250 142)"><polygon points="0 0 58 -28 105 -6 47 23" fill="#0a1e2a" stroke="#55ddff" stroke-width="2"/><path d="M7 0L48 20M29 -10L70 10M51 -20L92 0" stroke="#8af3bf" stroke-width="3"/><text x="54" y="44" fill="#dffaff" font-family="system-ui" font-size="12" text-anchor="middle">RECOVERY INTERFACE</text></g>
+<!-- car -->
+<g transform="translate(135 85) rotate(27)"><path d="M-42 4L-31 -15L2 -18L23 -2L42 2L42 20L-42 20Z" fill="url(#cyan)" stroke="#d4fbff" stroke-width="2"/><path d="M-25 -13L0 -14L15 0L-32 0Z" fill="#123747" stroke="#8cecff"/><circle cx="-24" cy="21" r="9" fill="#08131c" stroke="#b3eff8" stroke-width="3"/><circle cx="26" cy="21" r="9" fill="#08131c" stroke="#b3eff8" stroke-width="3"/></g>
+<!-- toll canopy -->
+<g transform="translate(535 10)"><polygon points="0 42 100 0 215 48 115 91" fill="#123448" stroke="#6ce9ff" stroke-width="2"/><polygon points="18 42 100 9 197 49 115 82" fill="url(#pv)" stroke="#9cefff"/><path d="M35 47L115 82M62 35L143 70M91 24L171 58M75 19L151 52M118 11L194 44" stroke="#b1f4ff" stroke-opacity=".65"/><path d="M34 56V111M115 96V147M196 61V113" stroke="#5c8694" stroke-width="7"/><text x="111" y="-10" fill="#9befff" font-family="system-ui" font-size="15" text-anchor="middle" letter-spacing="1.5">TOLL / BRIDGE NODE</text></g></g>
+<!-- conversion and storage -->
+<g transform="translate(760 260)" filter="url(#glow)"><path d="M0 25L75 -12 152 25 77 63Z" fill="#163c4b" stroke="#77efff" stroke-width="2"/><path d="M0 25L77 63V138L0 100Z" fill="#102b38" stroke="#428fa2"/><path d="M77 63L152 25V100L77 138Z" fill="#214654" stroke="#58b6c8"/><rect x="39" y="35" width="75" height="30" rx="5" fill="#061720" stroke="#8af3bf"/><path d="M49 51L60 42 69 52 80 42 96 50" stroke="#8af3bf" stroke-width="3" fill="none"/><text x="77" y="158" fill="#c6f7ff" text-anchor="middle" font-size="13" font-family="system-ui">POWER CONDITIONER</text></g>
+<g transform="translate(935 295)"><polygon points="0 24 45 0 91 22 46 47" fill="#224d47" stroke="#8af3bf" stroke-width="2"/><polygon points="0 24 46 47 46 128 0 105" fill="#17332f" stroke="#458d7a"/><polygon points="46 47 91 22 91 104 46 128" fill="#24574b" stroke="#65c6a5"/><path d="M13 43L33 53V77L13 67ZM57 56L79 45V69L57 80M13 75L33 85V98L13 88M57 89L79 78V93L57 104" fill="#071b1a" stroke="#8af3bf"/><text x="46" y="151" fill="#a5ffd4" text-anchor="middle" font-family="system-ui" font-size="12">BESS</text></g>
+<g fill="none" stroke-linecap="round" stroke-width="4"><path d="M385 345C500 402 657 400 760 334" stroke="#55ddff" stroke-dasharray="8 10"/><path d="M910 366C927 357 933 345 946 331" stroke="#8af3bf" stroke-dasharray="8 10"/></g>
+<g fill="#c4f8ff" font-family="system-ui" font-size="13"><text x="455" y="410">CONDITIONED ENERGY</text><text x="852" y="482" text-anchor="middle">LOCAL LIGHTING / MONITORING</text></g>
+<g transform="translate(860 490)" stroke="#8af3bf" stroke-width="3" fill="none"><path d="M-75 28V-6M-85 4L-75 -14 -65 4M-95 28H-55L-65 40H-85Z"/><path d="M0 28V-6M-10 4L0 -14 10 4M-20 28H20L10 40H-10Z"/><path d="M75 28V-6M65 4L75 -14 85 4M55 28H95L85 40H65Z"/></g>
+<g><rect x="30" y="560" width="1040" height="36" rx="11" fill="#06131b" stroke="#285568"/><text x="550" y="583" fill="#8edfea" font-family="system-ui,sans-serif" font-size="12.5" text-anchor="middle" letter-spacing="1.7">CONCEPT STAGE · NOT TO SCALE · NO MEASURED OUTPUT OR FIELD VALIDATION IMPLIED</text></g>
+</svg>

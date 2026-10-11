@@ -1,0 +1,20 @@
+IGERS POWERCORE — GITHUB PAGES UPLOAD PACKAGE
+Release date: 12 October 2026
+
+এই ZIP-টি GitHub-এর একবারে ৯৮টির কম ফাইল আপলোড করার সীমা মাথায় রেখে তৈরি। ZIP-এর ভিতরে 45টি app runtime file এবং 3টি maintenance/test tool-সহ মোট 50টি ফাইল একই root level-এ আছে; আলাদা data/ বা magazine/ folder লাগবে না।
+
+UPLOAD STEPS
+1. ZIP Extract করুন।
+2. Extract করা folder-এর ভিতরের সব 50টি file select করুন। Parent folder বা ZIP ফাইলটিকে repo-তে upload করবেন না।
+3. GitHub repository খুলুন → Add file → Upload files।
+4. সব 50টি file একসঙ্গে drag/drop করুন। আগে থেকে একই নামের runtime file থাকলে নতুন release-এর version দিয়ে replace/overwrite করুন।
+5. Commit changes করুন। GitHub Pages যদি /docs folder বা অন্য branch থেকে publish করে, সেই existing publishing setting অপরিবর্তিত রাখুন এবং শুধু configured publish location-এ files দিন।
+6. Actions/Pages deployment সফল হলে site refresh করুন; stale service worker থাকলে hard refresh বা browser site data clear করে নতুন release পরীক্ষা করুন।
+
+IMPORTANT
+- index.html এবং এর পাশের CSS/JS/assets একই directory-তে থাকতে হবে। Files-কে নতুন folder-এর ভিতরে সরাবেন না।
+- .nojekyll ফাইলটি release-এর অংশ; file picker-এ hidden files দেখা না গেলে সেটিও আলাদাভাবে include করুন।
+- এটি একটি static GitHub Pages release। External provider feeds তাদের API/availability/CORS policy অনুযায়ী কাজ করবে; live data সবসময় guaranteed নয়।
+- Salah notification-এর জন্য HTTPS site, browser notification permission এবং user-activated alarm setup প্রয়োজন। Browser/app সম্পূর্ণ বন্ধ থাকলে static website নির্ভরযোগ্য alarm guarantee করে না।
+- Concept Lab-এর 3D/live-flow animation হলো conceptual visualization; real sensor telemetry বা measured power output নয়। Engineering deployment-এর আগে civil, traffic, electrical, environmental ও cost validation প্রয়োজন।
+- GitHub Pages frontend-only authentication production-grade server security নয়; secrets/API keys কখনো repository-তে commit করবেন না।

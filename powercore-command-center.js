@@ -431,12 +431,19 @@
       const absent = criticalSections.filter((id) => !$(id));
       checks.push({ name: 'Core / upgrade sections', state: absent.length ? 'bad' : 'good', detail: absent.length ? `Missing: ${absent.join(', ')}` : `${criticalSections.length} sections present` });
       const scriptNames = ['section-navigation.js','airport-runway-sim.js','border-monitor.js','nasa-gibs-bd.js','system-master-control.js','powercore-command-center.js'];
-      const missingScripts = scriptNames.filter((file) => !$$('script[src]').some((script) => {
-        try { return new URL(script.src, location.href).pathname.endsWith('/' + file); } catch (_) { return false; }
-      }));
+      // Some modules are deliberately inlined into index.html by the static release build.
+      // Check both external src= tags and data-inline-src markers so healthy inlined modules
+      // (notably border-monitor.js) are not incorrectly reported as missing.
+      const hasScriptModule = (file) => $$('script[src], script[data-inline-src]').some((script) => {
+        const declared = script.getAttribute('src') || script.getAttribute('data-inline-src') || '';
+        const clean = declared.split('?')[0].split('#')[0];
+        if (clean === file || clean.endsWith('/' + file)) return true;
+        try { return new URL(declared, location.href).pathname.endsWith('/' + file); } catch (_) { return false; }
+      });
+      const missingScripts = scriptNames.filter((file) => !hasScriptModule(file));
       checks.push({ name: 'Core script references', state: missingScripts.length ? 'bad' : 'good', detail: missingScripts.length ? `Missing tags: ${missingScripts.join(', ')}` : `${scriptNames.length} required script tags present` });
 
-      const sameOriginFiles = ['powercore-command-center.css','powercore-command-center.js','data/bangladesh-boundary-fallback.geojson','sw.js','manifest.webmanifest'];
+      const sameOriginFiles = ['powercore-command-center.css','powercore-command-center.js','bangladesh-boundary-fallback.geojson','sw.js','manifest.webmanifest'];
       const results = await Promise.all(sameOriginFiles.map(async (file) => {
         const controller = typeof AbortController === 'function' ? new AbortController() : null;
         const timer = window.setTimeout(() => controller?.abort(), 8000);
@@ -549,7 +556,7 @@
 
   async function loadGeography() {
     try {
-      const response = await fetch(new URL('data/bangladesh-boundary-fallback.geojson', document.baseURI).href, { cache: 'no-cache' });
+      const response = await fetch(new URL('bangladesh-boundary-fallback.geojson', document.baseURI).href, { cache: 'no-cache' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const geo = await response.json(); if (geo.type !== 'FeatureCollection' || !Array.isArray(geo.features)) throw new Error('Invalid GeoJSON FeatureCollection');
       geoFeatures = geo.features; geoStatus = `Bundled GeoJSON loaded · ${geoFeatures.length} feature(s)`;

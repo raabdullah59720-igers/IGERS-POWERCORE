@@ -1,63 +1,72 @@
-import { existsSync, rmSync, mkdirSync, cpSync, readdirSync, statSync } from 'node:fs';
-import { join, resolve, extname } from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { existsSync, rmSync, mkdirSync, cpSync, readdirSync, readFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 
+// Deterministic static release builder for GitHub Pages.
+// Keep the complete app (index.html contains the legacy inline modules) plus only
+// the local resources referenced by the runtime. Development scripts, duplicate
+// GeoJSON copies, source archives and historical QA documents are not deployed.
 const root = resolve(process.cwd());
 const dist = join(root, 'dist');
-const skipDirs = new Set(['node_modules', 'dist', '.git', '.github', '__pycache__', '.pytest_cache', '.mypy_cache', '.venv', 'venv', 'tests']);
-const skipFiles = new Set([
-  '.DS_Store', 'build.mjs', 'server.mjs', 'package.json', 'package-lock.json', 'IGERS-BD-01-App-Package.zip',
-  'company_backend.py', 'render.yaml', 'vercel.json', '.gitignore',
-  'README.md', 'README_BN.txt', 'PROJECT-DOCUMENTATION-ARCHIVE.md',
-  'UPGRADE-AND-VALIDATION-REPORT.md', 'POWERCORE-12-UPGRADE-REPORT.md',
-  'FULL-PANEL-AUDIT-REPORT.md', 'BUGFIX-VERIFY-REPORT.md', 'SECTION-GROUPING-UPDATE.md',
-  'COMPANY-OPERATIONS-SETUP.md', 'STYLES-SOURCE-ARCHIVE.css', 'TEMPLATE',
-  'border-status-integration-snippet.html', 'integration-snippet.html'
-]);
-const skipExtensions = new Set(['.py', '.pyc', '.pyo', '.md', '.txt', '.bat', '.mjs', '.jsx', '.sqlite3', '.db', '.log', '.tmp', '.env']);
-
-function shouldSkip(name) {
-  return skipDirs.has(name) || skipFiles.has(name) || name.endsWith('.pyc') || name.endsWith('.pyo') || name.startsWith('.env') || skipExtensions.has(extname(name).toLowerCase());
-}
-
-function copyTree(src, dst, onlyMissing = false) {
-  mkdirSync(dst, { recursive: true });
-  for (const name of readdirSync(src)) {
-    if (shouldSkip(name)) continue;
-    const from = join(src, name);
-    const to = join(dst, name);
-    const st = statSync(from);
-    if (st.isDirectory()) copyTree(from, to, onlyMissing);
-    else if (!onlyMissing || !existsSync(to)) cpSync(from, to);
-  }
-}
-
-function runRealVite() {
-  const viteBin = process.platform === 'win32'
-    ? join(root, 'node_modules', '.bin', 'vite.cmd')
-    : join(root, 'node_modules', '.bin', 'vite');
-  if (!existsSync(viteBin)) return false;
-  const result = spawnSync(viteBin, ['build'], { stdio: 'inherit', shell: false });
-  if (result.error || result.status !== 0) process.exit(result.status ?? 1);
-  return true;
-}
+const runtimeFiles = [
+  '.nojekyll', '404.html', 'LICENSE', 'index.html',
+  'copyright.html', 'privacy.html', 'terms.html',
+  'manifest.webmanifest', 'sw.js', 'bangladesh-boundary-fallback.geojson',
+  'bangladesh-flag-overlay.svg', 'icon.svg', 'icon-192.png', 'icon-512.png',
+  'feas-footstep-overview.webp', 'feas-footstep-installation.webp',
+  'thesis-concept-bridge-toll.svg', 'thesis-concept-footstep.svg',
+  'thesis-concept-hydro.svg', 'thesis-concept-integrated.svg',
+  'thesis-concept-resilience-station.svg', 'thesis-concept-road-harvester.jpg',
+  'thesis-concept-road.svg', 'thesis-concept-sluice-gate.jpg',
+  'thesis-concept-solar.svg', 'thesis-concept-thermal-canopy.svg',
+  'thesis-concept-vibration.svg',
+  'igers-compact-bundle.css', 'design-standard.css', 'airport-runway-sim.css',
+  'powercore-command-center.css', 'thesis-concept-lab.css',
+  'company-operations-suite.css', 'app-shell.css',
+  'toll-national-pro.js', 'nasa-gibs-bd.js', 'airport-runway-sim.js',
+  'section-navigation.js', 'system-master-control.js', 'powercore-command-center.js',
+  'thesis-concept-lab.js', 'company-operations-suite.js', 'i18n.js', 'app-shell.js'
+];
+const magazineCandidates = ['magazine/IGERS-BD-01_Professional_Engineering_Magazine.pdf', 'IGERS-BD-01_Professional_Engineering_Magazine.pdf'];
+const magazineSource = magazineCandidates.find((file) => existsSync(join(root, file)));
+const magazineOutput = 'IGERS-BD-01_Professional_Engineering_Magazine.pdf';
 
 if (existsSync(dist)) rmSync(dist, { recursive: true, force: true });
 mkdirSync(dist, { recursive: true });
-const builtWithVite = runRealVite();
-// Copy root-relative runtime assets (including GeoJSON and image files) while excluding
-// source code, secrets, tests, documentation and deployment configuration from the public site.
-copyTree(root, dist, builtWithVite);
-const required = ['index.html', 'sw.js', 'manifest.webmanifest', 'company-operations-suite.js', 'company-operations-suite.css', 'i18n.js', 'data/bangladesh-boundary-fallback.geojson', 'feas-footstep-overview.webp', 'feas-footstep-installation.webp', 'magazine/IGERS-BD-01_Professional_Engineering_Magazine.pdf'];
-const missing = required.filter((path) => !existsSync(join(dist, path)));
+
+const missing = runtimeFiles.filter((file) => !existsSync(join(root, file)));
+if (!magazineSource) missing.push('magazine/IGERS-BD-01_Professional_Engineering_Magazine.pdf (or flat-root PDF)');
 if (missing.length) {
-  console.error(`Build failed: required runtime assets missing: ${missing.join(', ')}`);
+  console.error(`Build failed: required release resources missing: ${missing.join(', ')}`);
   process.exit(1);
 }
-for (const forbidden of ['company_backend.py', 'tests', '.github', 'render.yaml', 'PROJECT-DOCUMENTATION-ARCHIVE.md', 'README.md', 'COMPANY-OPERATIONS-SETUP.md']) {
-  if (existsSync(join(dist, forbidden))) {
-    console.error(`Build failed: source-only file leaked to public output: ${forbidden}`);
-    process.exit(1);
+for (const file of runtimeFiles) cpSync(join(root, file), join(dist, file));
+// Keep the engineering magazine available in the single-level GitHub upload set.
+cpSync(join(root, magazineSource), join(dist, magazineOutput));
+
+const localTargets = new Set();
+const collectLocal = (raw) => {
+  if (!raw || raw.startsWith('#') || /^(?:[a-z]+:|\/\/|data:|javascript:)/i.test(raw)) return;
+  let path = raw.split(/[?#]/, 1)[0];
+  try { path = decodeURIComponent(path); } catch (_) {}
+  if (path && path !== '/') localTargets.add(path.replace(/^\.\//, ''));
+};
+const html = readFileSync(join(dist, 'index.html'), 'utf8');
+for (const tag of html.match(/<[^>]+>/g) || []) {
+  if (/^<script\b/i.test(tag) || /^<link\b/i.test(tag) || /^<img\b/i.test(tag) || /^<iframe\b/i.test(tag) || /^<a\b/i.test(tag)) {
+    for (const match of tag.matchAll(/\s(?:src|href)\s*=\s*(["'])(.*?)\1/gi)) collectLocal(match[2]);
   }
 }
-console.log(`✓ ${builtWithVite ? 'Vite' : 'offline static'} production build created in dist/; required runtime assets exist and private/source files are excluded.`);
+const missingTargets = [...localTargets].filter((target) => !existsSync(join(dist, target)));
+// Hash links, external providers and data attributes are skipped above. Legal pages,
+// direct assets, stylesheet/script URLs and the manifest must all exist in the release.
+if (missingTargets.length) {
+  console.error(`Build failed: broken local index reference(s): ${missingTargets.join(', ')}`);
+  process.exit(1);
+}
+const countFiles = (folder) => readdirSync(folder, { withFileTypes: true }).reduce((sum, entry) => sum + (entry.isDirectory() ? countFiles(join(folder, entry.name)) : 1), 0);
+const count = countFiles(dist);
+if (count >= 98) {
+  console.error(`Build failed: release has ${count} files; GitHub upload target is fewer than 98.`);
+  process.exit(1);
+}
+console.log(`✓ Static production release built in dist/: ${count} files, all at the root, fewer than 98; local index references validated.`);

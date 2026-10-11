@@ -2,8 +2,10 @@
 // Dependency-free regression tests for the active inline calculators in index.html.
 const fs = require('node:fs');
 const vm = require('node:vm');
+const path = require('node:path');
 const assert = require('node:assert/strict');
-const html = fs.readFileSync(new URL('../index.html', `file://${__filename}`), 'utf8');
+const projectRoot = fs.existsSync(path.join(__dirname, 'index.html')) ? __dirname : path.resolve(__dirname, '..');
+const html = fs.readFileSync(path.join(projectRoot, 'index.html'), 'utf8');
 
 function element(value = '') {
   return { value, textContent: '', classList: { add() {}, remove() {}, toggle() {} }, style: { setProperty() {} } };
@@ -71,7 +73,7 @@ assert.equal(calcElements.energyAnnual.textContent, '7.089 GWh/yr');
 assert.equal(calcElements.energyAverage.textContent, '809.3 kW');
 
 // Frame-live model uses the same units and should agree with the main calculator.
-const ops = fs.readFileSync(new URL('../igers-live-3d-operations-2026-10-05.js', `file://${__filename}`), 'utf8');
+const ops = fs.readFileSync(path.join(projectRoot, 'igers-live-3d-operations-2026-10-05.js'), 'utf8');
 const frameStart = ops.indexOf('function calculations(){');
 const frameEnd = ops.indexOf('\nfunction ensureResultsConsole()', frameStart);
 assert.ok(frameStart >= 0 && frameEnd > frameStart, 'frame-live calculator exists');

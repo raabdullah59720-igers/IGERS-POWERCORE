@@ -2,7 +2,7 @@
  * Keep this file intentionally network-light: no stale application cache is kept.
  * Bump REVISION whenever shipping an application update.
  */
-const REVISION = 'igers-2026-10-11-dynamic-recovery-v5';
+const REVISION = 'igers-2026-10-12-concept-salah-v6';
 self.addEventListener('install', event => {
   event.waitUntil(self.skipWaiting());
 });
@@ -22,10 +22,18 @@ self.addEventListener('message', event => {
 });
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  event.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
+  const target = event.notification.data && event.notification.data.url
+    ? new URL(event.notification.data.url, self.registration.scope).href
+    : new URL('./#emergencyCenter', self.registration.scope).href;
+  event.waitUntil((async () => {
+    const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     for (const client of clients) {
-      if ('focus' in client) return client.focus();
+      if (!('focus' in client)) continue;
+      if (event.notification.data && event.notification.data.url && 'navigate' in client) {
+        try { await client.navigate(target); } catch (_) {}
+      }
+      return client.focus();
     }
-    if (self.clients.openWindow) return self.clients.openWindow('./#emergencyCenter');
-  }));
+    if (self.clients.openWindow) return self.clients.openWindow(target);
+  })());
 });
