@@ -64,3 +64,22 @@ body.pc-low-motion .pc-runway-plane,body.pc-low-motion .pc-eyebrow:before{animat
 .pc-sim-stage.pc-scenario-map .pc-sim-ring{animation:pcMapScan 4.8s linear infinite}
 @keyframes pcEnergyPulse{0%,100%{opacity:.3;transform:scale(.88)}50%{opacity:.9;transform:scale(1.08)}}
 @keyframes pcMapScan{from{transform:rotateX(68deg) rotateZ(0)}to{transform:rotateX(68deg) rotateZ(360deg)}}
+
+/* IGERS 2026-10-11 · Field calibration data-entry, metrics and history */
+.pc-field-metrics{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:14px}
+.pc-field-history{display:grid;gap:8px;margin-top:13px}
+.pc-field-record{display:grid;grid-template-columns:minmax(120px,1fr) minmax(180px,1.3fr) auto;gap:12px;align-items:center;padding:11px 12px;border:1px solid var(--ui-border);border-radius:11px;background:rgba(103,210,226,.035);min-width:0}
+.pc-field-record strong{font-size:11px;display:block;overflow-wrap:anywhere}
+.pc-field-record small,.pc-field-record p{font-size:9px;color:var(--ui-muted);margin:3px 0 0;overflow-wrap:anywhere}
+.pc-field-record .pc-field-record-values{font:10px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+.pc-field-record .pc-field-remove{min-height:30px;padding:5px 8px;font-size:9px}
+.pc-field-record .pc-error-positive{color:#ffd28a}.pc-field-record .pc-error-negative{color:#83d6b3}
+@media(max-width:760px){.pc-field-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.pc-field-record{grid-template-columns:minmax(0,1fr) auto}.pc-field-record .pc-field-record-values{grid-column:1/-1;grid-row:2}.pc-field-record .pc-field-remove{grid-column:2;grid-row:1}}
+@media(max-width:420px){.pc-field-metrics{grid-template-columns:1fr 1fr}.pc-field-record{padding:9px;gap:8px}}
+
+/* Field calibration filtering and duration-normalized model validation */
+.pc-field-filter-row{display:grid;grid-template-columns:minmax(220px,.8fr) minmax(240px,1fr) minmax(220px,1fr);gap:12px;align-items:end;margin:14px 0;padding:12px;border:1px solid var(--pc-line,rgba(118,190,205,.25));border-radius:12px;background:rgba(80,125,145,.06)}
+.pc-field-filter-row label{display:grid;gap:6px;font-size:12px;color:var(--pc-muted,#9ab2bf)}
+.pc-field-filter-row input,.pc-field-filter-row select{width:100%;min-height:40px;padding:9px 10px;border:1px solid var(--pc-line,rgba(118,190,205,.25));border-radius:8px;background:var(--pc-surface,#101c27);color:inherit;font:inherit}
+.pc-field-filter-note{font-size:12px;line-height:1.55;color:var(--pc-muted,#9ab2bf)}
+@media(max-width:780px){.pc-field-filter-row{grid-template-columns:1fr}}

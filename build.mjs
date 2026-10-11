@@ -6,7 +6,7 @@ const root = resolve(process.cwd());
 const dist = join(root, 'dist');
 const skipDirs = new Set(['node_modules', 'dist', '.git', '.github', '__pycache__', '.pytest_cache', '.mypy_cache', '.venv', 'venv', 'tests']);
 const skipFiles = new Set([
-  '.DS_Store', 'build.mjs', 'server.mjs', 'package.json', 'package-lock.json',
+  '.DS_Store', 'build.mjs', 'server.mjs', 'package.json', 'package-lock.json', 'IGERS-BD-01-App-Package.zip',
   'company_backend.py', 'render.yaml', 'vercel.json', '.gitignore',
   'README.md', 'README_BN.txt', 'PROJECT-DOCUMENTATION-ARCHIVE.md',
   'UPGRADE-AND-VALIDATION-REPORT.md', 'POWERCORE-12-UPGRADE-REPORT.md',
@@ -48,7 +48,7 @@ const builtWithVite = runRealVite();
 // Copy root-relative runtime assets (including GeoJSON and image files) while excluding
 // source code, secrets, tests, documentation and deployment configuration from the public site.
 copyTree(root, dist, builtWithVite);
-const required = ['index.html', 'sw.js', 'manifest.webmanifest', 'company-operations-suite.js', 'company-operations-suite.css', 'i18n.js', 'data/bangladesh-boundary-fallback.geojson', 'feas-footstep-overview.webp', 'feas-footstep-installation.webp'];
+const required = ['index.html', 'sw.js', 'manifest.webmanifest', 'company-operations-suite.js', 'company-operations-suite.css', 'i18n.js', 'data/bangladesh-boundary-fallback.geojson', 'feas-footstep-overview.webp', 'feas-footstep-installation.webp', 'magazine/IGERS-BD-01_Professional_Engineering_Magazine.pdf'];
 const missing = required.filter((path) => !existsSync(join(dist, path)));
 if (missing.length) {
   console.error(`Build failed: required runtime assets missing: ${missing.join(', ')}`);

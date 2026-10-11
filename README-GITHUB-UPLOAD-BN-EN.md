@@ -18,7 +18,7 @@ The browser entry point is `index.html`. All current JavaScript modules, require
 
 ## Option B — Production build / local preview
 
-- `node build.mjs` creates `dist/`; build check passed and `dist/` contains 88 files. For a static host that uses build output, upload **only the contents of `dist/`** (88 files), not the root and `dist/` together.
+- `node build.mjs` creates `dist/`; build check passed and `dist/` contains 87 files. For a static host that uses build output, upload **only the contents of `dist/`** (87 files), not the root and `dist/` together.
 - `node server.mjs` starts a simple local preview at `http://127.0.0.1:4173/`.
 - `package.json`, `build.mjs`, `server.mjs`, `vercel.json` and `render.yaml` are included for the existing package/deployment workflow.
 
@@ -28,11 +28,24 @@ The browser entry point is `index.html`. All current JavaScript modules, require
 
 ## Validation performed
 
-- Calculation regression tests: PASS.
-- Japanese/Vietnamese/Urdu language tests: 10/10 PASS.
+- Latest engineering-upgrade QA: 98 source files, 87 production-build files; 49 JavaScript syntax checks, 3 Python compilation checks, 12/12 math/runtime tests, 8/8 language-addon tests, offline relay fixture checks, and 0 missing direct local references. A separate downloadable QA report is provided with the build.
+
+- Calculation regression tests: PASS (8 deterministic model/validation tests plus direct mathematical API tests).
+- Japanese, Vietnamese and Urdu localization: 163 additional normalized UI keys per language, plus the add-on’s existing curated dictionary, with language selection and Urdu RTL behavior covered by targeted tests.
 - Patch-guard tests: 3/3 PASS.
 - Air-traffic relay self-test: PASS.
-- Production static build: PASS; `dist/` generated with 88 files.
+- Production static build: PASS; `dist/` generated with 87 files.
 - Root HTML direct local resource references: 0 missing.
 
 The previous bug fixes for kinetic-energy units, average power, input bounds, map fallback presence and service-worker revision are retained. These automated checks do not prove external providers are currently online, nor do they field-calibrate energy estimates. Model outputs must be validated against measured site data before engineering use.
+
+
+## New: Field Calibration & Model Validation / মাঠপর্যায়ের যাচাই
+- Use the new **Field Calibration & Model Validation** panel in Engineering & Simulation Lab. Save predicted and measured energy in kWh for the **same test interval**, include duration, site/test ID and operating conditions, and export CSV/JSON records.
+- MAE, RMSE, mean bias, MAPE (excluding zero predictions) and aggregate signed bias are calculated from saved user-entered records. Records are kept in this browser only; export them before clearing browser storage or changing devices.
+- Engineering model checks validate formula/unit reference cases, not field performance. Exact future field agreement cannot be guaranteed without calibrated instruments, representative testing, measured traffic/flow/weather, parasitic losses, downtime and additional energy/fuel penalties.
+- The app is a static web/PWA. It can be installed through supported Android browsers; this package does **not** contain a native Android APK. Python backend/relay scripts require separate server hosting and do not run on GitHub Pages.
+
+- Added model/site-scoped calibration metrics, duration-normalized power error metrics (kW), and filtered CSV/JSON exports.
+- Fixed language-selection wiring so Japanese, Vietnamese and Urdu are supported by the localization engine rather than only displayed in the language selector.
+- Restored the IGERS Professional Engineering Magazine panel and direct PDF asset in the main app. The old screenshot `runtime.png` was removed because it was not referenced by the runtime; the publication PDF is now a first-class resource.
