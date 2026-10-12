@@ -152,7 +152,6 @@
         </section>
 
         <div class="ias-dashboard-bar"><div><span class="ias-overline">NAVIGATION CONTROL</span><h2>Choose your workspace</h2><p>Each panel appears once in the workspace list. Related tools remain together inside their original section.</p></div><div class="ias-panel-count"><span class="ias-panel-count-number">${String(allFeatureCount).padStart(2, '0')}</span><span>panel destinations</span></div></div>
-        <a class="ias-lcs-home-shortcut" href="#liveConceptSilo" aria-label="Open the separate Live Conceptual Application Silo with eleven visuals"><span class="ias-lcs-icon" aria-hidden="true">⬡</span><span class="ias-lcs-copy"><strong>LIVE CONCEPTUAL APPLICATION SILO · 11 VISUALS</strong><small>Open its own workspace for all concept visuals, animated flows and calculation scenarios.</small></span><span class="ias-lcs-arrow" aria-hidden="true">↗</span></a>
         <div class="ias-search-status" id="iasSearchStatus" aria-live="polite"></div>
         <div class="ias-search-results" id="iasSearchResults" hidden></div>
         <div class="ias-grid" id="iasCategoryGrid">${categoryData.map((category, index) => `
@@ -521,7 +520,7 @@
     history.replaceState(currentState, '', location.hash);
   }
   window.__igersAppShell = {
-    version: '2.2.0-independent-panel-v4',
+    version: '2.1.0',
     categories: categoryData.map((category) => ({ title: category.title, features: category.links.length })),
     showDashboard: () => showDashboard(true),
     showCategory: (index) => showCategory(index, true),

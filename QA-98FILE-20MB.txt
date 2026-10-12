@@ -1,0 +1,29 @@
+IGERS POWERCORE FULL INTEGRATED PACKAGE · 98-FILE LIMIT / SIZE-PRESERVED RELEASE
+Date: 2026-10-12
+
+PACKAGE
+- Outer archive root entries: 67; PASS (maximum 98)
+- Live dependency closure is at repository root: PASS
+- Independent top-level #liveConceptSilo: PASS
+- 11 conceptual scene visuals: PASS
+- Existing app-shell.js byte-identical to supplied source: cd2faac61e86039bd2505e61e4788e9122a71cf0b1680ac981f8fc584bc9ac7a
+- Existing app-shell.css byte-identical to supplied source: 3f0cd6d1cb0425462a302d5647e851925794b9b11c31e760883c5cd8804c7e10
+- Dashboard template shortcut insertion: NO
+- Duplicate HTML IDs: 0
+- JavaScript syntax: 21 files checked; errors: 0
+- CSS: 17 deployed stylesheets parsed; 0 parse errors
+- Missing local file refs detected in deployed HTML: 0
+
+SOURCE PRESERVATION
+- Original main source archive files: 243; content/checksum preservation verified for all: PASS
+- Exact original IGERS-BD-01-App-Package.zip binary retained inside IGERS-POWERCORE-COMPLETE-SOURCE-ARCHIVE.zip: PASS
+- Nested original app package content members checksum-verified: 83 / 83
+- Outer archive contains active runtime files at root; preservation archive is not a runtime dependency: PASS
+
+SIZE
+- Input source ZIP bytes: 20,945,938
+- Final integrated ZIP: 21,062,571 bytes (21.063 MB decimal; 20.087 MiB).
+- Size reduction in prior 12.30MB package was caused by replacing the original 8.84MB nested app ZIP binary with a ~79KB differential archive. This release preserves that original ZIP binary, so its overall size remains close to the supplied ~20MB archive without artificial padding.
+
+LIMITATIONS
+Offline source integrity / syntax / ZIP checks only. No live GitHub deployment was performed; browser end-to-end and external APIs were not fully verified from this environment. Scenario visuals are conceptual, not sensor telemetry.

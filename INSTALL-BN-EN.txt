@@ -1,0 +1,20 @@
+IGERS POWERCORE · COMPLETE INTEGRATED GITHUB PAGES BUILD
+Release: 12 October 2026
+
+DEPLOY
+1) Extract this outer ZIP locally.
+2) Upload/replace the extracted root-level files in the GitHub repository configured for Pages. Do not upload only the ZIP as a single repository file.
+3) Keep the root structure and filenames as extracted. Do not move HTML, JS, CSS, webmanifest, SVG or image files into a new folder.
+4) Commit on the configured Pages branch, then wait for the Pages deployment to complete.
+5) Open #liveConceptSilo to test the new panel. Hard-refresh the browser; for an installed PWA, close and reopen the app after deployment.
+
+INTEGRATED BUILD
+- The outer ZIP has fewer than 98 top-level files and is designed for a repository-root upload.
+- The live app files and their detected local dependencies are already at the outer archive root.
+- The existing app-shell.js and app-shell.css are preserved byte-for-byte, keeping the original Dashboard template/grouping unchanged.
+- The Live Conceptual Application Silo is a separate top-level panel with 11 concept visuals, using separate CSS/JS files.
+- Do not extract IGERS-POWERCORE-COMPLETE-SOURCE-ARCHIVE.zip over the deployed root. It stores legacy documentation/assets/source snapshots and the exact original nested app package to preserve everything while keeping the deploy root under the file-count limit.
+- Concept animations/calculations are conceptual scenario demonstrations, not verified field telemetry.
+
+VERIFY LIMIT
+Archive integrity, file checksums, dependency paths, JavaScript syntax and CSS parse were checked offline. This package has not been deployed to your GitHub repository from this environment, and a full browser end-to-end/live API test could not be completed here.
