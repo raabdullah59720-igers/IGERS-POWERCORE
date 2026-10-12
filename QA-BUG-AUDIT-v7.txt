@@ -1,0 +1,43 @@
+IGERS POWERCORE BUG AUDIT · SCENARIO VAULT v7
+Build date: 2026-10-12
+Baseline: user-provided IGERS-POWERCORE-main (16).zip
+
+BUGS FOUND AND FIXED
+1. Malformed local records without a unique ID were previously accepted by the Scenario Vault. Such records could share selection state or cause a delete operation to remove multiple malformed records. v7 requires a well-formed record ID, deduplicates stored records, validates the scene against the 11 known IDs, and strictly validates numeric inputs and metrics.
+2. Storage-quota/write failures could leave in-memory record lists changed while localStorage stayed unchanged. v7 uses a transactional commit: it writes first, then updates UI/state only after storage succeeds. Failed save/import/delete/clear operations leave the visible/persisted list intact.
+3. Scenario names were written into CSV without spreadsheet formula-injection mitigation. v7 prefixes formula-like text cells before CSV quoting.
+
+BEHAVIORAL TESTS (Node-based mock DOM, not a real browser)
+[PASS] Malformed saved record with no ID is ignored.
+[PASS] Save creates a record with a valid ID and well-formed inputs.
+[PASS] Two scenarios can be selected and compared.
+[PASS] Simulated localStorage quota failure during clear leaves persisted data and displayed cards unchanged.
+[PASS] CSV export neutralizes a scenario name beginning with a spreadsheet formula character.
+[PASS] Invalid JSON record import is rejected without changing storage.
+[PASS] Valid JSON import adds a scenario using a new unique ID.
+[PASS] Restore action applies the selected saved calculator inputs.
+[PASS] Successful clear empties local storage and visible list.
+Result: 9/9 behavioral mock-DOM checks passed.
+
+STATIC / REGRESSION QA
+- Outer ZIP integrity: PASS
+- Root-level ZIP entries: below 98
+- Main panel structure: #liveConceptSilo is a standalone direct child of <main>, between #concept3d and #tower3d
+- Static concept cards: 11
+- HTML duplicate IDs: 0
+- Local file references in index.html: 0 missing
+- Local CSS url() references: 0 missing
+- JavaScript syntax checks: 72 paths checked (original sources + deployed runtime files), 0 errors
+- Inline JavaScript blocks: 13 checked, 0 errors
+- CSS files: 18 parsed, 0 parse errors
+- SHA256 manifest: all listed files match
+- Original source files: 243/243 contents preserved at root or source archive
+- Original nested app package: exact binary preserved, 83/83 inner members checksum-inventoried
+- Existing app-shell.js unchanged: cd2faac61e86039bd2505e61e4788e9122a71cf0b1680ac981f8fc584bc9ac7a
+- Existing app-shell.css unchanged: 3f0cd6d1cb0425462a302d5647e851925794b9b11c31e760883c5cd8804c7e10
+- Dashboard template was not modified.
+
+NOT CLAIMED
+- A real Chromium/browser end-to-end test was not completed. Mock-DOM behavior tests do not guarantee all visual interactions in a browser.
+- The package was not deployed to GitHub Pages from this workspace. Live API/provider reachability is not certified by this audit.
+- Scenario calculations remain conceptual estimates; Scenario Vault data is stored in the current browser only. Use JSON export for cross-device backup.
