@@ -633,6 +633,7 @@
   }
   // Resolve the first-paint guard only after the shell has selected the correct view.
   document.documentElement.classList.add('igers-shell-ready');
+  document.documentElement.removeAttribute('data-igers-shell-fallback');
   const netState = document.getElementById('iasNetState');
   const netDot = document.getElementById('iasNetDot');
   const localClock = document.getElementById('iasLocalClock');

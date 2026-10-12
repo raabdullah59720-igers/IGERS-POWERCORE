@@ -1,0 +1,11 @@
+IGERS POWERCORE SAFE ADDITIVE UPGRADE - QA REPORT
+Date: 2026-10-12
+
+JavaScript syntax checks: 56/56 pass
+PASS: every packaged app .js/.mjs source passes node --check.
+Local index asset references: 109/109 references resolved (external URLs and anchors excluded)
+Static ID regression: baseline 754 IDs; final 754 IDs; removed 0; duplicate IDs 0
+Existing calculation regression test: PASS
+PASS: Concept Lab SI conversions, annual road energy, combined scenario, non-negative inputs, and consistent main/frame-live energy outputs.
+
+Important limits: no full browser end-to-end pass was confirmed. The repo test_apply_patch.py suite has a pre-existing missing fixture at browser-smoke/index.html; do not interpret it as app browser test.

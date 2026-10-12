@@ -230,16 +230,23 @@
   }
 
   function bindControls() {
-    const refresh = () => { setText('igdLastRefresh', 'Refreshing · ' + stamp()); loadWeather(); loadQuakes(); if (Array.isArray(window.__igersAirLastPayload)) handleAirRows(window.__igersAirLastPayload, window.__igersAirLastSync); else fallbackAircraft(); if (state.map && state.mapMode === 'nasa') { const btn = document.querySelector('[data-igd-map="nasa"]'); if (btn) btn.click(); } setTimeout(() => setText('igdLastRefresh', 'Last dashboard refresh: ' + stamp()), 250); };
+    const refresh = () => { setText('igdLastRefresh', 'Refreshing · ' + stamp()); loadWeather(); loadQuakes(); refreshAuthorizedGroundFeed(); if (Array.isArray(window.__igersAirLastPayload)) handleAirRows(window.__igersAirLastPayload, window.__igersAirLastSync); else { airFallbackTried = false; fallbackAircraft(); } if (state.map && state.mapMode === 'nasa') { const btn = document.querySelector('[data-igd-map="nasa"]'); if (btn) btn.click(); } setTimeout(() => setText('igdLastRefresh', 'Last dashboard refresh: ' + stamp()), 250); };
     $('igdRefreshAll')?.addEventListener('click', refresh); $('igdRefreshFooter')?.addEventListener('click', refresh); $('igdOpenDirectory')?.addEventListener('click', () => { const d = $('iasLegacyDirectory'); if (d) { d.open = !d.open; if (d.open) d.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'}); } });
-    window.addEventListener('online', () => { updateClock(); loadWeather(); loadQuakes(); fallbackAircraft(); }); window.addEventListener('offline', updateClock);
+    window.addEventListener('online', () => { updateClock(); loadWeather(); loadQuakes(); refreshAuthorizedGroundFeed(); airFallbackTried = false; fallbackAircraft(); }); window.addEventListener('offline', updateClock);
     window.addEventListener('igers:airtraffic', event => handleAirRows(event.detail || [], window.__igersAirLastSync));
     if (Array.isArray(window.__igersAirLastPayload)) handleAirRows(window.__igersAirLastPayload, window.__igersAirLastSync);
     else setTimeout(() => { if (!state.aircraftAt) fallbackAircraft(); }, 7500);
     setText('igdLastRefresh', 'Last dashboard refresh: ' + stamp());
   }
+  let initializeAttempts = 0;
   function initialize() {
-    if (!$('igdShell')) { setTimeout(initialize, 100); return; }
+    if (!$('igdShell')) {
+      // app-shell must create the dashboard host. Stop polling after 4 s rather than
+      // leave an endless 100 ms retry loop if a future script failure prevents it.
+      if (initializeAttempts++ < 40) setTimeout(initialize, 100);
+      return;
+    }
+    initializeAttempts = 0;
     updateClock(); setInterval(updateClock, 1000); bindControls(); setupAuthorizedGroundFeed(); initMap(); loadWeather(); loadQuakes();
     state.timers.push(setInterval(loadWeather, 10 * 60 * 1000), setInterval(loadQuakes, 5 * 60 * 1000));
   }

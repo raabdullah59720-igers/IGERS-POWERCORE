@@ -1,0 +1,32 @@
+IGERS-BD-01 | Live Conceptual Application Silo Add-on
+Build date: 2026-10-12
+
+STATIC QA RESULTS
+[PASS] New silo JavaScript parses under Node.js 22.16.0 (node --check).
+[PASS] Existing thesis-concept-lab.js parses under Node.js 22.16.0.
+[PASS] The 11 scene identifiers in the silo module are unique.
+[PASS] All 11 scene image assets referenced by the silo are included in the patch.
+[PASS] Existing Thesis Concept Lab JS/CSS and both FEAS reference images are included.
+[PASS] index.html references the new silo CSS and JS using a versioned URL.
+[PASS] Navigation includes the Live Concept Application Silo entry.
+[PASS] The panel is inserted after #concept3d, with a fallback after #thesisVisualLab / #applications.
+[PASS] The add-on uses a namespaced .lcas-* CSS prefix and a one-time initialization guard.
+[PASS] Calculation labels explicitly mark the outputs as scenario estimates, not sensor telemetry.
+[PASS] No credentials, API keys or restricted feed URLs are embedded in this add-on.
+
+CALCULATION CHECK
+Defaults: mass=900 kg, v1=20 km/h, v2=15 km/h, road efficiency=20%, events=210,000/year/site, sites=100.
+- Gross kinetic-energy reduction is approximately 0.0016875 kWh/event.
+- Scenario recoverable energy is approximately 0.0003375 kWh/event (0.3375 Wh/event).
+- Road scenario annual estimate is approximately 7.09 MWh/year.
+- Hydraulic scenario at Q=5 m3/s, H=1.5 m, η=70% is approximately 51.5 kW.
+- Hydraulic annual scenario at 2,000 operating hours is approximately 103 MWh/year.
+- PV scenario at 100 kWp × 1,400 kWh/kWp-year is 140 MWh/year.
+- Battery autonomy at 1,000 kWh nominal, 85% usable DoD, 92% discharge efficiency and 250 kW constant load is approximately 3.13 hours.
+These calculations depend entirely on the editable assumptions and are not observed output.
+
+LIMITATIONS
+- Full browser smoke test not confirmed in this build environment.
+- No physical hardware telemetry or authenticated private feed is connected by this add-on.
+- SVG/JPG/WebP visuals are conceptual reference imagery; not fabrication drawings or proof of feasibility.
+- The combined annual estimate is an exploratory sum; project feasibility, source overlap, system constraints and additional losses require separate engineering analysis.
