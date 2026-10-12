@@ -129,7 +129,18 @@
         { p:[537,338,620,363,691,350,761,330], c:'#8af3bf', n:4, o:.2 },
         { p:[761,330,810,341,860,365,905,383], c:'#54ddff', n:4, o:.34 },
         { p:[704,182,727,218,746,254,762,286], c:'#78efff', n:3, o:.1 }
-      ], nodes:[[430,220,'#54ddff'],[537,338,'#54ddff'],[761,330,'#8af3bf'],[905,383,'#8af3bf'],[704,182,'#78efff']]
+      ], nodes:[[430,220,'#54ddff'],[537,338,'#54ddff'],[761,330,'#8af3bf'],[905,383,'#54ddff'],[704,182,'#78efff']]
+    },
+    railway: {
+      src: 'thesis-concept-railway.svg', title: 'Railway track energy-recovery concept',
+      label: 'RAIL VIBRATION · FIELD MEASUREMENT REQUIRED', desc: 'Illustrates a conceptual train-track interface with trackside vibration/deflection transducers, a cable route, power conditioning, buffer storage and a wayside sensor. The drawing and animated overlay are schematic; they are not measured output, a validated rail design or a construction drawing.',
+      model: 'RAILWAY / WAYSIDE CONCEPT', phases: ['TRAIN PASSAGE → MEASURED TRACK MOTION', 'TRANSDUCER → ELECTRICAL OUTPUT', 'OUTPUT → RECTIFIER / REGULATOR', 'CONDITIONED ENERGY → BUFFER STORAGE', 'STORAGE → LOW-POWER WAYSIDE SENSOR'],
+      paths: [
+        { p:[300,300,350,315,410,350,465,385], c:'#ffbf73', n:5, o:0 },
+        { p:[465,385,530,405,590,390,650,365], c:'#54ddff', n:5, o:.15 },
+        { p:[650,365,710,350,760,330,820,300], c:'#8af3bf', n:5, o:.30 },
+        { p:[820,300,870,275,910,285,955,300], c:'#54ddff', n:4, o:.12 }
+      ], nodes:[[300,300,'#ffbf73'],[465,385,'#54ddff'],[650,365,'#8af3bf'],[820,300,'#54ddff'],[955,300,'#8af3bf']]
     }
   };
 

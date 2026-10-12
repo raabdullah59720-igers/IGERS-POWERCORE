@@ -2,7 +2,7 @@
  * Keep this file intentionally network-light: no stale application cache is kept.
  * Bump REVISION whenever shipping an application update.
  */
-const REVISION = 'igers-2026-10-12-scenario-vault-bugfix-v7';
+const REVISION = 'igers-2026-10-13-railway-concept-v2';
 self.addEventListener('install', event => {
   event.waitUntil(self.skipWaiting());
 });

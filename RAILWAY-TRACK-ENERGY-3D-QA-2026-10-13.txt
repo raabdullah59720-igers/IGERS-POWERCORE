@@ -1,0 +1,63 @@
+IGERS POWERCORE · RAILWAY TRACK ENERGY RECOVERY · RELEASE QA
+Release: 2026-10-13-railway-v2
+
+INTEGRATION — PASS
+- Dedicated #railwayEnergy3d panel exists and is linked from the Energy & System Control navigation group.
+- Railway track concept is selectable in the existing Thesis 3D Concept Lab (scene 12/12).
+- Railway track concept is selectable in the existing Live Concept Application Silo (card 12/12).
+- Local SVG asset is included in build.mjs runtime files.
+- Versioned stylesheet/script references and service-worker revision are on railway-v2.
+- HTML duplicate-ID audit: 0 duplicates.
+- Existing app-shell.js was not modified.
+
+BUILD / STATIC VALIDATION — PASS
+- `npm run build` completed successfully.
+- Production `dist/` contains 52 root-level runtime files, below the 98-file target.
+- Build-time local-reference validation passed.
+- `node --check` passed for railway-track-energy.js, thesis-concept-lab.js, live-concept-application-silo.js, build.mjs and sw.js.
+- CSS parsed with tinycss2 without CSS parse-error tokens.
+- Railway SVG parsed as valid XML and was rendered to a PNG preview.
+- Static scene-count audit: 12 Thesis 3D Lab buttons and 12 Live Concept Application Silo cards.
+- HTTP local-server checks returned 200 for index.html, railway JS/CSS/SVG and both scene controller scripts.
+- ZIP archive integrity checked after packaging.
+
+CALCULATOR / MOCKED CANVAS SMOKE TEST — PASS
+Formulae:
+  E_event,module = E_mechanical_available,event,module × conversion_efficiency
+  E_day = E_event,module × passages_per_day_per_module × module_count × system_availability
+  E_year = E_day × operating_days_per_year / 1000
+  P_calendar_average = E_year(kWh) × 1000 / (365 × 24)
+  battery_autonomy = battery_nameplate_kWh × usable_DoD × discharge_efficiency × 1000 / load_W
+
+Default editable assumptions:
+- Mechanical energy available at one module per train pass: 5 Wh (placeholder; must be measured).
+- Electrical conversion efficiency: 35%.
+- System availability: 90%.
+- Train passages per day at each module: 40.
+- Active modules: 4.
+- Operating days/year: 365.
+- Example load: 25 W.
+- Battery nameplate capacity: 2 kWh; usable DoD 85%; discharge efficiency 92%.
+
+Expected / checked scenario outputs:
+- Electrical energy per active pass per module: 1.75 Wh.
+- Energy across the selected modules per operating day after availability: 252 Wh/day.
+- Annual energy at 365 operating days: 91.98 kWh/year.
+- Calendar-year average power: 10.50 W.
+- Equivalent daily run-time at 25 W load: 10.1 h/day.
+- Battery autonomy under the entered battery assumptions: 62.6 h.
+- Changing conversion efficiency to 50% recalculated daily / annual output to 360 Wh/day and 131.4 kWh/year.
+- 300 operating days at 50% efficiency and 90% availability recalculated annual output to 108 kWh/year.
+- Fractional train-passage count is rejected instead of silently rounded; 0% availability returns 0 Wh/day.
+- Pause / resume handlers toggle status in isolated test.
+
+REAL-BROWSER / LIVE DEPLOYMENT — NOT VERIFIED
+- Chromium in this execution environment timed out even on a minimal `data:text/html` screenshot test, so an actual browser end-to-end render could not be completed here.
+- GitHub Pages live deployment, external live feeds and actual railway telemetry were not tested.
+- The local mocked-DOM/canvas smoke test exercised module initialization, initial drawing calls, calculations, validation and pause/resume logic; it is not a substitute for a real browser test.
+
+ENGINEERING BOUNDARIES
+- These outputs are scenario estimates. `5 Wh mechanical energy available per pass per module` is a placeholder for experimentally measured extractable energy at the harvester interface, not the train's total kinetic energy and not a claimed field result.
+- No live railway timetable, physical sensor, track strain/vibration measurement or generator telemetry is connected.
+- The canvas is an animated isometric 3D-style schematic, and the gallery SVG is a concept illustration; neither is a validated structural model, finite-element simulation, fabrication drawing or railway operations tool.
+- Before any physical trial, a railway authority and qualified engineers must review rail/fastener/sleeper interface, track geometry, structural fatigue, vibration limits, signalling/electrical isolation, worker safety, maintenance access, net-energy effect and operational approval.

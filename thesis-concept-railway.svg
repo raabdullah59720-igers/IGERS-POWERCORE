@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 620" role="img" aria-labelledby="title desc">
+<title id="title">Railway track energy recovery concept</title><desc id="desc">Isometric conceptual train and double rail track with sleepers, side-mounted vibration harvesters, cable, converter, storage battery, and a trackside sensor. Not a construction drawing.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="0.9" y2="1"><stop stop-color="#102b3a"/><stop offset="1" stop-color="#06131e"/></linearGradient>
+ <linearGradient id="rail" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e3f6fa"/><stop offset=".45" stop-color="#8faab7"/><stop offset="1" stop-color="#425d6b"/></linearGradient>
+ <linearGradient id="trainBody" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4db6c7"/><stop offset=".55" stop-color="#17657c"/><stop offset="1" stop-color="#103044"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe0a0"/><stop offset="1" stop-color="#b77932"/></linearGradient>
+ <linearGradient id="storage" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2c6479"/><stop offset="1" stop-color="#102d3b"/></linearGradient>
+ <pattern id="grid" width="38" height="38" patternUnits="userSpaceOnUse"><path d="M38 0H0V38" fill="none" stroke="#69a6bc" stroke-opacity=".11" stroke-width="1"/></pattern>
+ <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1100" height="620" rx="18" fill="url(#bg)"/><rect width="1100" height="620" rx="18" fill="url(#grid)"/>
+<g opacity=".45" stroke="#4de0d1" stroke-width="1"><path d="M50 100H1050M50 525H1050" stroke-dasharray="4 8"/></g>
+<!-- Ballast and track in a shallow isometric projection -->
+<path d="M75 375 720 160 1032 315 386 544Z" fill="#142d3a" stroke="#416477" stroke-width="2"/>
+<path d="M93 374 719 185 1009 318 384 526Z" fill="#1b3b49" stroke="#355c6e"/>
+<!-- sleepers -->
+<g fill="#71858c" stroke="#a6bac0" stroke-width="1" opacity=".95">
+ <path d="M118 357 142 350 438 488 414 497Z"/><path d="M176 339 200 332 496 470 472 479Z"/><path d="M234 320 258 313 554 451 530 460Z"/><path d="M292 302 316 295 612 432 588 441Z"/><path d="M350 283 374 276 670 413 646 422Z"/><path d="M408 264 432 257 728 394 704 403Z"/><path d="M466 246 490 239 786 375 762 384Z"/><path d="M524 227 548 220 844 356 820 365Z"/><path d="M582 209 606 202 902 337 878 346Z"/><path d="M640 190 664 183 960 318 936 327Z"/>
+</g>
+<!-- steel rails -->
+<path d="M85 339 715 132 1021 279" fill="none" stroke="#1a2e39" stroke-width="17" stroke-linecap="round"/><path d="M85 339 715 132 1021 279" fill="none" stroke="url(#rail)" stroke-width="9" stroke-linecap="round"/><path d="M85 355 393 499 1029 294" fill="none" stroke="#1a2e39" stroke-width="17" stroke-linecap="round"/><path d="M85 355 393 499 1029 294" fill="none" stroke="url(#rail)" stroke-width="9" stroke-linecap="round"/>
+<path d="M85 337 715 130 1022 277M85 353 393 497 1029 292" fill="none" stroke="#d5f4f5" stroke-width="1.4" opacity=".7"/>
+<!-- stylized locomotive and two cars; intentionally schematic -->
+<g stroke="#9fe6ef" stroke-width="2" stroke-linejoin="round">
+ <path d="M322 287 507 227 590 264 405 329Z" fill="#19536a"/><path d="M322 287 405 329 405 355 322 312Z" fill="#103548"/><path d="M405 329 590 264 590 292 405 355Z" fill="url(#trainBody)"/>
+ <path d="M344 281 382 269 383 299 345 312Z" fill="#a8e8ee"/><path d="M391 266 426 255 427 286 392 298Z" fill="#a8e8ee"/><path d="M441 249 477 237 478 269 442 281Z" fill="#a8e8ee"/>
+ <path d="M507 227 535 218 590 240 590 264Z" fill="#2c8096"/><path d="M531 224 553 217 566 222 544 230Z" fill="#e2faff"/>
+ <path d="M431 319 519 289 519 320 431 351Z" fill="#12384a"/>
+ <!-- trailing cars -->
+ <path d="M142 349 275 305 330 332 197 377Z" fill="#235b6c"/><path d="M142 349 197 377 197 397 142 367Z" fill="#123646"/><path d="M197 377 330 332 330 352 197 397Z" fill="#194658"/>
+ <path d="M207 328 243 316 244 345 208 357Z" fill="#9ddde5"/><path d="M254 313 287 302 288 331 255 343Z" fill="#9ddde5"/>
+</g>
+<!-- wheel markers -->
+<g fill="#0b1b24" stroke="#9eb8c3" stroke-width="4"><ellipse cx="355" cy="326" rx="10" ry="7"/><ellipse cx="412" cy="347" rx="10" ry="7"/><ellipse cx="492" cy="317" rx="10" ry="7"/><ellipse cx="548" cy="297" rx="10" ry="7"/><ellipse cx="180" cy="374" rx="8" ry="6"/><ellipse cx="238" cy="356" rx="8" ry="6"/><ellipse cx="285" cy="357" rx="8" ry="6"/></g>
+<!-- wayside harvesters, cable and electrical conditioning -->
+<g stroke="#ffd68e" stroke-width="1.5"><path d="M430 422 474 406 494 416 450 433Z" fill="url(#gold)"/><path d="M450 433 494 416 494 445 450 461Z" fill="#845824"/><path d="M430 422 450 433 450 461 430 449Z" fill="#b67c35"/>
+<path d="M506 399 550 383 571 393 527 410Z" fill="url(#gold)"/><path d="M527 410 571 393 571 422 527 438Z" fill="#845824"/><path d="M506 399 527 410 527 438 506 427Z" fill="#b67c35"/></g>
+<path d="M470 430 610 387 684 413 765 389 836 354" stroke="#1a737d" stroke-width="9" fill="none" stroke-linejoin="round"/><path d="M470 430 610 387 684 413 765 389 836 354" stroke="#4de0d1" stroke-width="2.5" fill="none" stroke-linejoin="round" filter="url(#glow)" stroke-dasharray="5 10"/>
+<g transform="translate(792 318)"><path d="M0 17 90 -12 151 17 60 48Z" fill="#3d7184" stroke="#89c8d9"/><path d="M0 17 60 48 60 134 0 103Z" fill="#193f51" stroke="#5a98ae"/><path d="M60 48 151 17 151 102 60 134Z" fill="url(#storage)" stroke="#5a98ae"/><path d="M90 15 110 8 110 55 90 62Z" fill="#48d9c9" stroke="#a4fff1"/><path d="M121 5 139 -1 139 46 121 52Z" fill="#5fb7ef" stroke="#b1e5ff"/><path d="M83 85 128 70" stroke="#83f0b9" stroke-width="4" stroke-linecap="round"/></g>
+<g transform="translate(973 300)"><path d="M0 18 29 8 44 15 15 25Z" fill="#8bd2ed" stroke="#c2f0ff"/><path d="M15 25 44 15 44 65 15 75Z" fill="#23556e" stroke="#8bd2ed"/><path d="M0 18 15 25 15 75 0 68Z" fill="#163d52" stroke="#8bd2ed"/><circle cx="24" cy="39" r="5" fill="#8af3bf" filter="url(#glow)"/></g>
+<!-- labels / status -->
+<g font-family="ui-monospace,Consolas,monospace" font-weight="700"><text x="64" y="61" font-size="18" fill="#8ceee4" letter-spacing="3">IGERS-BD-01 / RAILWAY ENERGY RECOVERY</text><text x="66" y="88" font-size="11" fill="#82a9ba" letter-spacing="2">CONCEPT VISUAL · NOT TO SCALE · NO LIVE TELEMETRY</text>
+<text x="407" y="477" font-size="12" fill="#ffcf7f">TRACK-SIDE HARVESTER</text><path d="M465 465 465 486 412 486" fill="none" stroke="#ffcf7f" stroke-width="1.2" stroke-dasharray="3 4"/>
+<text x="745" y="492" font-size="12" fill="#74e9dc">DC / STORAGE</text><path d="M822 467 822 478 788 478" fill="none" stroke="#74e9dc" stroke-width="1.2" stroke-dasharray="3 4"/>
+<text x="922" y="410" font-size="11" fill="#9bdcff">WAYSIDE</text><text x="922" y="424" font-size="11" fill="#9bdcff">SENSOR</text>
+<text x="67" y="574" font-size="10" fill="#7f9cab" letter-spacing="1.4">TRAIN MOVEMENT -> TRANSDUCER -> POWER CONDITIONING -> BUFFER STORAGE -> SENSOR LOAD</text></g>
+</svg>

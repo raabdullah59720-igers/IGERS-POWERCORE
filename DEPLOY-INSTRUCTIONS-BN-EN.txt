@@ -1,0 +1,14 @@
+IGERS POWERCORE — Railway Track Energy Recovery 3D Concept
+Release: 2026-10-13-railway-v2
+
+RECOMMENDED: use IGERS-POWERCORE-RAILWAY-3D-DEPLOY.zip for compact GitHub Pages deployment.
+1) Download and EXTRACT the ZIP.
+2) Open the existing IGERS-POWERCORE GitHub repository ROOT (the folder from which index.html is served).
+3) Upload/replace the extracted files directly at the root. Do not upload the ZIP as a single file and do not place files into a nested folder.
+4) Keep unrelated repository files not included in this deploy package; do not delete other files.
+5) Commit changes and confirm GitHub Pages deployment completes.
+6) Open Thesis 3D Concept Lab or Live Conceptual Application Silo and select Railway track energy recovery (Concept 12). For the dedicated calculator/animated panel, use Railway Energy Recovery · 3D under Energy & System Control. Hard-refresh with Ctrl+F5 if an old cached page remains.
+
+Alternative: IGERS-POWERCORE-RAILWAY-3D-PATCH.zip is a root-level overlay for the source baseline represented by the uploaded IGERS-POWERCORE-main (17).zip. Extract directly into that repository root and commit the changed/new files. The patch is not a standalone app.
+
+The animated train/track scene is illustrative, not real train tracking or a physical railway simulation. Results are assumptions-driven estimates; no live train timetable, sensor feed or measured harvest energy is connected. Do not install hardware on active railway infrastructure without railway-authority approval and qualified structural/electrical/operational safety validation.
