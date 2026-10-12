@@ -1,0 +1,35 @@
+IGERS-POWERCORE NATIONAL AUTHORIZED-FEED UPGRADE · QA REPORT
+Release: 2026-10-12-authorized-ground-v2
+
+PASS — PACKAGE AND STATIC CHECKS
+[PASS] Source ZIP and prior dashboard package opened; ZIP integrity passed before editing.
+[PASS] Dashboard is part of the existing IGERS app shell, with its previous workspace directory and routes retained.
+[PASS] Added same-origin-only browser integration for a provisioned authorized aggregate status endpoint.
+[PASS] Frontend config contains no credentials and ships with the endpoint disabled/blank.
+[PASS] Backend gateway defaults to loopback (127.0.0.1), requires an exact approved host allowlist and HTTPS upstream, rejects redirects, and is documented for SSO/VPN-protected private deployment.
+[PASS] Gateway returns aggregate counts only; it does not return video, camera IDs/URLs, per-person records, or raw events.
+[PASS] Missing/inaccessible/invalid feed values display NOT CONFIGURED or UNAVAILABLE; old values are cleared rather than treated as live.
+[PASS] JavaScript syntax checks passed for all external project JS files, the gateway server.mjs, and inline executable script in index.html.
+[PASS] Local src/href references in index.html resolve to packaged files.
+[PASS] App shell/dashboard cache-busting query strings and service-worker revision were bumped.
+[PASS] Private gateway documentation, data schema, field mappings, .env.example, and formal access request template included.
+
+LOCAL GATEWAY SMOKE TEST
+[PASS] /healthz returned HTTP 200 when run locally.
+[PASS] /api/operations/status returned HTTP 503 with a safe unconfigured status when the upstream was not configured.
+[PASS] Positive-path integration test with a synthetic HTTPS upstream normalized vehicle/queue/lane/camera aggregates and provider timestamp; private camera IDs were confirmed absent from gateway output. This was a local test fixture, not a real agency feed.
+[PASS] Gateway did not require npm-installed third-party dependencies; Node.js 20+ built-ins are used.
+
+NOT VERIFIED / LIMITATIONS
+[NOT VERIFIED] Full browser screenshot/smoke test could not be performed in this environment because Chromium could not be launched.
+[NOT VERIFIED] External provider uptime, DNS, CORS, tile coverage and live response timestamps were not validated from this build container.
+[NOT CONNECTED] No government/border CCTV, gate sensor, vehicle counter, private agency API, energy meter, BMS, or grid feed was provisioned. The successful connector test used synthetic fixture data only. Written approval and owner-issued credentials are required.
+[NOT CLAIMED] No 100% bug-free guarantee. This archive is statically and locally checked but must be smoke-tested after deployment.
+
+SECURITY / DEPLOYMENT REQUIREMENTS
+- Keep authorized-feed-config.js blank on public GitHub Pages.
+- Do not put secrets, tokens, private camera URLs or restricted counts in client code or a public repository.
+- Deploy restricted-data views on an agency-approved private origin protected by SSO/VPN and required logging. Never expose the gateway directly to the internet.
+- Configure upstream URL/host/token using a private environment or secret manager after the data owner provisions access.
+- Validate the API schema, units, source timestamp/timezone, freshness, rate limits and privacy/retention rules with the owner.
+- Test public map/weather/USGS/ADS-B feeds separately; these are different sources and cannot establish real ground-border traffic.
