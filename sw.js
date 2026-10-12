@@ -2,7 +2,7 @@
  * Keep this file intentionally network-light: no stale application cache is kept.
  * Bump REVISION whenever shipping an application update.
  */
-const REVISION = 'igers-2026-10-12-safe-merge-v1';
+const REVISION = 'igers-2026-10-12-concept-silo-static-mount-fix-v2';
 self.addEventListener('install', event => {
   event.waitUntil(self.skipWaiting());
 });

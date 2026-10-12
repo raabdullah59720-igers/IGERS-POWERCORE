@@ -1,0 +1,28 @@
+IGERS POWERCORE | 11 Concept Silo Static-Mount Fix
+Release: 2026-10-12-static-mount-fix-v2
+
+PASS — STATIC INTEGRATION
+[PASS] Full index.html is based on the user-uploaded IGERS-POWERCORE-main (16).zip.
+[PASS] #liveConceptSilo is a static <section> directly under <main>, so app-shell panel routing can resolve it.
+[PASS] 11 static scene cards exist in index.html; they are not generated solely by JS.
+[PASS] The Energy & System Control navigation group includes #liveConceptSilo before app-shell.js initializes.
+[PASS] A prominent home-dashboard shortcut is appended after app-shell renders the landing view, so the silo is not hidden behind workspace navigation alone.
+[PASS] Static markup/card list remains in index.html even if addon JavaScript fails; the controller only activates interactivity/calculations.
+[PASS] New CSS link and cache-busted JS link are present in index.html.
+[PASS] Existing #thesisVisualLab is preserved, along with its stylesheet, script and eleven local concept image assets.
+[PASS] The 11 local scene assets used by the added panel are present in this patch.
+[PASS] New JavaScript passes Node.js syntax validation.
+[PASS] Service-worker revision bumped to announce the update to installed app clients.
+[PASS] No API keys, credentials or private feed endpoints are included.
+
+DEFAULT SCENARIO CALCULATION CHECK
+- Road example: mass 900 kg, 20→15 km/h, efficiency 20%, 210,000 events/year/site, 100 sites gives about 7.09 MWh/year scenario.
+- Hydraulic example: flow 5 m³/s, net head 1.5 m, efficiency 70% gives about 51.5 kW, or about 103 MWh/year at 2,000 hours/year.
+- PV example: 100 kWp × 1,400 kWh/kWp/year gives 140 MWh/year scenario.
+- Battery example: 1,000 kWh nominal × 85% DoD × 92% efficiency / 250 kW gives about 3.13 hours.
+These are editable assumptions, not metered field data.
+
+NOT CLAIMED
+- Full browser end-to-end test was not completed in this environment.
+- Actual GitHub Pages deployment cannot be changed from this archive alone; the correct root index.html must be committed and the intended Pages deployment must publish it.
+- Concept pictures are visual references, not fabrication drawings or validation of engineering feasibility.
