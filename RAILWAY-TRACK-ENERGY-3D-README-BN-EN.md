@@ -1,35 +1,49 @@
-# IGERS POWERCORE — Railway Track Energy Recovery (railway-v2)
+# IGERS POWERCORE — Railway Live 3D Demo / Railway Track Energy Recovery (v4)
 
-This update does three things without replacing the existing app shell:
+## What's included
 
-1. Adds a selectable railway concept scene to the existing **Thesis 3D Concept Lab**.
-2. Adds the railway concept as concept card 12 in the **Live Concept Application Silo**.
-3. Adds a separate **Railway Track Energy Recovery · 3D** panel with a locally animated isometric train/rail/harvester/converter/storage/sensor concept and an editable scenario calculator.
+- Coloured locomotive plus three coloured passenger cars moving on an isometric steel track.
+- Four rail-pad visual indicators that pulse as wheel positions cross them.
+- A cutaway mechanism view showing conceptual wheel load → rail/sleeper → transducer pad → rectifier/DC conditioner → buffer storage.
+- A separate steel wheel–rail slip/heat-loss visualization. Dissipated friction/heat is never counted as recovered electricity.
+- Editable speed, wheel load, adhesion, force utilization, relative slip and visual pad-compression inputs.
+- The existing recovery calculator, daily/annual estimates, battery autonomy view, Pause/Resume and Reset controls.
+- Invalid-input regression fixes: energy accumulation no longer uses stale calculator values; invalid friction parameters suppress stale force/loss values and heat visuals.
+- OS/browser reduced-motion preference is identified as a static preview instead of falsely reporting a running animation.
 
-## Calculator model
+## Recovery calculator
 
-`E_day = Wh available/pass/module × conversion efficiency × availability × train passages/day/module × number of modules`
+`E_day (Wh) = Wh_available/pass/module × conversion_efficiency × system_availability × passages/day/module × number_of_modules`
 
-`E_year = E_day × operating days/year ÷ 1,000`
+`E_year (kWh) = E_day (Wh) × operating_days/year ÷ 1,000`
 
-The battery autonomy estimate uses editable battery nameplate capacity, usable depth of discharge, discharge efficiency and the selected load. Input validation flags empty/out-of-range values and requires whole-number train passages, modules and annual operating days.
+Default scenario: 5 Wh mechanical input/pass/module × 35% conversion = 1.75 Wh electrical estimate/pass/module; × 40 passes/day × 4 modules × 90% availability = **252 Wh/day**. At 365 operating days, **91.98 kWh/year** and **10.50 W** annualized average power. These are assumption-based outputs, not field measurements.
 
-With the release defaults, the illustrative scenario gives **1.75 Wh per active passage per module**, **252 Wh/day**, **91.98 kWh/year**, **10.50 W calendar-average power**, **10.1 equivalent hours/day at a 25 W load**, and **62.6 h of battery autonomy** for the stated battery assumptions.
+## Wheel–rail slip-loss model
 
-These values are not measured performance. The 5 Wh mechanical-energy input is a placeholder that must be replaced by laboratory/field measurements at a tested harvesting interface. No railway data source or physical device is connected.
+`F_t (kN) = μ × N (kN) × force_utilization`
 
-## Deployment ZIP
+`v_slip (m/s) = train_speed (km/h) ÷ 3.6 × slip_ratio`
 
-Use `IGERS-POWERCORE-RAILWAY-3D-DEPLOY.zip` for a compact static deployment package. Extract its contents directly into the GitHub Pages repository root—the directory from which `index.html` is served. Do not upload the ZIP as a single file or place its contents in a nested folder. The deployment package contains fewer than 98 root-level files. Keep unrelated repository files that are not part of the package.
+`P_loss (kW) = F_t (kN) × v_slip (m/s)`
 
-## Patch ZIP
+`E_loss/contact (J) = F_t (kN) × 1,000 × slip_ratio × assumed_contact_length (m)`
 
-Use `IGERS-POWERCORE-RAILWAY-3D-PATCH.zip` to overlay the source project represented by the uploaded `IGERS-POWERCORE-main (17).zip`. Extract at the repository root and commit/replace the listed files. The patch ZIP is not a standalone app.
+The assumed contact length is 0.50 m. Defaults yield 6 kN, 1.20 kW slip-loss power, 30 J/contact and 25 ms at 72 km/h. At 2% slip, loss rises to 2.40 kW and 60 J/contact. This is a simplified illustrative slip-dissipation case, not a calibrated rolling-resistance or wheel/rail contact model.
 
-## Validation status
+## Model limitations
 
-The static production build, JavaScript syntax checks, duplicate-ID audit, scene selectors, SVG/CSS validation, local-reference checks, mocked-DOM/canvas calculator/control smoke tests and ZIP integrity checks passed. A real-browser end-to-end test and live GitHub Pages run remain unverified because Chromium did not complete even a minimal screenshot test in the execution environment.
+The visuals are animated canvas drawings with isometric/cross-section presentation, not full WebGL geometry, finite-element analysis or a validated digital twin. Track spacing and train travel distance are illustrative. The pad-compression slider changes visual stroke but does not independently predict electrical Wh. No live railway telemetry or physical sensors are connected.
 
-## Safety
+## Run / deploy
 
-The animation is a conceptual 3D-style schematic, not a physical or finite-element simulation. Do not attach devices to active rails, sleepers, fasteners, signalling or railway electrical systems without railway-authority approval and qualified engineering review, including fatigue, track geometry, vibration, isolation and operational safety checks.
+- Complete Deploy ZIP: 52 static runtime files + 3 documentation files = **55 root-level files**, under the stated 98-file upload target.
+- Extract and upload the root-level contents beside `index.html` in the GitHub Pages repository. Replace same-named files from the matching `IGERS-POWERCORE-main (17).zip` baseline; retain unrelated files.
+- Patch ZIP is only for overlaying that matching source baseline, not a standalone app. Do not upload both ZIPs together.
+- CSS/JS query versions and service-worker revision were bumped to v4 to help browsers fetch the updated code.
+
+## QA status
+
+The production builder, 14 external JavaScript syntax checks, 13 inline script syntax checks, 10 CSS parser checks, 843 unique HTML IDs, local asset references, mocked canvas/control/calculation smoke tests, and ZIP integrity passed. Full real-browser end-to-end rendering was not verified: headless Chromium timed out at startup in this environment. GitHub Pages publication has not been externally checked.
+
+Before any physical rail deployment, obtain railway-authority approval and complete qualified review of track geometry, axle load, fatigue, fasteners/sleepers, vibration, signalling compatibility, electrical isolation and maintenance access.

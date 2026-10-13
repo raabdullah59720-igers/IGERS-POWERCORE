@@ -1,14 +1,19 @@
-IGERS POWERCORE — Railway Track Energy Recovery 3D Concept
-Release: 2026-10-13-railway-v2
+IGERS POWERCORE RAILWAY LIVE DEMO v4 — DEPLOY INSTRUCTIONS
 
-RECOMMENDED: use IGERS-POWERCORE-RAILWAY-3D-DEPLOY.zip for compact GitHub Pages deployment.
-1) Download and EXTRACT the ZIP.
-2) Open the existing IGERS-POWERCORE GitHub repository ROOT (the folder from which index.html is served).
-3) Upload/replace the extracted files directly at the root. Do not upload the ZIP as a single file and do not place files into a nested folder.
-4) Keep unrelated repository files not included in this deploy package; do not delete other files.
-5) Commit changes and confirm GitHub Pages deployment completes.
-6) Open Thesis 3D Concept Lab or Live Conceptual Application Silo and select Railway track energy recovery (Concept 12). For the dedicated calculator/animated panel, use Railway Energy Recovery · 3D under Energy & System Control. Hard-refresh with Ctrl+F5 if an old cached page remains.
+OPTION A — COMPLETE DEPLOY ZIP (recommended for GitHub Pages)
+1. Download IGERS-POWERCORE-RAILWAY-3D-DEPLOY.zip.
+2. Extract it locally.
+3. Upload the 55 root-level files into the same repository folder as index.html.
+4. Replace same-named files from the matching IGERS-POWERCORE-main (17).zip baseline. Do not delete unrelated project files.
+5. Commit the update and allow GitHub Pages to deploy.
+6. Hard-refresh the published site (Ctrl+Shift+R) and open Energy & System Control → Railway Energy Recovery · 3D.
+7. Test train motion, pad pulses, cutaway energy flow, wheel–rail heat/slip, edit controls, invalid-input warnings, Pause/Resume and Reset.
 
-Alternative: IGERS-POWERCORE-RAILWAY-3D-PATCH.zip is a root-level overlay for the source baseline represented by the uploaded IGERS-POWERCORE-main (17).zip. Extract directly into that repository root and commit the changed/new files. The patch is not a standalone app.
+OPTION B — PATCH ZIP
+Use IGERS-POWERCORE-RAILWAY-3D-PATCH.zip only as an overlay on the source represented by IGERS-POWERCORE-main (17).zip. Extract into the repository root and replace the listed same-name files. It is not a standalone app. Do not upload the Deploy ZIP and Patch ZIP together.
 
-The animated train/track scene is illustrative, not real train tracking or a physical railway simulation. Results are assumptions-driven estimates; no live train timetable, sensor feed or measured harvest energy is connected. Do not install hardware on active railway infrastructure without railway-authority approval and qualified structural/electrical/operational safety validation.
+TEST STATUS
+Static build, JS/CSS syntax, HTML/asset checks, mocked canvas/control smoke test and ZIP integrity passed. Real-browser end-to-end rendering and the live GitHub Pages deployment could not be verified because headless Chromium timed out during startup in this environment.
+
+NOTICE
+The graphics are animated canvas/isometric concept visuals, not full WebGL or finite-element analysis. All model values are estimates from editable assumptions, not measured railway output. Never install hardware on active railway infrastructure without formal approval and qualified engineering validation.

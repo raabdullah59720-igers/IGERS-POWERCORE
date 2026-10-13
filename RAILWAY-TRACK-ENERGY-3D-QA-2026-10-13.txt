@@ -1,63 +1,30 @@
-IGERS POWERCORE · RAILWAY TRACK ENERGY RECOVERY · RELEASE QA
-Release: 2026-10-13-railway-v2
+IGERS POWERCORE — RAILWAY TRACK ENERGY RECOVERY v4 QA
+Date: 2026-10-13 (Asia/Dhaka)
+Source baseline: IGERS-POWERCORE-main (17).zip plus Railway v3 integration
+Release: 2026-10-13-railway-v4
 
-INTEGRATION — PASS
-- Dedicated #railwayEnergy3d panel exists and is linked from the Energy & System Control navigation group.
-- Railway track concept is selectable in the existing Thesis 3D Concept Lab (scene 12/12).
-- Railway track concept is selectable in the existing Live Concept Application Silo (card 12/12).
-- Local SVG asset is included in build.mjs runtime files.
-- Versioned stylesheet/script references and service-worker revision are on railway-v2.
-- HTML duplicate-ID audit: 0 duplicates.
-- Existing app-shell.js was not modified.
+FIXES APPLIED
+- Prevent stale energy estimates from accruing when any energy-calculator field is blank/out of range. The current pass counter can still advance, but invalid-input passes do not add an energy estimate until inputs are valid again.
+- Suppress stale friction numbers and heat/glow visuals while any wheel–rail physics input is invalid. Valid input restores the model.
+- Show a truthful STATIC PREVIEW · REDUCED MOTION status when the user's OS/browser requests reduced motion; no false claim that the train is animating.
+- Bumped railway CSS/JS query revisions and service-worker revision to v4 to reduce stale-asset delivery.
+- Kept recovery energy and wheel–rail slip dissipation separate; heat loss is not added to generated Wh.
 
-BUILD / STATIC VALIDATION — PASS
-- `npm run build` completed successfully.
-- Production `dist/` contains 52 root-level runtime files, below the 98-file target.
-- Build-time local-reference validation passed.
-- `node --check` passed for railway-track-energy.js, thesis-concept-lab.js, live-concept-application-silo.js, build.mjs and sw.js.
-- CSS parsed with tinycss2 without CSS parse-error tokens.
-- Railway SVG parsed as valid XML and was rendered to a PNG preview.
-- Static scene-count audit: 12 Thesis 3D Lab buttons and 12 Live Concept Application Silo cards.
-- HTTP local-server checks returned 200 for index.html, railway JS/CSS/SVG and both scene controller scripts.
-- ZIP archive integrity checked after packaging.
+AUTOMATED CHECKS
+PASS — Static release builder: 52 runtime files, root-level, under the 98-file target; all local index references resolved.
+PASS — Syntax: 14 standalone JavaScript files and 13 inline JavaScript blocks.
+PASS — CSS parser: 10 CSS files parsed without syntax errors.
+PASS — HTML audit: 843 IDs, all unique.
+PASS — CSS local URL audit: no missing local resources.
+PASS — Mocked canvas/DOM functional smoke test: canvas draw paths execute; animation advances module-pass events and session energy; speed/friction inputs recalculate; out-of-range input is rejected; stale energy and invalid-physics visual outputs are suppressed; pause/resume and reset work.
+PASS — Recovery scenario defaults: 1.75 Wh/pass/module, 252 Wh/day, 91.98 kWh/year. Assumptions: 5 Wh mechanical/pass/module, 35% conversion, 90% availability, 40 passes/day/module, 4 modules, 365 operating days.
+PASS — Friction scenario defaults: 6 kN tangential force, 1.20 kW slip-loss power, 30 J/contact, 25 ms contact time at 72 km/h. At 2% slip, the model responds with 2.40 kW and 60 J/contact.
+PASS — ZIP integrity, unique archive names, and root-level file-count checks. Deploy package: 55 files (52 runtime + 3 documents). Patch package: 11 files.
 
-CALCULATOR / MOCKED CANVAS SMOKE TEST — PASS
-Formulae:
-  E_event,module = E_mechanical_available,event,module × conversion_efficiency
-  E_day = E_event,module × passages_per_day_per_module × module_count × system_availability
-  E_year = E_day × operating_days_per_year / 1000
-  P_calendar_average = E_year(kWh) × 1000 / (365 × 24)
-  battery_autonomy = battery_nameplate_kWh × usable_DoD × discharge_efficiency × 1000 / load_W
+NOT VERIFIED
+- Full real-browser end-to-end rendering was attempted, but headless Chromium timed out during startup in this execution environment. No browser screenshot/E2E pass is claimed.
+- The GitHub Pages deployment has not been published or externally checked in this session.
+- No real train, track transducer, telemetry, electrical output, or contact-temperature sensor is connected.
 
-Default editable assumptions:
-- Mechanical energy available at one module per train pass: 5 Wh (placeholder; must be measured).
-- Electrical conversion efficiency: 35%.
-- System availability: 90%.
-- Train passages per day at each module: 40.
-- Active modules: 4.
-- Operating days/year: 365.
-- Example load: 25 W.
-- Battery nameplate capacity: 2 kWh; usable DoD 85%; discharge efficiency 92%.
-
-Expected / checked scenario outputs:
-- Electrical energy per active pass per module: 1.75 Wh.
-- Energy across the selected modules per operating day after availability: 252 Wh/day.
-- Annual energy at 365 operating days: 91.98 kWh/year.
-- Calendar-year average power: 10.50 W.
-- Equivalent daily run-time at 25 W load: 10.1 h/day.
-- Battery autonomy under the entered battery assumptions: 62.6 h.
-- Changing conversion efficiency to 50% recalculated daily / annual output to 360 Wh/day and 131.4 kWh/year.
-- 300 operating days at 50% efficiency and 90% availability recalculated annual output to 108 kWh/year.
-- Fractional train-passage count is rejected instead of silently rounded; 0% availability returns 0 Wh/day.
-- Pause / resume handlers toggle status in isolated test.
-
-REAL-BROWSER / LIVE DEPLOYMENT — NOT VERIFIED
-- Chromium in this execution environment timed out even on a minimal `data:text/html` screenshot test, so an actual browser end-to-end render could not be completed here.
-- GitHub Pages live deployment, external live feeds and actual railway telemetry were not tested.
-- The local mocked-DOM/canvas smoke test exercised module initialization, initial drawing calls, calculations, validation and pause/resume logic; it is not a substitute for a real browser test.
-
-ENGINEERING BOUNDARIES
-- These outputs are scenario estimates. `5 Wh mechanical energy available per pass per module` is a placeholder for experimentally measured extractable energy at the harvester interface, not the train's total kinetic energy and not a claimed field result.
-- No live railway timetable, physical sensor, track strain/vibration measurement or generator telemetry is connected.
-- The canvas is an animated isometric 3D-style schematic, and the gallery SVG is a concept illustration; neither is a validated structural model, finite-element simulation, fabrication drawing or railway operations tool.
-- Before any physical trial, a railway authority and qualified engineers must review rail/fastener/sleeper interface, track geometry, structural fatigue, vibration limits, signalling/electrical isolation, worker safety, maintenance access, net-energy effect and operational approval.
+MODEL BOUNDARY
+This is an animated canvas/isometric engineering concept and input-driven calculator, not a calibrated WebGL model, finite-element analysis, or operational digital twin. Pad displacement is a visual input and does not independently predict Wh. Actual train wheel loads, track dynamics, transducer force-displacement behaviour, rectifier/storage losses, contact slip and temperatures must be measured and validated. Do not install equipment on an active railway without railway-authority approval and qualified track, fatigue, signalling, electrical-isolation and maintenance review.
