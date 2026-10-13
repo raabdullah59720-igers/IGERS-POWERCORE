@@ -39,3 +39,23 @@
 .rte-friction-equation{margin-top:0;color:#ffc18a;border-color:rgba(255,163,92,.18);background:rgba(38,23,14,.38)}
 @media(max-width:900px){.rte-live-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rte-mechanism-head{flex-direction:column}.rte-mechanism-state{max-width:100%;text-align:left}}
 @media(max-width:560px){#rteMechanismCanvas{height:235px}.rte-live-stat-grid{padding:8px;gap:6px}.rte-live-stat{padding:8px}.rte-live-stat>span{min-height:0}.rte-physics-block{margin:0 10px 11px}.rte-physics-fields{padding:10px;gap:9px}.rte-physics-heading{align-items:flex-start;flex-direction:column}.rte-physics-heading span{text-align:left}.rte-mechanism-head{padding:12px 11px 8px}.rte-mechanism-state{font-size:7px}}
+
+/* v5: true GPU WebGL perspective scene with accessible 2D fallback. */
+.rte-stage{overflow:hidden}
+#rteRailWebglCanvas{position:absolute;inset:0;z-index:1;display:none;width:100%;height:100%;touch-action:pan-y;outline:none}
+.rte-stage.rte-webgl-enabled{height:clamp(320px,39vw,480px);min-height:320px;background:radial-gradient(ellipse at 52% 44%,rgba(39,149,173,.20),transparent 64%),linear-gradient(180deg,#071925,#030d14)}
+.rte-stage.rte-webgl-enabled #rteRailCanvas{display:none!important}
+.rte-stage.rte-webgl-enabled #rteRailWebglCanvas{display:block}
+.rte-stage-bottom{z-index:3}
+.rte-webgl-legend{position:absolute;z-index:3;left:14px;right:14px;bottom:52px;display:flex;flex-wrap:wrap;gap:7px 14px;pointer-events:none}
+.rte-webgl-legend span{display:inline-flex;align-items:center;gap:6px;padding:5px 7px;border:1px solid rgba(125,188,208,.18);border-radius:5px;background:rgba(4,16,24,.8);color:#bbd0da;font:800 7px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.035em}
+.rte-webgl-legend i{display:inline-block;width:7px;height:7px;border-radius:2px}
+.rte-legend-train{background:#1da7bf;box-shadow:0 0 7px #1da7bf}
+.rte-legend-pad{background:#4de0d1;box-shadow:0 0 7px #4de0d1}
+.rte-legend-flow{background:#aafff4;box-shadow:0 0 7px #4de0d1}
+.rte-legend-heat{background:#ff7546;box-shadow:0 0 7px #ff7546}
+@media(max-width:900px){.rte-stage.rte-webgl-enabled{height:380px}}
+@media(max-width:560px){.rte-stage.rte-webgl-enabled{height:315px;min-height:290px}.rte-webgl-legend{left:8px;right:8px;bottom:45px;gap:4px}.rte-webgl-legend span{font-size:6px;padding:4px 5px}.rte-webgl-legend i{width:6px;height:6px}}
+
+.rte-legend-view{background:#e9f2ff;box-shadow:0 0 7px #a8d1ff}
+#rteRailWebglCanvas:focus-visible{outline:2px solid #7eeadd;outline-offset:-4px}

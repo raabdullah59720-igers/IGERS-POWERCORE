@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IGERS-BD-01 | Integrated Energy Recovery & Storage</title>
-<meta name="igers-railway-concept-release" content="2026-10-13-railway-v2">
+<meta name="igers-railway-concept-release" content="2026-10-13-railway-v6">
 <meta name="description" content="IGERS-BD-01 conceptual engineering ecosystem, live world time, Bangladesh time, local time and weather-ready dashboard.">
 <style>
 :root{--bg:#050b10;--panel:#0b151e;--panel2:#0d1d28;--line:#1b3545;--text:#eef8fc;--muted:#8da7b6;--cyan:#55ddff;--green:#8af3bf;--gold:#ffd37a;--danger:#ff8d8d;--shadow:0 22px 70px rgba(0,0,0,.3)}
@@ -369,7 +369,7 @@ body[data-theme="day"] .ad3d-section{background:linear-gradient(180deg,#eef7fa,#
 <link rel="stylesheet" href="powercore-command-center.css?v=20261009-powersuite12-v2">
 <link rel="stylesheet" href="thesis-concept-lab.css?v=20261012-concept-v4">
 <link rel="stylesheet" href="live-concept-application-silo.css?v=20261012-bugfix-v7">
-<link rel="stylesheet" href="railway-track-energy.css?v=20261013-railway-v4">
+<link rel="stylesheet" href="railway-track-energy.css?v=20261013-railway-v6">
 <link rel="stylesheet" href="lcs-scenario-vault.css?v=20261012-bugfix-v7">
 <link rel="stylesheet" href="company-operations-suite.css?v=20261010-company-v2">
 <link rel="stylesheet" href="app-shell.css?v=20261011-dynamic-recovery-v5">
@@ -986,7 +986,7 @@ body[data-theme="day"] .ad3d-section{background:linear-gradient(180deg,#eef7fa,#
   </div>
 </section>
 
-<section id="railwayEnergy3d" class="rte-section" aria-labelledby="rteTitle" data-rte-release="2026-10-13-railway-v4">
+<section id="railwayEnergy3d" class="rte-section" aria-labelledby="rteTitle" data-rte-release="2026-10-13-railway-v6">
   <div class="rte-shell">
     <header class="rte-header">
       <div><div class="rte-eyebrow">IGERS-BD-01 · RAIL INFRASTRUCTURE CONCEPT 12</div><h2 class="rte-title" id="rteTitle">RAILWAY TRACK ENERGY RECOVERY</h2><p class="rte-subtitle">Live concept demo: a coloured train passes over highlighted rail pads; the cutaway shows sleeper/pad compression, electrical conditioning and storage, alongside the separate wheel–steel-rail friction and heat-loss model. All live values are simulated from editable assumptions, not railway telemetry.</p></div>
@@ -994,8 +994,8 @@ body[data-theme="day"] .ad3d-section{background:linear-gradient(180deg,#eef7fa,#
     </header>
     <div class="rte-grid">
       <article class="rte-card rte-visual-card">
-        <div class="rte-card-top"><strong>3D-style railway digital concept</strong><span class="rte-tag">SCHEMATIC · NOT TO SCALE</span></div>
-        <div class="rte-stage"><canvas id="rteRailCanvas" role="img" aria-label="Animated coloured train passing over steel rails, sleepers and highlighted energy pads, with live pad-contact pulses, wheel–rail friction glow, converter and storage node."></canvas><div class="rte-hud rte-hud-left"><span>MODEL</span><b>RAIL / WAYSIDE</b><span id="rteAnimBadge">ANIMATION RUNNING</span></div><div class="rte-hud rte-hud-right"><span>DATA STATE</span><b>LIVE DEMO</b><span>SIMULATED · NO HARDWARE FEED</span></div><div class="rte-stage-bottom"><span class="rte-chip">01 · TRAIN + TRACK</span><span class="rte-chip">02 · HARVEST → STORE → USE</span></div></div>
+        <div class="rte-card-top"><strong>LIVE 3D RAILWAY DIGITAL TWIN CONCEPT</strong><span class="rte-tag">WEBGL · SIMULATED</span></div>
+        <div class="rte-stage"><canvas id="rteRailWebglCanvas" aria-label="Interactive WebGL 3D railway scene: coloured locomotive and passenger cars move on steel rails; under-sleeper recovery pads compress when wheels pass, cyan energy pulses travel to converter and battery storage, and orange sparks indicate separate wheel–rail friction loss. Drag to rotate the 3D view; arrow keys also work when focused." role="img"></canvas><canvas id="rteRailCanvas" role="img" aria-label="Animated coloured train passing over steel rails, sleepers and highlighted energy pads, with live pad-contact pulses, wheel–rail friction glow, converter and storage node."></canvas><div class="rte-hud rte-hud-left"><span>MODEL</span><b>RAIL / WAYSIDE</b><span id="rteAnimBadge">ANIMATION RUNNING</span></div><div class="rte-hud rte-hud-right"><span>DATA STATE</span><b>LIVE DEMO</b><span>SIMULATED · NO HARDWARE FEED</span></div><div class="rte-stage-bottom"><span class="rte-chip">01 · TRAIN + TRACK</span><span class="rte-chip">02 · HARVEST → STORE → USE</span></div></div>
         <section class="rte-mechanism-wrap" aria-labelledby="rteMechanismHeading">
           <div class="rte-mechanism-head"><div><strong id="rteMechanismHeading">LIVE MECHANISM CUTAWAY</strong><p>LEFT · wheel load compresses a conceptual transducer pad under the sleeper. RIGHT · tangential wheel–rail slip dissipates energy as heat; it is not counted as recovered electricity.</p></div><span id="rteMechanismState" class="rte-mechanism-state" aria-live="polite">PAD IDLE · FRICTION SCENARIO READY</span></div>
           <canvas id="rteMechanismCanvas" role="img" aria-label="Live cutaway mechanism: a wheel loads a steel rail and sleeper over a compressible energy harvesting transducer with wires to a rectifier and storage, next to a wheel steel-rail friction contact showing slip and heat loss."></canvas>
@@ -1052,7 +1052,7 @@ body[data-theme="day"] .ad3d-section{background:linear-gradient(180deg,#eef7fa,#
       </aside>
     </div>
     <div class="rte-notes"><div class="rte-note"><strong>Potential use case.</strong> Research whether recovered energy can support low-power track-condition sensors, local telemetry, condition indicators or a small auxiliary node. This concept is <strong>not</strong> a proposal to power train traction, brakes, signalling interlocks or the national railway grid from the modeled output.</div><div class="rte-note safety"><strong>Rail safety boundary.</strong> No device should be attached to active rails, fasteners or sleepers without railway-authority approval, structural / fatigue testing, track-geometry checks, electrical isolation and maintenance-access review. Energy extraction must not compromise safe track operation.</div></div>
-    <div class="rte-source-line"><span>Model boundary: animated concept + assumption-based friction/pad arithmetic · no live train feed or physical sensors connected.</span><span>Release: <code>2026-10-13-railway-v4</code></span></div>
+    <div class="rte-source-line"><span>Model boundary: animated concept + assumption-based friction/pad arithmetic · no live train feed or physical sensors connected.</span><span>Release: <code>2026-10-13-railway-v6</code></span></div>
   </div>
 </section>
 
@@ -2664,6 +2664,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="company-operations-suite.js?v=20261010-company-v2" defer></script>
 <script src="i18n.js?v=20261010-lang-v2" defer></script>
 <script src="app-shell.js?v=20261011-dynamic-recovery-v5" defer></script>
-<script src="railway-track-energy.js?v=20261013-railway-v4" defer></script>
+<script src="railway-track-energy.js?v=20261013-railway-v6" defer></script>
+<script src="railway-track-webgl.js?v=20261013-railway-v6" defer></script>
 </body>
 </html>

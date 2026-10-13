@@ -1,30 +1,26 @@
-IGERS POWERCORE — RAILWAY TRACK ENERGY RECOVERY v4 QA
-Date: 2026-10-13 (Asia/Dhaka)
-Source baseline: IGERS-POWERCORE-main (17).zip plus Railway v3 integration
-Release: 2026-10-13-railway-v4
+IGERS POWERCORE — RAILWAY ENERGY RECOVERY v6 QA REPORT
+Date: 2026-10-13
+Source baseline: /mnt/data/IGERS-POWERCORE-RAILWAY-3D-DEPLOY.zip (user's latest supplied release), containing the main IGERS project and Railway v5 WebGL module.
 
-FIXES APPLIED
-- Prevent stale energy estimates from accruing when any energy-calculator field is blank/out of range. The current pass counter can still advance, but invalid-input passes do not add an energy estimate until inputs are valid again.
-- Suppress stale friction numbers and heat/glow visuals while any wheel–rail physics input is invalid. Valid input restores the model.
-- Show a truthful STATIC PREVIEW · REDUCED MOTION status when the user's OS/browser requests reduced motion; no false claim that the train is animating.
-- Bumped railway CSS/JS query revisions and service-worker revision to v4 to reduce stale-asset delivery.
-- Kept recovery energy and wheel–rail slip dissipation separate; heat loss is not added to generated Wh.
+BUGS FOUND AND FIXED
+1. Geometry/contact alignment: In the 2D fallback, the harvester pad cuboid's top face was inside the sleeper instead of meeting its underside. Corrected the lower z coordinate so the pad top meets the sleeper underside. In the WebGL model, pad top alignment now follows the loaded sleeper underside instead of leaving a visual gap during compression.
+2. Reset/session accounting: Resetting while a wheel was already approaching or loading a pad could immediately recount that in-flight pass. Reset now latches zones already in contact range; the same train contact will not be credited again until a fresh pass.
+3. Mixed energy assumptions: Session Wh totals could combine values calculated with different input assumptions. Changing a valid energy scenario now clears its simulated session counters; invalid input suppresses calculated/live Wh and clears totals that used assumptions no longer considered valid.
+4. WebGL performance: The GPU renderer previously requested a new frame continuously even when its panel was hidden or the simulation was paused. It now sleeps off-screen/when the tab is hidden, stops continuous rendering when paused, and redraws once when inputs or camera controls change. Render errors stop retrying every frame and keep the 2D fallback available.
+5. Release metadata: HTML release metadata, asset query strings and service-worker revision now consistently identify railway v6 (previous metadata incorrectly said v2 while assets reported v5).
 
-AUTOMATED CHECKS
-PASS — Static release builder: 52 runtime files, root-level, under the 98-file target; all local index references resolved.
-PASS — Syntax: 14 standalone JavaScript files and 13 inline JavaScript blocks.
-PASS — CSS parser: 10 CSS files parsed without syntax errors.
-PASS — HTML audit: 843 IDs, all unique.
-PASS — CSS local URL audit: no missing local resources.
-PASS — Mocked canvas/DOM functional smoke test: canvas draw paths execute; animation advances module-pass events and session energy; speed/friction inputs recalculate; out-of-range input is rejected; stale energy and invalid-physics visual outputs are suppressed; pause/resume and reset work.
-PASS — Recovery scenario defaults: 1.75 Wh/pass/module, 252 Wh/day, 91.98 kWh/year. Assumptions: 5 Wh mechanical/pass/module, 35% conversion, 90% availability, 40 passes/day/module, 4 modules, 365 operating days.
-PASS — Friction scenario defaults: 6 kN tangential force, 1.20 kW slip-loss power, 30 J/contact, 25 ms contact time at 72 km/h. At 2% slip, the model responds with 2.40 kW and 60 J/contact.
-PASS — ZIP integrity, unique archive names, and root-level file-count checks. Deploy package: 55 files (52 runtime + 3 documents). Patch package: 11 files.
+AUTOMATED VALIDATION PERFORMED
+- PASS: node --check on all 15 JavaScript files in the deployment root.
+- PASS: all 4 inline scripts in index.html pass node syntax checking.
+- PASS: HTML parsing: 844 IDs, all unique; no duplicate IDs.
+- PASS: all 54 in-page hash references resolve to an existing ID.
+- PASS: every local src/href reference resolves to a file in the package.
+- PASS: energy-module mock-DOM regression tests: default arithmetic (1.75 Wh/pass/module, 252 Wh/day, 91.98 kWh/year, 10.50 W annualized average); train passes a pad; reset while paused at pad; valid scenario change reset; invalid energy input suppression; invalid friction input suppression; recovery after valid input.
+- PASS: mocked-WebGL tests: scene render/draw calls, canvas/fallback switching, pause frame behavior, camera redraw when paused, off-screen stop, and resume redraw.
+- PASS: ZIP archive integrity and package file count (56 root-level entries, below the user's 98-file target).
 
 NOT VERIFIED
-- Full real-browser end-to-end rendering was attempted, but headless Chromium timed out during startup in this execution environment. No browser screenshot/E2E pass is claimed.
-- The GitHub Pages deployment has not been published or externally checked in this session.
-- No real train, track transducer, telemetry, electrical output, or contact-temperature sensor is connected.
+- Native GPU pixel rendering and live GitHub Pages operation were not verified. Chromium headless could not open even a simple local/data test page in this execution environment and timed out. Mocked WebGL validates JavaScript control flow and draw submissions, not a real GPU image. The actual published site still needs a regular desktop Chrome/Edge check.
 
-MODEL BOUNDARY
-This is an animated canvas/isometric engineering concept and input-driven calculator, not a calibrated WebGL model, finite-element analysis, or operational digital twin. Pad displacement is a visual input and does not independently predict Wh. Actual train wheel loads, track dynamics, transducer force-displacement behaviour, rectifier/storage losses, contact slip and temperatures must be measured and validated. Do not install equipment on an active railway without railway-authority approval and qualified track, fatigue, signalling, electrical-isolation and maintenance review.
+ENGINEERING BOUNDARIES
+No real train feed, rail load cell, displacement sensor or battery telemetry is connected. Energy values are assumption-based; the contact length and pad deformation are illustrative. Friction loss is kept separate from electrical recovery. This is a conceptual visualization—not a calibrated railway digital twin, finite-element analysis, certification or operational safety system. No device should be installed on active railway infrastructure without railway-authority approval and professional structural/fatigue/signalling/electrical safety validation.

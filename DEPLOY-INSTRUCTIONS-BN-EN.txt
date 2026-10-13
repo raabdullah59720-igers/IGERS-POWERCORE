@@ -1,19 +1,23 @@
-IGERS POWERCORE RAILWAY LIVE DEMO v4 — DEPLOY INSTRUCTIONS
+IGERS POWERCORE RAILWAY LIVE 3D DEMO v6 — DEPLOY INSTRUCTIONS
 
-OPTION A — COMPLETE DEPLOY ZIP (recommended for GitHub Pages)
+COMPLETE DEPLOY ZIP (recommended)
 1. Download IGERS-POWERCORE-RAILWAY-3D-DEPLOY.zip.
-2. Extract it locally.
-3. Upload the 55 root-level files into the same repository folder as index.html.
-4. Replace same-named files from the matching IGERS-POWERCORE-main (17).zip baseline. Do not delete unrelated project files.
-5. Commit the update and allow GitHub Pages to deploy.
-6. Hard-refresh the published site (Ctrl+Shift+R) and open Energy & System Control → Railway Energy Recovery · 3D.
-7. Test train motion, pad pulses, cutaway energy flow, wheel–rail heat/slip, edit controls, invalid-input warnings, Pause/Resume and Reset.
+2. Extract it on your computer.
+3. Upload the 56 root-level entries into the same repository folder as index.html.
+4. Replace same-named files from the matching IGERS-POWERCORE-main (17).zip baseline. Retain unrelated app files; do not delete them.
+5. Commit the update and let GitHub Pages deploy.
+6. Hard-refresh the site (Ctrl+Shift+R), open Energy & System Control → Railway Energy Recovery · 3D.
+7. Check the coloured train, pad compression, cyan energy flow to storage, separate orange friction heat-loss, drag-to-rotate view, editable inputs, Pause/Resume and Reset.
 
-OPTION B — PATCH ZIP
-Use IGERS-POWERCORE-RAILWAY-3D-PATCH.zip only as an overlay on the source represented by IGERS-POWERCORE-main (17).zip. Extract into the repository root and replace the listed same-name files. It is not a standalone app. Do not upload the Deploy ZIP and Patch ZIP together.
+PATCH ZIP
+Use the Patch ZIP only as an overlay on the source represented by IGERS-POWERCORE-main (17).zip. Extract into repository root and replace its listed files. It is not a standalone app. Do not upload Deploy ZIP and Patch ZIP together.
 
-TEST STATUS
-Static build, JS/CSS syntax, HTML/asset checks, mocked canvas/control smoke test and ZIP integrity passed. Real-browser end-to-end rendering and the live GitHub Pages deployment could not be verified because headless Chromium timed out during startup in this environment.
+VALIDATION
+- PASS: syntax checks for all JavaScript files and inline scripts.
+- PASS: 844 unique HTML IDs, no duplicate IDs, all hash links and local assets resolve.
+- PASS: mocked calculator/control regressions and mocked-WebGL pause/visibility/camera redraw tests.
+- PASS: ZIP integrity; complete package has 56 root-level entries, below the 98-file target.
+- NOT VERIFIED: native GPU pixel rendering and live GitHub Pages deployment. Chromium timed out in this environment even for a simple test page; verify in normal desktop Chrome/Edge after deployment.
 
-NOTICE
-The graphics are animated canvas/isometric concept visuals, not full WebGL or finite-element analysis. All model values are estimates from editable assumptions, not measured railway output. Never install hardware on active railway infrastructure without formal approval and qualified engineering validation.
+ENGINEERING NOTICE
+This is an assumption-driven conceptual simulation. No real train or sensor data is connected. The result is not an engineering certification or railway safety approval. No device should be installed on operating track without railway-authority approval and professional structural, fatigue, signalling, electrical and operational review.

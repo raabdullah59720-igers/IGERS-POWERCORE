@@ -1,5 +1,6 @@
 /* IGERS-BD-01 · Railway Track Energy Recovery concept module.
- * Canvas is an illustrative browser simulation; the calculator uses explicit user assumptions.
+ * A self-contained WebGL perspective renderer consumes the shared state; this file keeps
+ * the canvas fallback, cutaway and assumption-based calculator synchronized.
  * It is not connected to railway telemetry and must not be used for operational rail decisions.
  */
 (function () {
@@ -20,16 +21,17 @@
   const byId = (id) => document.getElementById(id);
   const fieldIds = ['rteWhPerPass', 'rteEfficiency', 'rteAvailability', 'rtePassesDay', 'rteOperatingDays', 'rteModules', 'rteLoadW', 'rteBatteryKwh', 'rteBatteryDod', 'rteBatteryEfficiency'];
   const physicsFieldIds = ['rteSpeedKph', 'rteWheelLoadKn', 'rteAdhesionMu', 'rteTractionUsePct', 'rteSlipPct', 'rtePadCompressionMm'];
-  const railPadXs = [-215, -120, -25, 70];
+  const railPadXs = [-230, -101, 28, 157]; // selected recovery zones aligned with sleeper centres
   const CONTACT_LENGTH_M = 0.50; // explicitly assumed visual contact length, not a measured contact patch
   const mechCanvas = byId('rteMechanismCanvas');
   const mechCtx = mechCanvas && mechCanvas.getContext ? mechCanvas.getContext('2d') : null;
   let width = 800, height = 380, dpr = 1, frame = 0, elapsed = 0, lastStamp = 0, playing = true;
   let mechWidth = 800, mechHeight = 270, mechDpr = 1;
-  let distanceTravelled = 300, previousTrainX = null;
+  let distanceTravelled = 380, previousTrainX = null;
   let padVisitLatched = railPadXs.map(() => false);
   let padIntensities = railPadXs.map(() => 0), activePadCount = 0, peakPadIntensity = 0;
   let liveModulePassEvents = 0, liveEnergyWh = 0, recoveredPerPassWh = 1.75;
+  let lastEnergyScenarioSignature = null;
   let energyInputsValid = true, physicsInputsValid = true;
   let frictionState = { speedKph: 72, wheelLoadKn: 80, mu: 0.25, forceUse: 0.30, slipRatio: 0.01, compressionMm: 2, forceKn: 6, powerKw: 1.2, energyJ: 30, contactMs: 25 };
   let reducedMotion = false;
@@ -47,6 +49,22 @@
     return n.toLocaleString(undefined, { maximumFractionDigits: maxDigits, minimumFractionDigits: 0 });
   }
   function put(id, value) { const el = byId(id); if (el) el.textContent = value; }
+  // Keep the WebGL scene's read-only state fresh even while the animation is paused.
+  function syncVisualStateInputs() {
+    const state = window.__igersRailwayVisualState;
+    if (!state) return;
+    state.energyInputsValid = energyInputsValid;
+    state.physicsInputsValid = physicsInputsValid;
+    state.speedKph = frictionState.speedKph;
+    state.compressionMm = frictionState.compressionMm;
+    state.slipRatio = frictionState.slipRatio;
+    state.forceKn = frictionState.forceKn;
+    state.powerKw = frictionState.powerKw;
+    state.liveModulePassEvents = liveModulePassEvents;
+    state.liveEnergyWh = liveEnergyWh;
+    state.animating = Boolean(playing && !reducedMotion);
+    window.dispatchEvent(new CustomEvent('igers:railway-statechange'));
+  }
   function recalculate() {
     const specs = {
       rteWhPerPass: [0, 1000000], rteEfficiency: [0, 100], rteAvailability: [0, 100],
@@ -67,8 +85,17 @@
       if (!isValid) valid = false;
     }
     if (!valid) {
-      // Never keep using a stale yield assumption after the user makes an input invalid.
+      // Suppress totals that were accumulated under a now-invalid or mixed scenario.
+      if (energyInputsValid) {
+        liveModulePassEvents = 0;
+        liveEnergyWh = 0;
+        padVisitLatched = railPadXs.map((_, i) => (padIntensities[i] || 0) > 0.001);
+        put('rteLivePulseCount', '0');
+        put('rteLiveEnergyWh', 'CHECK INPUT');
+      }
+      lastEnergyScenarioSignature = null;
       energyInputsValid = false;
+      syncVisualStateInputs();
       recoveredPerPassWh = 0;
       ['rteMetricPass','rteMetricDay','rteMetricYear','rteMetricAverage','rteMetricDeviceHours','rteMetricBatteryHours'].forEach(id => put(id, 'CHECK INPUT'));
       put('rteFormulaDaily', 'Enter values inside the shown limits; passages, operating days and module count must be whole numbers.');
@@ -76,7 +103,18 @@
       put('rteResultNote', 'One or more inputs are blank or outside the accepted range. Correct highlighted fields to recalculate.');
       return;
     }
+    const scenarioSignature = fieldIds.map(id => `${id}=${inputs[id]}`).join('|');
+    if (lastEnergyScenarioSignature !== null && scenarioSignature !== lastEnergyScenarioSignature) {
+      // Do not mix session Wh from different model assumptions in one counter.
+      liveModulePassEvents = 0;
+      liveEnergyWh = 0;
+      padVisitLatched = railPadXs.map((_, i) => (padIntensities[i] || 0) > 0.001);
+      put('rteLivePulseCount', '0');
+      put('rteLiveEnergyWh', '0.000 Wh');
+    }
+    lastEnergyScenarioSignature = scenarioSignature;
     energyInputsValid = true;
+    syncVisualStateInputs();
     const wh = inputs.rteWhPerPass;
     const eff = inputs.rteEfficiency / 100;
     const availability = inputs.rteAvailability / 100;
@@ -133,6 +171,7 @@
       // Suppress stale force/heat indicators while any physics input is invalid.
       physicsInputsValid = false;
       frictionState = { ...frictionState, slipRatio: 0, compressionMm: 0, forceKn: 0, powerKw: 0, energyJ: 0, contactMs: 0 };
+      syncVisualStateInputs();
       ['rteFrictionForce', 'rteFrictionPower', 'rteFrictionEnergy', 'rteContactTime'].forEach(id => put(id, 'CHECK INPUT'));
       put('rteMechanismState', 'CHECK PHYSICS INPUTS · OUTPUT SUPPRESSED');
       if (!frame) { drawBackground(); drawRailway(elapsed); drawMechanism(elapsed); }
@@ -152,6 +191,7 @@
     const energyJ = forceKn * 1000 * slipRatio * CONTACT_LENGTH_M;
     const contactMs = CONTACT_LENGTH_M / speedMps * 1000;
     frictionState = { speedKph, wheelLoadKn, mu, forceUse, slipRatio, compressionMm, forceKn, powerKw, energyJ, contactMs };
+    syncVisualStateInputs();
     put('rteSpeedReadout', `${fmt(speedKph, 0)} km/h`);
     put('rteFrictionForce', `${fmt(forceKn, 2)} kN`);
     put('rteFrictionPower', `${fmt(powerKw, 3)} kW`);
@@ -164,8 +204,10 @@
 
   // Isometric projection for a lightweight, dependency-free 3D-style schematic.
   function project(x, y, z) {
-    const s = Math.min(width / 1000, height / 470);
-    return { x: width * 0.47 + (x + y * 0.92) * s, y: height * 0.49 + (x * 0.25 - y * 0.43 - z) * s };
+    // Horizontal fit is slightly wider than vertical scale so the full train remains visible in fallback mode.
+    const sx = Math.min(width / 1280, height / 470);
+    const sy = Math.min(width / 1000, height / 470);
+    return { x: width * 0.50 + (x + y * 0.92) * sx, y: height * 0.50 + (x * 0.25 - y * 0.43 - z) * sy };
   }
   function path(points, fill, stroke, lineWidth = 1) {
     ctx.beginPath();
@@ -214,22 +256,34 @@
     });
     activePadCount = padIntensities.filter(v => v > 0.05).length;
     peakPadIntensity = padIntensities.length ? Math.max(...padIntensities) : 0;
-    // Count one module-level train passage when the leading bogie enters a zone,
-    // rather than treating each axle pulse as an entire train passage.
+    // Count one module passage only when an axle actually loads that pad zone.
+    // The latch suppresses duplicate counts from the remaining axles of the same train.
     railPadXs.forEach((x, i) => {
-      if (!padVisitLatched[i] && trainX >= x - 71 && trainX <= x + 68) {
+      if (!padVisitLatched[i] && padIntensities[i] > 0.08) {
         padVisitLatched[i] = true;
-        liveModulePassEvents += 1;
-        if (energyInputsValid) liveEnergyWh += recoveredPerPassWh;
+        // Invalid assumptions can still show pad compression, but cannot create a credited energy event.
+        if (energyInputsValid) {
+          liveModulePassEvents += 1;
+          liveEnergyWh += recoveredPerPassWh;
+        }
       }
     });
     put('rteLivePadState', `${activePadCount} / ${railPadXs.length}`);
     const padLabel = activePadCount ? `${activePadCount} zone(s) under wheel load · simulated` : 'Train not over a recovery zone';
     put('rteLivePadLabel', energyInputsValid ? padLabel : `${padLabel} · energy estimate paused: correct calculator inputs`);
     put('rteLivePulseCount', fmt(liveModulePassEvents, 0));
-    put('rteLiveEnergyWh', `${fmt(liveEnergyWh, 3)} Wh`);
+    put('rteLiveEnergyWh', energyInputsValid ? `${fmt(liveEnergyWh, 3)} Wh` : 'CHECK INPUT');
     put('rteLiveCompression', `${fmt(frictionState.compressionMm * peakPadIntensity, 2)} mm`);
     put('rteMechanismState', !physicsInputsValid ? 'PHYSICS INPUTS INVALID · OUTPUT SUPPRESSED' : activePadCount ? `PAD LOADED · ${activePadCount}/${railPadXs.length} ZONES · FRICTION ${fmt(frictionState.powerKw, 2)} kW` : `PAD IDLE · FRICTION MODEL ${fmt(frictionState.powerKw, 2)} kW`);
+    // Shared read-only frame state for the GPU scene. No hardware/live telemetry is implied.
+    window.__igersRailwayVisualState = {
+      trainX, elapsed: nowSeconds, distanceTravelled, padIntensities: padIntensities.slice(),
+      activePadCount, liveModulePassEvents, liveEnergyWh, speedKph: frictionState.speedKph,
+      compressionMm: frictionState.compressionMm, slipRatio: frictionState.slipRatio,
+      forceKn: frictionState.forceKn, powerKw: frictionState.powerKw,
+      physicsInputsValid, energyInputsValid, playing, animating: Boolean(playing && !reducedMotion)
+    };
+    if (!playing || reducedMotion) window.dispatchEvent(new CustomEvent('igers:railway-statechange'));
   }
 
   function drawRailway(nowSeconds) {
@@ -239,28 +293,40 @@
     // Ballast bed / track foundation.
     path([[-465,-57,0],[465,-57,0],[465,57,0],[-465,57,0]], '#162c38', '#244858', 1);
     path([[-465,-53,2],[465,-53,2],[465,53,2],[-465,53,2]], '#1b3542', 'rgba(114,174,194,.24)', .6);
-    // Sleepers are separated so the moving train and rails remain visible.
-    for (let x = -445; x <= 445; x += 43) {
-      path([[x-6,-47,3],[x+6,-47,3],[x+6,47,3],[x-6,47,3]], '#536a73', '#70868e', .7);
-      path([[x-6,-47,3],[x+6,-47,3],[x+6,-47,8],[x-6,-47,8]], '#71858b', '#8ca2a7', .5);
+    // Conceptual transducer pads are BELOW selected sleepers, never on top of the rail.
+    railPadXs.forEach((x, i) => {
+      const pulse = padIntensities[i] || 0;
+      const padH = 2.7 - pulse * 0.55;
+      const padZ = 3 - padH; // cuboid() takes the lower z face: pad top now touches sleeper underside z=3
+      const active = pulse > 0.08;
+      cuboid(x, 0, padZ, 25, 22, padH, { top: active ? '#39d9c3' : '#b98746', front: active ? '#168d7e' : '#805825', side: active ? '#12665f' : '#5a3b1c', edge: active ? '#b5fff5' : '#ffd58c' });
+      // Exposed near-side indicator lip makes the hidden under-sleeper pad readable from this camera angle.
+      cuboid(x, -14, 2.0, 17, 3, 1.1, { top: active ? '#85fff0' : '#f1bd70', front: active ? '#16aa9a' : '#8c5d2a', side: active ? '#117367' : '#63421d', edge: active ? '#e0fff9' : '#ffe2a8' });
+      if (active) {
+        const p = project(x, -14, 2.7);
+        ctx.save(); ctx.globalAlpha = .35 + pulse * .65; ctx.fillStyle = '#7dfff0'; ctx.shadowColor = '#4de0d1'; ctx.shadowBlur = 12; ctx.beginPath(); ctx.arc(p.x, p.y, 3 + pulse * 3, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      }
+    });
+    // Selected recovery sleepers align exactly with the pad centres.
+    const sleeperXs = [];
+    for (let x = -445; x <= 445; x += 43) sleeperXs.push(x);
+    railPadXs.forEach(x => { if (!sleeperXs.some(s => Math.abs(s - x) < 5)) sleeperXs.push(x); });
+    sleeperXs.sort((a,b)=>a-b);
+    for (const x of sleeperXs) {
+      const padIndex = railPadXs.findIndex(px => Math.abs(px-x) < 5);
+      const pulse = padIndex >= 0 ? (padIntensities[padIndex] || 0) : 0;
+      path([[x-6,-47,3],[x+6,-47,3],[x+6,47,3],[x-6,47,3]], pulse > .08 ? '#718f91' : '#536a73', '#8ca2a7', .7);
+      path([[x-6,-47,3],[x+6,-47,3],[x+6,-47,8-pulse*.25],[x-6,-47,8-pulse*.25]], pulse > .08 ? '#a6c5c6' : '#71858b', '#8ca2a7', .5);
     }
     // Steel rails with dark edges and cyan specular glint.
     for (const y of [-27, 27]) {
       line([[-465,y,10],[465,y,10]], '#263b44', 9, .95);
       line([[-465,y,11],[465,y,11]], '#8da6b0', 4, .95);
       line([[-465,y-2,12],[465,y-2,12]], '#d7f0f4', 1.1, .8);
+      sleeperXs.forEach(x => {
+        line([[x-2,y-5,8],[x+2,y-5,8]], '#b8c9cc', 1, .8);
+      });
     }
-    // High-visibility status markers on the trackbed: the actual under-sleeper arrangement is shown in the live cutaway below.
-    railPadXs.forEach((x, i) => {
-      const pulse = padIntensities[i] || 0;
-      const top = pulse > 0.08 ? '#6ffff0' : '#d6a04e';
-      const front = pulse > 0.08 ? '#168d7e' : '#805825';
-      const edge = pulse > 0.08 ? '#b5fff5' : '#ffd58c';
-      cuboid(x, 0, 7.6 + (pulse * 0.3), 26, 15, Math.max(1.3, 2.2 - pulse * 0.65), { top, front, side: pulse > 0.08 ? '#12665f' : '#5a3b1c', edge });
-      const point = project(x, 0, 13);
-      ctx.save(); ctx.globalAlpha = 0.2 + pulse * 0.8; ctx.fillStyle = top; ctx.shadowColor = top; ctx.shadowBlur = 7 + pulse * 11; ctx.beginPath(); ctx.arc(point.x, point.y, 2 + pulse * 2, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-      if (pulse > 0.2) line([[x, 0, 12], [x, 0, 23 + pulse * 5]], '#ffc46b', 1.6, pulse);
-    });
     // Trackside vibration / small-deflection energy harvesting modules (concept).
     const moduleXs = railPadXs;
     moduleXs.forEach((x, i) => {
@@ -270,14 +336,14 @@
       line([[x,-70,5],[x,-70,9]], '#ffcf7f', 1.2, .8);
     });
     // Cable route from the modules to power conditioning/storage.
-    line([[-215,-96,7],[-170,-112,7],[-95,-112,7],[-20,-112,7],[55,-112,7],[135,-127,7],[215,-145,7]], '#1a6e77', 4, .92);
-    line([[-215,-96,8],[-170,-112,8],[-95,-112,8],[-20,-112,8],[55,-112,8],[135,-127,8],[215,-145,8]], '#4de0d1', 1.3, .8);
+    line([[-230,-96,7],[-170,-112,7],[-101,-112,7],[28,-112,7],[157,-112,7],[215,-127,7],[260,-145,7]], '#1a6e77', 4, .92);
+    line([[-230,-96,8],[-170,-112,8],[-101,-112,8],[28,-112,8],[157,-112,8],[215,-127,8],[260,-145,8]], '#4de0d1', 1.3, .8);
     // Energy packets are shown only while a wheel is loading at least one recovery zone.
-    if (peakPadIntensity > 0.05) {
+    if (energyInputsValid && peakPadIntensity > 0.05) {
       ctx.save(); ctx.globalAlpha = Math.min(1, 0.25 + peakPadIntensity * 0.75);
       for (let i = 0; i < 7; i++) {
         const t = ((nowSeconds * .45 + i / 7) % 1);
-        const pathNodes = [[-215,-96,11],[-170,-112,11],[-95,-112,11],[-20,-112,11],[55,-112,11],[135,-127,11],[215,-145,11]];
+        const pathNodes = [[-230,-96,11],[-170,-112,11],[-101,-112,11],[28,-112,11],[157,-112,11],[215,-127,11],[260,-145,11]];
         const scaled = t * (pathNodes.length - 1); const idx = Math.min(pathNodes.length - 2, Math.floor(scaled)); const f = scaled - idx;
         const a = pathNodes[idx], b = pathNodes[idx + 1]; circleAt(a[0] + (b[0]-a[0])*f, a[1] + (b[1]-a[1])*f, a[2] + (b[2]-a[2])*f, 3.5, '#c2fff5', '#4de0d1');
       }
@@ -357,14 +423,14 @@
     c.clearRect(0, 0, w, h);
     const bg = c.createLinearGradient(0, 0, 0, h); bg.addColorStop(0, '#0b202b'); bg.addColorStop(1, '#06121a'); c.fillStyle = bg; c.fillRect(0, 0, w, h);
     c.strokeStyle = 'rgba(112,196,220,.15)'; c.lineWidth = 1; c.beginPath(); c.moveTo(split, 0); c.lineTo(split, h); c.stroke();
-    const active = Math.max(0, Math.min(1, peakPadIntensity));
+    const active = Math.max(0, Math.min(1, padIntensities[0] || 0)); // close-up cutaway follows module 01
     const forceIntensity = Math.max(0, Math.min(1, frictionState.powerKw / 6));
     const txt = (text, x, y, size=9, color='#c6e8f1', weight='700') => { c.fillStyle=color; c.font=`${weight} ${size}px ui-monospace, SFMono-Regular, Consolas, monospace`; c.fillText(text, x, y); };
     const arrow = (x1,y1,x2,y2,color,width=2) => { c.strokeStyle=color;c.lineWidth=width;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();const a=Math.atan2(y2-y1,x2-x1);c.fillStyle=color;c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-7*Math.cos(a-.45),y2-7*Math.sin(a-.45));c.lineTo(x2-7*Math.cos(a+.45),y2-7*Math.sin(a+.45));c.closePath();c.fill(); };
     // LEFT CUTAWAY: a wheel loads rail + sleeper, which compresses an illustrative transducer layer below.
     c.fillStyle='rgba(77,224,209,.035)';c.fillRect(0,0,split,h);
-    txt('A · PAD ENERGY RECOVERY', 12, 18, 9, '#6ce7d9');
-    const leftW=split, railY=76, railW=Math.max(126,leftW*.72), padX=Math.max(42,Math.min(leftW-75,leftW*.36)), wheelX=padX;
+    txt('A · MODULE 01 PAD RECOVERY', 12, 18, 9, '#6ce7d9');
+    const leftW=split, railY=76, railW=Math.max(126,leftW*.72), padPixelX=railPadXs[0], railStart=10, railSpan=leftW-20, padX=railStart+((padPixelX+720)/1440)*railSpan, movingTrainX=getTrainX(), movingWheelPixels=[movingTrainX-49,movingTrainX-16,movingTrainX+18,movingTrainX+53].reduce((best,x)=>Math.abs(x-padPixelX)<Math.abs(best-padPixelX)?x:best,movingTrainX), wheelX=railStart+((movingWheelPixels+720)/1440)*railSpan;
     const wheelR=Math.max(15,Math.min(26,leftW*.068));
     const wheelGrad=c.createRadialGradient(wheelX-wheelR*.3,railY-wheelR*.8,2,wheelX,railY-wheelR*.3,wheelR*1.5); wheelGrad.addColorStop(0,'#cfe7ed');wheelGrad.addColorStop(.5,'#607d8a');wheelGrad.addColorStop(1,'#1b303a');
     c.beginPath();c.arc(wheelX,railY-wheelR+5,wheelR,0,Math.PI*2);c.fillStyle=wheelGrad;c.fill();c.strokeStyle='#cdeaf1';c.lineWidth=2;c.stroke();
@@ -379,9 +445,9 @@
     txt(active>.05?`COMPRESSION ${fmt(frictionState.compressionMm*active,1)} mm`:'PAD READY · NO LOAD',12,padY+43,8,active>.05?'#ffc46b':'#829eac');
     const convX=leftW-52, convY=padY+1;
     c.strokeStyle=active>.05?'#4de0d1':'#27606c';c.lineWidth=2;c.beginPath();c.moveTo(padX+25,padY+10);c.lineTo(convX-10,padY+10);c.stroke();
-    if(active>.05){for(let i=0;i<4;i++){const fx=((nowSeconds*.75+i*.25)%1);c.fillStyle='#c0fff7';c.shadowColor='#4de0d1';c.shadowBlur=7;c.beginPath();c.arc(padX+25+(convX-padX-35)*fx,padY+10,2.1,0,Math.PI*2);c.fill();}c.shadowBlur=0;}
+    if(energyInputsValid && active>.05){for(let i=0;i<4;i++){const fx=((nowSeconds*.75+i*.25)%1);c.fillStyle='#c0fff7';c.shadowColor='#4de0d1';c.shadowBlur=7;c.beginPath();c.arc(padX+25+(convX-padX-35)*fx,padY+10,2.1,0,Math.PI*2);c.fill();}c.shadowBlur=0;}
     c.fillStyle='#214d5d';c.fillRect(convX-12,convY-8,48,31);c.strokeStyle='#4de0d1';c.strokeRect(convX-12,convY-8,48,31);txt('DC',convX+1,convY+10,9,'#c8fff7');txt('STORE',convX-3,convY+35,7,'#90b7c5');
-    txt('WHEEL → RAIL → SLEEPER → PAD → RECTIFIER / STORE',12,h-12,7,'#91afbc','600');
+    txt(energyInputsValid?'WHEEL → RAIL → SLEEPER → PAD → RECTIFIER / STORE':'INVALID INPUT · ENERGY PULSE PAUSED',12,h-12,7,energyInputsValid?'#91afbc':'#ffbf75','600');
     // RIGHT CUTAWAY: slip contact heat is dissipated energy and is not counted in the harvester output.
     c.fillStyle='rgba(255,147,73,.025)';c.fillRect(split,0,split,h);
     txt('B · STEEL WHEEL / RAIL FRICTION', split+12,18,9,'#ffbf75');
@@ -457,10 +523,10 @@
     if (playing && !reducedMotion) frame = window.requestAnimationFrame(tick); else render();
   });
   byId('rteSimReset')?.addEventListener('click', () => {
-    elapsed = 0; distanceTravelled = 300; previousTrainX = null; lastStamp = 0;
-    padVisitLatched = railPadXs.map(() => false); liveModulePassEvents = 0; liveEnergyWh = 0;
+    elapsed = 0; distanceTravelled = 380; previousTrainX = null; lastStamp = 0;
+    padVisitLatched = railPadXs.map((_, i) => (padIntensities[i] || 0) > 0.001); liveModulePassEvents = 0; liveEnergyWh = 0;
     put('rteSimStatus', playing ? (reducedMotion ? 'STATIC PREVIEW · REDUCED MOTION' : 'SIMULATION RUNNING') : 'SIMULATION PAUSED');
-    put('rteLivePulseCount', '0'); put('rteLiveEnergyWh', '0.000 Wh');
+    put('rteLivePulseCount', '0'); put('rteLiveEnergyWh', energyInputsValid ? '0.000 Wh' : 'CHECK INPUT');
     if (!frame) { render(); drawMechanism(elapsed); }
   });
 
