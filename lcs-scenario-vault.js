@@ -4,7 +4,7 @@
   const root = document.getElementById('liveConceptSilo');
   if (!root || document.getElementById('lcsScenarioVault')) return;
 
-  const inputIds = ['lcsMass','lcsV1','lcsV2','lcsRoadEff','lcsEvents','lcsSites','lcsFlow','lcsHead','lcsHydEff','lcsHydHours','lcsPv','lcsYield','lcsBattery','lcsDod','lcsBatEff','lcsLoad'];
+  const inputIds = ['lcsMass','lcsV1','lcsV2','lcsCaptureKJ','lcsRoadEff','lcsEvents','lcsSites','lcsPointsKm','lcsRoadDays','lcsRoadAvailability','lcsRoadAux','lcsFlow','lcsHead','lcsHydEff','lcsHydHours','lcsPv','lcsYield','lcsBattery','lcsDod','lcsBatEff','lcsLoad'];
   const metricDefs = [['lcsRoadAnnual','Road annual energy'],['lcsHydPower','Hydraulic power'],['lcsPvAnnual','PV annual energy'],['lcsBatteryHours','Battery autonomy'],['lcsHydAnnual','Hydraulic annual energy'],['lcsCombined','Combined modeled annual energy']];
   const validScenes = new Set(['integrated','road','hydro','solar','sluice','roadharvest','bridge','footstep','thermal','vibration','station']);
   const storageKey = 'igersLcsScenarioVaultV1';
@@ -33,7 +33,7 @@
       const range = limits[id];
       if (typeof value !== 'number' || !Number.isFinite(value) || value < range[0] || value > range[1]) return false;
     }
-    return inputs.lcsV2 <= inputs.lcsV1;
+    return inputs.lcsV2 <= inputs.lcsV1 && Number.isInteger(inputs.lcsEvents) && Number.isInteger(inputs.lcsRoadDays);
   }
   function validRecord(item) {
     if (!item || typeof item !== 'object' || Array.isArray(item)) return false;
@@ -44,12 +44,39 @@
     if (!validInputs(item.inputs) || !item.metrics || typeof item.metrics !== 'object' || Array.isArray(item.metrics)) return false;
     return metricDefs.every(([id]) => typeof item.metrics[id] === 'string' && item.metrics[id].length > 0 && item.metrics[id].length <= 90 && !/NaN|undefined/i.test(item.metrics[id]));
   }
+  function migrateLegacyRecord(item) {
+    if (!item || typeof item !== 'object' || !item.inputs || typeof item.inputs !== 'object') return item;
+    const hasV2 = typeof item.inputs.lcsCaptureKJ === 'number' && typeof item.inputs.lcsPointsKm === 'number';
+    if (hasV2) return item;
+    // Preserve older user scenarios instead of deleting them. Old event/site values are reinterpreted
+    // as AADT and corridor length, then results are recalculated under the thesis-referenced model.
+    const old=item.inputs, inputs={...old,
+      lcsCaptureKJ:2,
+      lcsRoadEff:Number.isFinite(old.lcsRoadEff)?old.lcsRoadEff:70,
+      lcsEvents:Number.isFinite(old.lcsEvents)?Math.min(5000000,Math.max(0,Math.round(old.lcsEvents))):210000,
+      lcsSites:Number.isFinite(old.lcsSites)?Math.min(100000,Math.max(0,old.lcsSites)):100,
+      lcsPointsKm:1,lcsRoadDays:365,lcsRoadAvailability:100,lcsRoadAux:0
+    };
+    const record={...item,inputs,formatVersion:2};
+    try {
+      const r=window.IGERSCalcCore.road({massKg:inputs.lcsMass,entryKph:inputs.lcsV1,exitKph:inputs.lcsV2,captureKJ:inputs.lcsCaptureKJ,electricalEfficiencyPct:inputs.lcsRoadEff,aadt:inputs.lcsEvents,lengthKm:inputs.lcsSites,pointsPerKm:inputs.lcsPointsKm,operatingDays:inputs.lcsRoadDays,availabilityPct:inputs.lcsRoadAvailability,auxiliaryWhPerEvent:inputs.lcsRoadAux,addedTractionKJPerEvent:0,drivetrainEfficiencyPct:25});
+      const h=window.IGERSCalcCore.hydraulic({flowM3s:inputs.lcsFlow,netHeadM:inputs.lcsHead,efficiencyPct:inputs.lcsHydEff,operatingHours:inputs.lcsHydHours});
+      const pv=window.IGERSCalcCore.solarPV({capacityKWp:inputs.lcsPv,specificYieldKWhPerKWpYear:inputs.lcsYield});
+      const b=window.IGERSCalcCore.battery({capacityKWh:inputs.lcsBattery,depthOfDischargePct:inputs.lcsDod,dischargeEfficiencyPct:inputs.lcsBatEff,loadKW:inputs.lcsLoad});
+      record.metrics={...item.metrics,lcsRoadAnnual:`${r.annualNetGWh.toFixed(4)} GWh/y`,lcsHydPower:`${h.powerKW.toFixed(2)} kW`,lcsPvAnnual:`${(pv.annualKWh/1000).toFixed(2)} MWh/y`,lcsBatteryHours:b.autonomyHours===null?'NO LOAD':`${b.autonomyHours.toFixed(2)} h`,lcsHydAnnual:`${(h.annualKWh/1000).toFixed(2)}`,lcsCombined:`${((r.annualNetKWh+h.annualKWh+pv.annualKWh)/1000).toFixed(2)}`};
+    } catch (_) {
+      // Keep the saved scenario and flag it for review if the older inputs conflict with the new physical ceiling.
+      record.metrics={...item.metrics,lcsRoadAnnual:'CHECK INPUT',lcsHydPower:'CHECK INPUT',lcsPvAnnual:'CHECK INPUT',lcsBatteryHours:'CHECK INPUT',lcsHydAnnual:'CHECK INPUT',lcsCombined:'CHECK INPUT'};
+    }
+    return record;
+  }
   function readStore() {
     try {
       const value = JSON.parse(localStorage.getItem(storageKey) || '[]');
       if (!Array.isArray(value)) return [];
       const result = [], ids = new Set();
-      for (const item of value) {
+      for (const rawItem of value) {
+        const item=migrateLegacyRecord(rawItem);
         if (!validRecord(item) || ids.has(item.id)) continue;
         ids.add(item.id); result.push(item);
         if (result.length >= maxScenarios) break;
@@ -90,7 +117,7 @@
     const table=document.createElement('table'),thead=document.createElement('thead'),trh=document.createElement('tr');
     ['Metric',...chosen.map(r=>r.name)].forEach(label=>{const th=document.createElement('th');th.scope='col';th.textContent=label;trh.append(th);});thead.append(trh);table.append(thead);
     const tb=document.createElement('tbody');
-    const rows=[...metricDefs.map(([id,label])=>[label,id]),['Entry speed (km/h)','lcsV1'],['Exit speed (km/h)','lcsV2'],['Net recovery efficiency (%)','lcsRoadEff'],['Hydraulic flow (m³/s)','lcsFlow'],['Hydraulic head (m)','lcsHead'],['PV size (kWp)','lcsPv'],['Battery size (kWh)','lcsBattery'],['Average load (kW)','lcsLoad']];
+    const rows=[...metricDefs.map(([id,label])=>[label,id]),['Entry speed (km/h)','lcsV1'],['Exit speed (km/h)','lcsV2'],['Mechanical capture / event (kJ)','lcsCaptureKJ'],['Electrical-chain efficiency (%)','lcsRoadEff'],['AADT / passages per day','lcsEvents'],['Corridor length (km)','lcsSites'],['Harvesting points / km','lcsPointsKm'],['Operating days / year','lcsRoadDays'],['Road availability (%)','lcsRoadAvailability'],['Hydraulic flow (m³/s)','lcsFlow'],['Hydraulic head (m)','lcsHead'],['PV size (kWp)','lcsPv'],['Battery size (kWh)','lcsBattery'],['Average load (kW)','lcsLoad']];
     for(const [label,key] of rows){const tr=document.createElement('tr'),th=document.createElement('th');th.scope='row';th.textContent=label;tr.append(th);for(const record of chosen){const td=document.createElement('td');td.textContent=Object.prototype.hasOwnProperty.call(record.metrics,key)?record.metrics[key]:String(record.inputs[key]);tr.append(td);}tb.append(tr);}table.append(tb);host.append(table);
   }
   function render() {
@@ -127,7 +154,7 @@
     const record={id:newId(),name,createdAt:new Date().toISOString(),scene:activeScene(),inputs,metrics};
     if(commitRecords([record,...records],`Saved “${name}” locally.`))$('lcsScenarioName').value='';
   });
-  $('lcsScenarioJson').addEventListener('click',()=>{const payload={format:'IGERS-Scenario-Vault',version:1,exportedAt:new Date().toISOString(),note:'Conceptual calculator snapshots only; not field telemetry.',scenarios:records};const ok=download(`igers-scenario-vault-${new Date().toISOString().slice(0,10)}.json`,'application/json;charset=utf-8',JSON.stringify(payload,null,2));status(ok?'JSON export started. Keep a copy outside this browser for backup.':'JSON download is unavailable in this browser.',!ok);});
+  $('lcsScenarioJson').addEventListener('click',()=>{const payload={format:'IGERS-Scenario-Vault',version:2,exportedAt:new Date().toISOString(),note:'Conceptual calculator snapshots only; not field telemetry.',scenarios:records};const ok=download(`igers-scenario-vault-${new Date().toISOString().slice(0,10)}.json`,'application/json;charset=utf-8',JSON.stringify(payload,null,2));status(ok?'JSON export started. Keep a copy outside this browser for backup.':'JSON download is unavailable in this browser.',!ok);});
   $('lcsScenarioCsv').addEventListener('click',()=>{const headers=['Name','Created At','Selected Scene',...metricDefs.map(([,label])=>label),...inputIds];const rows=[headers];for(const record of records)rows.push([record.name,record.createdAt,record.scene,...metricDefs.map(([id])=>record.metrics[id]),...inputIds.map(id=>record.inputs[id])]);const csv='\uFEFF'+rows.map(row=>row.map(csvCell).join(',')).join('\r\n');const ok=download(`igers-scenario-vault-${new Date().toISOString().slice(0,10)}.csv`,'text/csv;charset=utf-8',csv);status(ok?'CSV export started. Spreadsheet-safe text escaping was applied.':'CSV download is unavailable in this browser.',!ok);});
   $('lcsScenarioImport').addEventListener('change',async(event)=>{
     const file=event.target.files?.[0];if(!file)return;if(file.size>maxImportBytes){status('Import blocked: JSON file exceeds 2 MB.',true);event.target.value='';return;}

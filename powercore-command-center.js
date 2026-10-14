@@ -265,34 +265,31 @@
   }
   function calculatePowerModel(mode, p) {
     let primaryValue = NaN, primaryUnit = '', primaryLabel = '', annual = NaN, formula = '', basis = '', detail = '';
-    if (mode === 'kinetic') {
-      const mass = p.pcMass, vin = p.pcVin, vout = p.pcVout, eff = p.pcEffKinetic / 100, events = p.pcAnnualEvents;
-      if ([mass, vin, vout, eff, events].some((x) => !Number.isFinite(x) || x < 0) || vin > 500 || vout > 500 || eff > 1) return { ok: false, error: 'Inputs must be finite and non-negative; vehicle speeds must be ≤ 500 km/h and efficiency must be 0–100%.' };
-      const vi = vin / 3.6, vo = vout / 3.6;
-      const grossJ = Math.max(0, .5 * mass * (vi * vi - vo * vo));
-      const netJ = grossJ * eff;
-      // Kinetic scenario output is energy per event, NOT power. Keep the physical unit explicit.
-      primaryValue = netJ / 1000; primaryUnit = 'kJ/event'; primaryLabel = 'Estimated recoverable energy per event'; annual = netJ * events / 3600000;
-      formula = 'E = ½m(vin² − vout²) × η'; basis = 'kJ/event';
-      detail = `Gross kinetic-energy reduction ${fmt(grossJ / 1000)} kJ/event; estimated recovered ${fmt(primaryValue)} kJ/event at ${fmt(eff * 100, 1)}% net efficiency, with ${fmt(events)} assumed events/year. ${vout > vin ? 'Exit speed exceeds entry speed; recoverable deceleration energy is set to zero.' : ''}`;
-    } else if (mode === 'wind') {
-      const area = p.pcWindArea, rho = p.pcAirDensity, v = p.pcWindSpeed, cp = p.pcCp, eff = p.pcEffWind / 100, hours = p.pcWindHours;
-      if ([area, rho, v, cp, eff, hours].some((x) => !Number.isFinite(x) || x < 0) || rho > 2 || v > 120 || cp > .593 || eff > 1 || hours > 8760) return { ok: false, error: 'Check wind inputs. Air density must be ≤ 2 kg/m³, Cp is capped at 0.593 (ideal Betz limit), efficiency must be 0–100% and hours/year ≤ 8760.' };
-      primaryValue = .5 * rho * area * v ** 3 * cp * eff / 1000; primaryUnit = 'kW'; primaryLabel = 'Estimated electrical power'; annual = primaryValue * hours; formula = 'P = ½ρAv³Cpη'; basis = 'kW at entered wind speed';
-      detail = `Using air density ${fmt(rho, 3)} kg/m³, area ${fmt(area)} m², speed ${fmt(v)} m/s, Cp ${fmt(cp, 3)}, electrical efficiency ${fmt(eff * 100, 1)}% and assumed operating hours ${fmt(hours)} h/year.`;
-    } else if (mode === 'hydro') {
-      const q = p.pcFlow, head = p.pcHead, eff = p.pcEffHydro / 100, rho = p.pcWaterDensity, hours = p.pcHydroHours;
-      if ([q, head, eff, rho, hours].some((x) => !Number.isFinite(x) || x < 0) || eff > 1 || hours > 8760) return { ok: false, error: 'Hydraulic inputs must be non-negative; efficiency must be 0–100% and operating hours/year ≤ 8760.' };
-      primaryValue = rho * 9.80665 * q * head * eff / 1000; primaryUnit = 'kW'; primaryLabel = 'Estimated electrical power'; annual = primaryValue * hours; formula = 'P = ρgQHη'; basis = 'kW at entered flow/head';
-      detail = `Using ρ=${fmt(rho)} kg/m³, g=9.80665 m/s², Q=${fmt(q, 4)} m³/s, net head ${fmt(head)} m, efficiency ${fmt(eff * 100, 1)}% and assumed operating hours ${fmt(hours)} h/year.`;
-    } else if (mode === 'solar') {
-      const irradiance = p.pcIrradiance, area = p.pcSolarArea, eff = p.pcSolarEff / 100, derate = p.pcSolarDerate / 100, sunHours = p.pcSunHours, days = p.pcSolarDays;
-      if ([irradiance, area, eff, derate, sunHours, days].some((x) => !Number.isFinite(x) || x < 0) || irradiance > 1600 || eff > 1 || derate > 1 || sunHours > 24 || days > 366) return { ok: false, error: 'Solar inputs must be non-negative; efficiencies/derate must be 0–100%, sun hours/day ≤ 24 and days/year ≤ 366.' };
-      primaryValue = irradiance * area * eff * derate / 1000; primaryUnit = 'kW'; primaryLabel = 'Estimated DC-equivalent power'; annual = primaryValue * sunHours * days; formula = 'P = G × A × ηmodule × derate'; basis = 'kW at entered irradiance';
-      detail = `Using irradiance ${fmt(irradiance)} W/m², area ${fmt(area)} m², module efficiency ${fmt(eff * 100, 1)}%, system derate ${fmt(derate * 100, 1)}%, ${fmt(sunHours, 2)} assumed peak-sun-hours/day × ${fmt(days)} days/year.`;
-    } else return { ok: false, error: 'Choose a supported model.' };
-    if (!Number.isFinite(primaryValue) || !Number.isFinite(annual)) return { ok: false, error: 'Output is outside the supported numeric range. Reduce inputs and retry.' };
-    return { ok: true, mode, primaryValue, primaryUnit, primaryLabel, estimatedAnnualKWh: annual, formula, basis, detail, dataClass: 'user-input model estimate; not measured telemetry' };
+    try {
+      const core = window.IGERSCalcCore;
+      if (!core) throw new Error('Shared engineering calculation core did not load.');
+      if (mode === 'kinetic') {
+        const result = core.road({massKg:p.pcMass,entryKph:p.pcVin,exitKph:p.pcVout,captureKJ:p.pcCaptureKJ,electricalEfficiencyPct:p.pcEffKinetic,annualEvents:p.pcAnnualEvents,aadt:0,lengthKm:1,pointsPerKm:1,operatingDays:1,availabilityPct:100,auxiliaryWhPerEvent:0,addedTractionKJPerEvent:0,drivetrainEfficiencyPct:25});
+        primaryValue=result.netElectricalWhPerEvent/1000; primaryUnit='kWh/event'; primaryLabel='Net recovered electricity per event'; annual=result.annualNetKWh;
+        formula='ΔKE = ½m[(vin/3.6)² − (vout/3.6)²]; E_net/event = E_capture × η / 3.6'; basis='kWh/event';
+        detail=`Kinetic-reduction ceiling ${fmt(result.kineticReductionKJ,3)} kJ/event; assumed mechanical capture ${fmt(result.inputs.captureKJ,3)} kJ/event; estimated electrical output ${fmt(result.netElectricalWhPerEvent,4)} Wh/event at ${fmt(result.inputs.electricalEfficiencyPct,1)}% electrical-chain efficiency; ${fmt(result.effectiveAnnualEvents,0)} effective device events/year. Capture above the kinetic ceiling is rejected.`;
+      } else if (mode === 'wind') {
+        const result=core.wind({sweptAreaM2:p.pcWindArea,densityKgM3:p.pcAirDensity,velocityMS:p.pcWindSpeed,powerCoefficient:p.pcCp,electricalEfficiencyPct:p.pcEffWind,operatingHours:p.pcWindHours});
+        primaryValue=result.powerKW;primaryUnit='kW';primaryLabel='Estimated electrical power';annual=result.annualKWh;formula='P = ½ρAv³Cpη';basis='kW at entered wind speed';
+        detail=`Using air density ${fmt(result.densityKgM3,3)} kg/m³, swept area ${fmt(result.sweptAreaM2)} m², wind speed ${fmt(result.velocityMS)} m/s, Cp ${fmt(result.powerCoefficient,3)} and ${fmt(result.electricalEfficiencyPct,1)}% electrical efficiency. Annual estimate assumes ${fmt(result.operatingHours,0)} full-equivalent operating hours; wind-speed distribution/CF is not inferred from one speed input.`;
+      } else if (mode === 'hydro') {
+        const result=core.hydraulic({flowM3s:p.pcFlow,netHeadM:p.pcHead,efficiencyPct:p.pcEffHydro,densityKgM3:p.pcWaterDensity,operatingHours:p.pcHydroHours});
+        primaryValue=result.powerKW;primaryUnit='kW';primaryLabel='Estimated electrical power';annual=result.annualKWh;formula='P = ρgQHη';basis='kW at entered flow/head';
+        detail=`Using fluid density ${fmt(result.densityKgM3,0)} kg/m³, g=9.80665 m/s², Q=${fmt(result.flowM3s,4)} m³/s, net head ${fmt(result.netHeadM)} m and ${fmt(result.efficiencyPct,1)}% overall efficiency; ${fmt(result.operatingHours,0)} assumed operating hours/year.`;
+      } else if (mode === 'solar') {
+        const result=core.solarFromIrradiance({irradianceWm2:p.pcIrradiance,panelAreaM2:p.pcSolarArea,moduleEfficiencyPct:p.pcSolarEff,systemDeratePct:p.pcSolarDerate,peakSunHoursPerDay:p.pcSunHours,daysPerYear:p.pcSolarDays});
+        primaryValue=result.instantaneousPowerKW;primaryUnit='kW';primaryLabel='Instantaneous PV power at entered irradiance';annual=result.annualKWh;formula='P_inst = G × A × η × derate; E_annual = A × η × derate × PSH × days';basis='kW instant.; kWh/year annual';
+        detail=`Instantaneous power uses ${fmt(result.irradianceWm2,0)} W/m². Annual energy uses ${fmt(result.peakSunHoursPerDay,2)} equivalent peak-sun-hours/day × ${fmt(result.daysPerYear,0)} days at the standard 1,000 W/m² reference, then module efficiency ${fmt(result.moduleEfficiencyPct,1)}% and system derate ${fmt(result.systemDeratePct,1)}%. Irradiance is not multiplied into the annual PSH model a second time.`;
+      } else return { ok:false,error:'Choose a supported model.' };
+      if (![primaryValue,annual].every(Number.isFinite)) throw new Error('Output is not finite. Check input ranges.');
+      if (annual < 0 || primaryValue < 0) throw new Error('Negative generation is not accepted; check the model inputs.');
+      return {ok:true,mode,primaryValue,primaryUnit,primaryLabel,estimatedAnnualKWh:annual,formula,basis,detail,dataClass:'user-input scenario estimate; not measured telemetry'};
+    } catch(error) { return {ok:false,error:String(error?.message||'Invalid model input')}; }
   }
 
   function calculateEnergy() {
@@ -304,24 +301,24 @@
     setText('pcEnergyPrimaryLabel', result.primaryLabel);
     setText('pcEnergyAnnual', `${fmt(result.estimatedAnnualKWh, 3)} kWh/y`);
     setText('pcEnergyFormulaLabel', result.basis);
-    setText('pcEnergyFormula', `${result.formula}. ${result.detail} Annual energy is based on user-entered event count / operating hours / solar exposure. This is a theoretical model estimate, not measured output or a feasibility certification.`);
-    setText('pcEnergyConfidence', 'INPUT-BASED ESTIMATE'); drawEnergyGraph(result.primaryValue); return lastEnergy;
+    setText('pcEnergyFormula', `${result.formula}. ${result.detail} This is a user-input scenario estimate, not measured output or a feasibility certification.`);
+    setText('pcEnergyConfidence', 'INPUT-BASED ESTIMATE'); drawEnergyGraph(result.primaryValue, result.primaryUnit); return lastEnergy;
   }
-  function energyError(message) { setText('pcEnergyPower', 'Invalid'); setText('pcEnergyAnnual', '—'); setText('pcEnergyFormulaLabel', 'Input error'); setText('pcEnergyFormula', message); setText('pcEnergyConfidence', 'CHECK INPUTS'); lastEnergy = { error: message, mode: $('pcEnergySource')?.value || 'unknown', generatedAt: nowISO(), dataClass: 'calculation rejected' }; drawEnergyGraph(0); return null; }
+  function energyError(message) { setText('pcEnergyPower', 'Invalid'); setText('pcEnergyAnnual', '—'); setText('pcEnergyFormulaLabel', 'Input error'); setText('pcEnergyFormula', message); setText('pcEnergyConfidence', 'CHECK INPUTS'); lastEnergy = { error: message, mode: $('pcEnergySource')?.value || 'unknown', generatedAt: nowISO(), dataClass: 'calculation rejected' }; drawEnergyGraph(0, ''); return null; }
   function readEnergyInputs() {
-    const ids = ['pcMass','pcVin','pcVout','pcEffKinetic','pcAnnualEvents','pcWindArea','pcAirDensity','pcWindSpeed','pcCp','pcEffWind','pcWindHours','pcFlow','pcHead','pcEffHydro','pcWaterDensity','pcHydroHours','pcIrradiance','pcSolarArea','pcSolarEff','pcSolarDerate','pcSunHours','pcSolarDays'];
+    const ids = ['pcMass','pcVin','pcVout','pcCaptureKJ','pcEffKinetic','pcAnnualEvents','pcWindArea','pcAirDensity','pcWindSpeed','pcCp','pcEffWind','pcWindHours','pcFlow','pcHead','pcEffHydro','pcWaterDensity','pcHydroHours','pcIrradiance','pcSolarArea','pcSolarEff','pcSolarDerate','pcSunHours','pcSolarDays'];
     return Object.fromEntries(ids.filter((id) => $(id)).map((id) => [id, number(id, NaN)]));
   }
-  function drawEnergyGraph(value) {
+  function drawEnergyGraph(value, unit = '') {
     const canvas = $('pcEnergyGraph'); if (!canvas) return; const rect = canvas.getBoundingClientRect(); if (!rect.width || !rect.height) return;
     const dpr = Math.min(2, window.devicePixelRatio || 1), w = rect.width, h = rect.height; canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); const ctx = canvas.getContext('2d'); if (!ctx) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
     ctx.strokeStyle = 'rgba(103,210,226,.11)'; ctx.lineWidth = 1; for (let i = 1; i < 5; i++) { const y = h * i / 5; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
     ctx.fillStyle = 'rgba(158,184,199,.8)'; ctx.font = '9px ui-monospace,monospace'; ctx.fillText('CURRENT MODEL OUTPUT · LOG SCALE IN DISPLAYED UNIT', 12, 16);
     const barMax = Math.max(0, Number(value) || 0), width = Math.min(w - 34, (Math.log10(1 + barMax) / Math.log10(1 + Math.max(1000, barMax))) * (w - 40));
-    const grad = ctx.createLinearGradient(14, 0, Math.max(15, 14 + width), 0); grad.addColorStop(0, '#357f9e'); grad.addColorStop(1, '#8ce7c2'); ctx.fillStyle = grad; ctx.fillRect(14, h - 39, Math.max(2, width), 20); ctx.fillStyle = '#dffaff'; ctx.font = '700 10px ui-monospace,monospace'; ctx.fillText(`${fmt(barMax, 5)} kW`, 14, h - 47);
+    const grad = ctx.createLinearGradient(14, 0, Math.max(15, 14 + width), 0); grad.addColorStop(0, '#357f9e'); grad.addColorStop(1, '#8ce7c2'); ctx.fillStyle = grad; ctx.fillRect(14, h - 39, Math.max(2, width), 20); ctx.fillStyle = '#dffaff'; ctx.font = '700 10px ui-monospace,monospace'; ctx.fillText(`${fmt(barMax, 5)} ${unit || 'model units'}`, 14, h - 47);
   }
   function resetEnergyInputs() {
-    const defaults = { pcMass:900,pcVin:20,pcVout:15,pcEffKinetic:20,pcAnnualEvents:210000,pcWindArea:4,pcAirDensity:1.225,pcWindSpeed:6,pcCp:.35,pcEffWind:85,pcWindHours:2000,pcFlow:.1,pcHead:3,pcEffHydro:70,pcWaterDensity:1000,pcHydroHours:4000,pcIrradiance:800,pcSolarArea:2,pcSolarEff:20,pcSolarDerate:85,pcSunHours:4.5,pcSolarDays:300 };
+    const defaults = { pcMass:900,pcVin:20,pcVout:15,pcCaptureKJ:2,pcEffKinetic:70,pcAnnualEvents:76650000,pcWindArea:4,pcAirDensity:1.225,pcWindSpeed:6,pcCp:.35,pcEffWind:85,pcWindHours:2000,pcFlow:.1,pcHead:3,pcEffHydro:70,pcWaterDensity:1000,pcHydroHours:4000,pcIrradiance:800,pcSolarArea:2,pcSolarEff:20,pcSolarDerate:85,pcSunHours:4.5,pcSolarDays:300 };
     Object.entries(defaults).forEach(([id, value]) => { if ($(id)) $(id).value = String(value); }); calculateEnergy();
   }
 

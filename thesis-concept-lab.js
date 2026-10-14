@@ -411,31 +411,20 @@
 
 /* FEAS footstep model: dimensionally consistent scenario estimate, never measured telemetry. */
 function calculateIGERSFEASModel(input) {
-  const ranges = {
-    footfalls: [10000, 1000000], forceN: [100, 1000], travelMm: [1, 10],
-    efficiencyPct: [5, 35], activeHours: [1, 24], capacityWh: [100, 50000], loadW: [1, 50]
-  };
-  const clean = {};
-  for (const [key, bounds] of Object.entries(ranges)) {
-    const value = Number(input[key]);
-    if (!Number.isFinite(value) || value < bounds[0] || value > bounds[1]) {
-      throw new RangeError(`${key} must be between ${bounds[0]} and ${bounds[1]}`);
-    }
-    clean[key] = value;
-  }
-  const mechanicalJPerStep = clean.forceN * (clean.travelMm / 1000);
-  const electricalJPerStep = mechanicalJPerStep * (clean.efficiencyPct / 100);
-  const electricalMWhPerStep = electricalJPerStep / 3.6;
-  const dailyWh = electricalJPerStep * clean.footfalls / 3600;
-  const activeAverageW = dailyWh / clean.activeHours;
-  const capacityEquivalentPctPerDay = dailyWh / clean.capacityWh * 100;
-  const localLoadDemandWh = clean.loadW * clean.activeHours;
-  const localLoadCoveragePct = dailyWh / localLoadDemandWh * 100;
+  const result = window.IGERSCalcCore.feas({
+    dailyFootfalls: input.footfalls, forceN: input.forceN, travelMm: input.travelMm,
+    efficiencyPct: input.efficiencyPct, activeHours: input.activeHours,
+    storageCapacityWh: input.capacityWh, loadW: input.loadW, operatingDays: input.operatingDays ?? 365
+  });
   return {
-    inputs: clean, mechanicalJPerStep, electricalJPerStep, electricalMWhPerStep,
-    dailyWh, dailyKWh: dailyWh / 1000, activeAverageW,
-    capacityEquivalentPctPerDay, localLoadDemandWh, localLoadCoveragePct,
-    classification: 'MODEL_ESTIMATE_NOT_MEASURED'
+    inputs: {footfalls:result.dailyFootfalls, forceN:result.forceN, travelMm:result.travelMm,
+      efficiencyPct:result.efficiencyPct, activeHours:result.activeHours, capacityWh:result.storageCapacityWh, loadW:result.loadW},
+    mechanicalJPerStep:result.mechanicalJPerEvent, electricalJPerStep:result.electricalJPerEvent,
+    electricalMWhPerStep:result.electricalMWhPerEvent, electricalWhPerStep:result.electricalWhPerEvent,
+    dailyWh:result.dailyWh, dailyKWh:result.dailyKWh, annualKWh:result.annualKWh, annualMWh:result.annualMWh,
+    activeAverageW:result.activeAverageW, capacityEquivalentPctPerDay:result.storageEquivalentPct,
+    localLoadDemandWh:result.dailyLoadWh, localLoadCoveragePct:result.loadCoveragePct,
+    classification:result.classification
   };
 }
 if (typeof window !== 'undefined') window.IGERSFEASModel = { calculate: calculateIGERSFEASModel };
@@ -490,7 +479,7 @@ if (typeof window !== 'undefined') window.IGERSFEASModel = { calculate: calculat
   let lastFrame = 0;
   let raf = 0;
   const fmt = (n, digits = 2) => Number(n).toLocaleString('en-US', { maximumFractionDigits: digits, minimumFractionDigits: 0 });
-  const values = () => Object.fromEntries(Object.entries(liveInputs).map(([key, el]) => [key, Number(el && el.value)]));
+  const values = () => Object.fromEntries(Object.entries(liveInputs).map(([key, el]) => [key, !el || String(el.value).trim()==='' ? NaN : Number(el.value)]));
   function renderModel() {
     try {
       const result = calculateIGERSFEASModel(values());
@@ -501,9 +490,10 @@ if (typeof window !== 'undefined') window.IGERSFEASModel = { calculate: calculat
       if (labels.activeHours) labels.activeHours.textContent = `${fmt(result.inputs.activeHours, 0)} h/day`;
       if (labels.capacityWh) labels.capacityWh.textContent = `${fmt(result.inputs.capacityWh, 0)} Wh`;
       if (labels.loadW) labels.loadW.textContent = `${fmt(result.inputs.loadW, 0)} W`;
-      if (outputIds.perStep) outputIds.perStep.textContent = `${fmt(result.electricalMWhPerStep, 4)} mWh`;
+      if (outputIds.perStep) outputIds.perStep.textContent = `${fmt(result.electricalMWhPerStep, 4)} mWh`; 
       if (outputIds.daily) outputIds.daily.textContent = `${fmt(result.dailyWh, 2)} Wh/day`;
       if (outputIds.dailyKwh) outputIds.dailyKwh.textContent = `${fmt(result.dailyKWh, 5)} kWh/day`;
+      if (byId('feasAnnualResult')) byId('feasAnnualResult').textContent = `${fmt(result.annualKWh, 3)} kWh/year`;
       if (outputIds.power) outputIds.power.textContent = `${fmt(result.activeAverageW, 3)} W`;
       if (outputIds.mechanical) outputIds.mechanical.textContent = `Mechanical input: ${fmt(result.mechanicalJPerStep, 3)} J/event`;
       if (outputIds.storage) outputIds.storage.textContent = `${fmt(result.capacityEquivalentPctPerDay, 3)}% / day`;
@@ -527,7 +517,10 @@ if (typeof window !== 'undefined') window.IGERSFEASModel = { calculate: calculat
       if (modelStatus) modelStatus.textContent = 'Model updated · no hardware telemetry connected';
       return result;
     } catch (error) {
-      if (modelStatus) modelStatus.textContent = 'Invalid model inputs · check ranges';
+      ['feasPerStepResult','feasDailyResult','feasDailyKwh','feasPowerResult','feasMechanicalResult','feasStorageResult','feasLoadCoverageResult','feasLoadDemand','feasAnnualResult'].forEach(id=>{const e=byId(id);if(e)e.textContent='CHECK INPUT';});
+      if (outputIds.storageBar) outputIds.storageBar.style.width='0%';
+      if (outputIds.storageProgress) outputIds.storageProgress.setAttribute('aria-valuenow','0');
+      if (modelStatus) modelStatus.textContent = 'Invalid model inputs · old result cleared';
       return null;
     }
   }

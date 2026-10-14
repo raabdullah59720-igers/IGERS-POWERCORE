@@ -1,14 +1,11 @@
-IGERS POWERCORE — GitHub Pages Upload (বাংলা / English)
-Release: 2026-10-14-github-pages-release-fix02
+IGERS-POWERCORE · GITHUB PAGES RELEASE
+Release: 2026-10-14-engineering-core-v2
 
-বাংলা:
-1. ZIP Extract করো। ভেতরের ফাইলগুলো repository-র ROOT-এ upload করবে; ZIP-কে একক ফাইল হিসেবে upload করবে না এবং `IGERS-POWERCORE-main/` নামে nested folder বানাবে না।
-2. একই নামের ফাইলগুলো Replace করো। এই release-এ index.html, সব সরাসরি প্রয়োজনীয় CSS/JS/image/legal/manifest assets, এবং corrected build.mjs আছে।
-3. Repository → Settings → Pages → Build and deployment → Source: “Deploy from a branch” নির্বাচন করো। Branch: main (অথবা তোমার default branch), folder: /(root), তারপর Save। এই flat static package-এর জন্য GitHub Actions নির্বাচন কোরো না যদি আলাদা Pages workflow যোগ না করা থাকে।
-4. Deployment শেষ হলে সাইট খুলে Ctrl+Shift+R দাও।
-5. View Page Source-এ `2026-10-14-github-pages-release-fix02` খুঁজে দেখো। marker না থাকলে Pages অন্য branch/folder publish করছে, upload ভুল root-এ হয়েছে, অথবা deployment পুরোনো।
+This ZIP is a flat static-site root package. Extract it and upload the files inside directly to the repository publishing root; do not upload the ZIP file alone or add a second nested project folder. Enable GitHub Pages from your chosen branch and /(root). The package includes index.html and the runtime assets.
 
-English:
-Upload the ZIP CONTENTS into the repository root (not the ZIP itself and not a nested project folder). Replace same-name files. In Settings → Pages, choose “Deploy from a branch”, select your default branch and /(root). After deployment, hard-refresh and search View Page Source for the release marker.
+For code testing on a machine with Node.js, run: node calculation-regression-tests.cjs
+For reproducible staging, run: npm run build (the static build is created under dist/).
 
-QA scope: production build and static integrity checks passed; live GitHub-hosted/API-feed testing is outside this package build. External feeds depend on provider/API availability and browser network access.
+After commit, check Actions / Pages deployment status. In View Source, verify meta[name="igers-engineering-release"] is 2026-10-14-engineering-core-v2. Hard-refresh with Ctrl+Shift+R.
+
+Live external APIs, browser-specific graphics/WebGL and GitHub-hosted deployment must be verified on the deployed URL; static package checks cannot guarantee external feed uptime.

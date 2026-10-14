@@ -125,14 +125,21 @@
     const batteryKwh = inputs.rteBatteryKwh;
     const batteryDod = inputs.rteBatteryDod / 100;
     const batteryEfficiency = inputs.rteBatteryEfficiency / 100;
-    const recoveredPerPass = wh * eff;
+    let calculation;
+    try {
+      calculation = window.IGERSCalcCore.railway({grossWhPerPass:wh,electricalEfficiencyPct:inputs.rteEfficiency,availabilityPct:inputs.rteAvailability,passesPerDayPerModule:passes,operatingDays,modules,loadW,batteryCapacityKWh:batteryKwh,batteryDoDPercent:inputs.rteBatteryDod,batteryEfficiencyPct:inputs.rteBatteryEfficiency});
+    } catch (error) {
+      energyInputsValid = false;
+      recoveredPerPassWh = 0;
+      ['rteMetricPass','rteMetricDay','rteMetricYear','rteMetricAverage','rteMetricDeviceHours','rteMetricBatteryHours'].forEach(id => put(id, 'CHECK INPUT'));
+      put('rteFormulaDaily', String(error?.message || 'Calculation error'));
+      put('rteFormulaAnnual', 'Outputs suppressed until invalid inputs are corrected.');
+      put('rteResultNote', 'Calculation blocked. This is an estimate model, not field telemetry.');
+      syncVisualStateInputs();
+      return;
+    }
+    const recoveredPerPass=calculation.netWhPerPass, dailyWh=calculation.dailyWh, yearKwh=calculation.annualKWh, avgW=calculation.averageCalendarW, deviceHours=calculation.deviceHoursPerDay, usableBatteryKwh=calculation.usableBatteryKWh, autonomyHours=calculation.batteryAutonomyHours;
     recoveredPerPassWh = recoveredPerPass;
-    const dailyWh = recoveredPerPass * passes * modules * availability;
-    const yearKwh = dailyWh * operatingDays / 1000;
-    const avgW = yearKwh * 1000 / (365 * 24);
-    const deviceHours = dailyWh / loadW;
-    const usableBatteryKwh = batteryKwh * batteryDod * batteryEfficiency;
-    const autonomyHours = usableBatteryKwh * 1000 / loadW;
 
     put('rteMetricPass', `${fmt(recoveredPerPass, 3)} Wh`);
     put('rteMetricDay', `${fmt(dailyWh, 1)} Wh`);

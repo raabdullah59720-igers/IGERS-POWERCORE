@@ -1,87 +1,33 @@
+/* Dependency-free regression tests for IGERS-BD-01 calculation core. */
 'use strict';
-// Dependency-free regression tests for the active inline calculators in index.html.
-const fs = require('node:fs');
-const vm = require('node:vm');
-const path = require('node:path');
-const assert = require('node:assert/strict');
-const projectRoot = fs.existsSync(path.join(__dirname, 'index.html')) ? __dirname : path.resolve(__dirname, '..');
-const html = fs.readFileSync(path.join(projectRoot, 'index.html'), 'utf8');
-
-function element(value = '') {
-  return { value, textContent: '', classList: { add() {}, remove() {}, toggle() {} }, style: { setProperty() {} } };
-}
-function near(actual, expected, tolerance, message) {
-  assert.ok(Number.isFinite(actual) && Math.abs(actual - expected) <= tolerance,
-    `${message}: expected ${expected} ± ${tolerance}, got ${actual}`);
-}
-
-// Concept Lab — kinetic energy conversion and non-negative input boundaries.
-const conceptDefaults = {
-  alsC_mass: 900, alsC_v1: 20, alsC_v2: 15, alsC_eta: 20,
-  alsC_events: 210000, alsC_locations: 100, alsC_q: 5, alsC_head: 1.5,
-  alsC_hydEta: 70, alsC_avail: 40, alsC_pv: 100, alsC_yield: 1400,
-  alsC_bat: 1000, alsC_dod: 85, alsC_batEff: 92, alsC_load: 250
-};
-const conceptElements = Object.fromEntries(Object.entries(conceptDefaults).map(([id, value]) => [id, element(String(value))]));
-const conceptOutput = {};
-const conceptContext = {
-  $: id => conceptElements[id] || null,
-  clamp: (n, lo, hi) => Math.min(hi, Math.max(lo, n)),
-  state: {},
-  setText: (id, value) => { conceptOutput[id] = String(value); },
-  fmtNum: (value, digits = 2) => Number(value).toLocaleString('en-US', { maximumFractionDigits: digits, minimumFractionDigits: digits }),
-  nowTime: () => 'TEST'
-};
-const conceptStart = html.indexOf('function computeConcept(){');
-const conceptEnd = html.indexOf('\n  function renderConcept3D()', conceptStart);
-assert.ok(conceptStart >= 0 && conceptEnd > conceptStart, 'Concept Lab calculator exists');
-const conceptFn = html.slice(conceptStart, conceptEnd);
-vm.runInNewContext(`${conceptFn}\ncomputeConcept();`, conceptContext);
-near(conceptContext.state.concept.eKJ, 6.0763888889, 1e-8, '900 kg, 20→15 km/h kinetic loss in kJ');
-near(conceptContext.state.concept.netWh, 0.3375771605, 1e-8, 'net recovered energy per event in Wh');
-near(conceptContext.state.concept.annualRoad, 7089.12037, 0.01, 'annual road recovery in kWh');
-near(conceptContext.state.concept.totalMWh, 327.55388, 0.01, 'combined modeled generation in MWh/y');
-assert.equal(conceptOutput.alsCEk, '6.08 kJ');
-
-conceptElements.alsC_mass.value = '-900';
-conceptElements.alsC_q.value = '-5';
-conceptElements.alsC_pv.value = '-100';
-vm.runInNewContext(`${conceptFn}\ncomputeConcept();`, conceptContext);
-near(conceptContext.state.concept.eKJ, 0, 1e-12, 'negative vehicle mass is rejected');
-near(conceptContext.state.concept.hydKW, 0, 1e-12, 'negative water flow is rejected');
-near(conceptContext.state.concept.solarMWh, 0, 1e-12, 'negative PV capacity is rejected');
-
-// Main energy calculator — average kW must be annual kWh / 8,760 hours.
-const calcStart = html.indexOf('function calculate(){const s=state();');
-const calcEnd = html.indexOf('\nfunction sync(){', calcStart);
-assert.ok(calcStart >= 0 && calcEnd > calcStart, 'main Energy Calculator exists');
-const calcElements = Object.fromEntries(Object.entries({
-  energyMass: '900', energyV1: '20', energyV2: '15', energyRecovery: '20',
-  energyLocations: '100000', energyVehicles: '210000', energyLiveBadge: ''
-}).map(([id, value]) => [id, element(value)]));
-const calcContext = {
-  $: id => calcElements[id] || null,
-  num: (id, fallback) => { const value = Number(calcElements[id]?.value); return Number.isFinite(value) ? value : fallback; },
-  fmt: (value, digits = 2) => Number(value).toLocaleString('en-US', { maximumFractionDigits: digits, minimumFractionDigits: digits }),
-  set: (id, value) => { if (!calcElements[id]) calcElements[id] = element(); calcElements[id].textContent = String(value); },
-  state: () => ({ on: true }), Date, Number, Math
-};
-vm.runInNewContext(`${html.slice(calcStart, calcEnd)}\ncalculate();`, calcContext);
-assert.equal(calcElements.energyEvent.textContent, '1.688 Wh');
-assert.equal(calcElements.energyNet.textContent, '0.338 Wh/event');
-assert.equal(calcElements.energyAnnual.textContent, '7.089 GWh/yr');
-assert.equal(calcElements.energyAverage.textContent, '809.3 kW');
-
-// Frame-live model uses the same units and should agree with the main calculator.
-const ops = fs.readFileSync(path.join(projectRoot, 'igers-live-3d-operations-2026-10-05.js'), 'utf8');
-const frameStart = ops.indexOf('function calculations(){');
-const frameEnd = ops.indexOf('\nfunction ensureResultsConsole()', frameStart);
-assert.ok(frameStart >= 0 && frameEnd > frameStart, 'frame-live calculator exists');
-const frameResult = vm.runInNewContext(`${ops.slice(frameStart, frameEnd)}\ncalculations();`, {
-  $: id => calcElements[id] || null,
-  num: (id, fallback = 0) => { const value = Number(calcElements[id]?.value); return Number.isFinite(value) ? value : fallback; },
-  clamp: (value, lo, hi) => Math.min(hi, Math.max(lo, value)), Number, Math, Date
-});
-near(frameResult.energy.annualGWh, 7.0891203704, 1e-7, 'frame-live annual road energy matches main calculator');
-near(frameResult.energy.avgKW, 809.2603, 0.1, 'frame-live average power matches main calculator');
-console.log('PASS: Concept Lab SI conversions, annual road energy, combined scenario, non-negative inputs, and consistent main/frame-live energy outputs.');
+const assert=require('node:assert/strict');
+const vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
+const corePath=path.join(__dirname,'engineering-calculation-core.js');
+const context={window:{},globalThis:{},Number,Math,Object,RangeError};
+vm.runInNewContext(fs.readFileSync(corePath,'utf8'),context);
+const core=context.window.IGERSCalcCore;
+function near(a,b,tol,msg){assert.ok(Number.isFinite(a)&&Math.abs(a-b)<=tol,`${msg}: expected ${b} ± ${tol}; got ${a}`)}
+const roadInputs={massKg:900,entryKph:20,exitKph:15,captureKJ:2,electricalEfficiencyPct:70,aadt:210000,lengthKm:100,pointsPerKm:1,operatingDays:365,availabilityPct:100,auxiliaryWhPerEvent:0,addedTractionKJPerEvent:0,drivetrainEfficiencyPct:25};
+const road=core.road(roadInputs);
+near(road.kineticReductionKJ,6.0763888889,1e-8,'900kg 20→15 km/h kinetic-reduction ceiling');
+near(road.grossElectricalWhPerEvent,0.3888888889,1e-10,'2kJ capture at 70% net electrical chain');
+near(road.annualNetGWh,2.9808333333,1e-7,'Thesis 100km road base case');
+near(road.averageCalendarKW,340.2777778,1e-5,'Annual output divided by 8760 h');
+assert.throws(()=>core.road({...roadInputs,captureKJ:7}),/exceeds the calculated kinetic-reduction ceiling/,'capture above kinetic ceiling rejected');
+assert.throws(()=>core.road({...roadInputs,exitKph:25}),/Exit speed cannot exceed entry speed/,'exit faster than entry rejected');
+assert.throws(()=>core.road({...roadInputs,availabilityPct:110}),/between 0 and 100/,'availability >100 rejected');
+assert.throws(()=>core.road({...roadInputs,captureKJ:''}),/is required/,'blank inputs rejected');
+const roadAux=core.road({...roadInputs,auxiliaryWhPerEvent:0.5});near(roadAux.netElectricalWhPerEvent,-0.1111111111,1e-9,'auxiliary draw can reveal negative net electric output');
+const traction=core.road({...roadInputs,addedTractionKJPerEvent:1,drivetrainEfficiencyPct:25});near(traction.upstreamPropulsionGWh,8.5166666667,1e-7,'propulsion penalty reported on separate source-energy boundary');
+const single=core.road({...roadInputs,aadt:0,lengthKm:1,pointsPerKm:1,operatingDays:1,annualEvents:76650000});near(single.annualNetGWh,.02980833333,1e-8,'single module passage events/year semantics');
+const hyd=core.hydraulic({flowM3s:1,netHeadM:2,efficiencyPct:75,operatingHours:8760});near(hyd.powerKW,14.709975,1e-5,'hydraulic P=rho*g*Q*H*eta');
+const river=core.riverCurrent({sweptAreaM2:50,velocityMS:1.5,powerCoefficient:.35,generatorEfficiencyPct:90,capacityFactorPct:50});near(river.powerKW,26.578125,1e-6,'river-current power cubic velocity model');near(river.annualMWh,116.411,1e-2,'river-current annual energy');
+assert.throws(()=>core.riverCurrent({sweptAreaM2:50,velocityMS:1.5,powerCoefficient:.7,generatorEfficiencyPct:90,capacityFactorPct:50}),/between 0 and 0.592/,'Cp above Betz limit rejected');
+const wind=core.wind({sweptAreaM2:4,densityKgM3:1.225,velocityMS:6,powerCoefficient:.35,electricalEfficiencyPct:85,operatingHours:2000});near(wind.powerKW,0.157437,1e-6,'wind swept-area cubic velocity power');near(wind.annualKWh,314.874,1e-2,'wind annual full-equivalent operating hours');
+const pv=core.solarPV({capacityKWp:400,specificYieldKWhPerKWpYear:1400});near(pv.annualGWh,.56,1e-12,'400 kWp annual PV specific-yield method');
+const pvPSH=core.solarFromIrradiance({irradianceWm2:800,panelAreaM2:2,moduleEfficiencyPct:20,systemDeratePct:85,peakSunHoursPerDay:4.5,daysPerYear:300});near(pvPSH.instantaneousPowerKW,.272,1e-12,'instantaneous PV power');near(pvPSH.annualKWh,459,1e-12,'annual PV PSH not multiplied by instantaneous irradiance again');
+const battery=core.battery({capacityKWh:1000,depthOfDischargePct:85,dischargeEfficiencyPct:92,loadKW:250});near(battery.autonomyHours,3.128,1e-12,'battery autonomy with DoD and discharge efficiency');
+const rail=core.railway({grossWhPerPass:5,electricalEfficiencyPct:35,availabilityPct:90,passesPerDayPerModule:40,operatingDays:365,modules:4,loadW:5,batteryCapacityKWh:2,batteryDoDPercent:85,batteryEfficiencyPct:92});near(rail.netWhPerPass,1.75,1e-12,'railway net Wh/pass');near(rail.annualKWh,91.98,1e-2,'railway annual output including availability');near(rail.batteryAutonomyHours,312.8,1e-9,'railway battery autonomy formula');
+const feas=core.feas({forceN:400,travelMm:5,efficiencyPct:20,dailyFootfalls:100000,activeHours:12,storageCapacityWh:1000,loadW:5,operatingDays:365});near(feas.mechanicalJPerEvent,2,1e-12,'FEAS average force x stroke');near(feas.electricalJPerEvent,.4,1e-12,'FEAS net electrical output/event');near(feas.annualKWh,4.0555555556,1e-9,'FEAS annual output from mechanical model');
+near(100000*2/3600*365/1000,20.2777777778,1e-9,'thesis alternative benchmark at 2 J usable/event');
+console.log('PASS: shared road, wind, hydraulic, river-current, solar PSH/specific-yield, battery, railway and FEAS equations; thesis reference values; kinetic/Cp ceilings; blank/range validation. All outputs remain scenario estimates pending field data.');
