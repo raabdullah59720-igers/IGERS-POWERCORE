@@ -18,13 +18,16 @@ const runtimeFiles = [
   'thesis-concept-resilience-station.svg', 'thesis-concept-road-harvester.jpg',
   'thesis-concept-road.svg', 'thesis-concept-sluice-gate.jpg',
   'thesis-concept-solar.svg', 'thesis-concept-thermal-canopy.svg',
-  'thesis-concept-vibration.svg',
+  'thesis-concept-vibration.svg', 'thesis-concept-railway.svg',
   'igers-compact-bundle.css', 'design-standard.css', 'airport-runway-sim.css',
   'powercore-command-center.css', 'thesis-concept-lab.css',
+  'live-concept-application-silo.css', 'railway-track-energy.css', 'lcs-scenario-vault.css',
   'company-operations-suite.css', 'app-shell.css',
   'toll-national-pro.js', 'nasa-gibs-bd.js', 'airport-runway-sim.js',
   'section-navigation.js', 'system-master-control.js', 'powercore-command-center.js',
-  'thesis-concept-lab.js', 'company-operations-suite.js', 'i18n.js', 'app-shell.js'
+  'thesis-concept-lab.js', 'live-concept-application-silo.js', 'lcs-scenario-vault.js',
+  'railway-track-energy.js', 'railway-track-webgl.js',
+  'company-operations-suite.js', 'i18n.js', 'app-shell.js'
 ];
 const magazineCandidates = ['magazine/IGERS-BD-01_Professional_Engineering_Magazine.pdf', 'IGERS-BD-01_Professional_Engineering_Magazine.pdf'];
 const magazineSource = magazineCandidates.find((file) => existsSync(join(root, file)));

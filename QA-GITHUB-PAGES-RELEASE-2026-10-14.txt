@@ -1,0 +1,15 @@
+IGERS POWERCORE — RELEASE QA REPORT
+Date: 2026-10-14
+Release: 2026-10-14-github-pages-release-fix02
+
+PASS: `npm run build` from the original project completed successfully after the build manifest was fixed.
+PASS: calculated production output has fewer than 98 files and all files at the root.
+PASS: fixed manifest now includes 8 previously omitted runtime resources: live-concept-application-silo.css, railway-track-energy.css, lcs-scenario-vault.css, thesis-concept-railway.svg, live-concept-application-silo.js, lcs-scenario-vault.js, railway-track-energy.js, railway-track-webgl.js.
+PASS: calculation regression tests (SI conversions, annual-energy output, negative-input bounds and main/frame-live agreement).
+PASS: language-addon test suite (10/10).
+PASS: all external JS syntax checks and inline JS syntax checks.
+PASS: every direct local HTML asset reference resolves inside the release.
+PASS: CSS syntax and local url(...) asset checks.
+PASS: ZIP integrity.
+
+Runtime limitations: a live GitHub Pages browser deployment and live provider/API feeds were not available for end-to-end verification here; those depend on the actual repository publishing configuration and external service availability.
