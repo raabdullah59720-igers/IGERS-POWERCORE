@@ -1,0 +1,42 @@
+IGERS-BD-01 — DEFENSIVE MODULAR WORKSPACE VALIDATION
+Release: 2026-10-14-defensive-modules-v2
+
+FOLLOW-UP BUGFIX (v2)
+PASS — Persisted Radar OFF state remains OFF after refresh; startup no longer restarts its animation.
+PASS — Animation frame IDs are tracked so Pause/visibility changes cancel the current frame.
+PASS — Battery capacity/load input min/max boundaries are enforced by the calculation handler.
+PASS — A dependency-free runtime harness now exercises initial display, battery recomputation/blank/range validation, infrastructure state cycle/reset, local event log/export/clear, and Radar toggle persistence.
+
+PACKAGE / BUILD
+PASS — npm run build succeeded from the modified project root.
+PASS — The generated release ZIP was extracted into a separate directory and npm run build succeeded again.
+PASS — ZIP integrity verified; 83 root-level files; below the stated GitHub upload target of 98 files.
+PASS — Static release builder found all direct local HTML resource references.
+
+STRUCTURAL QA
+PASS — 929 HTML IDs checked; 0 duplicate IDs.
+PASS — 56 in-page hash links checked; 0 missing fragment targets.
+PASS — 51 direct local HTML resource references checked; 0 missing local assets.
+PASS — 26 runtime JavaScript files passed `node --check`; build.mjs and both CJS regression scripts also passed syntax checks.
+PASS — 13 inline JavaScript blocks passed syntax checking.
+PASS — CSS parser found 0 stylesheet parse errors; all 3 local CSS url() assets returned HTTP 200 in local-server checks.
+PASS — 36 direct DOM ID references in defensive-modular-panels.js resolved to present elements or explicitly supported existing source-state elements.
+PASS — Existing engineering calculation regression suite passed during both builds.
+PASS — New defensive-module runtime harness passed: default boot/results, valid input recomputation, blank/range errors, node cycle/reset, local log save/export/clear, persisted module OFF, and radar pause/resume.
+PASS — All 51 direct local HTML resource URLs returned HTTP 200 from the local staging server.
+PASS — All 844 HTML IDs in the prior app baseline are still present in the upgraded app; no old ID was removed.
+
+ADDED MODULES
+- Perimeter & Event Awareness: local radar-style animation, explicitly marked demo.
+- Sensor & Feed Health: read-only status audit of selected indicators already exposed by the app.
+- Critical Infrastructure Resilience Grid: five manually controlled browser-local scenario nodes.
+- Hazard & Environmental Context: internal shortcuts to existing weather, seismic, marine and toll panels.
+- Backup Power Endurance: input-validated first-order battery autonomy model.
+- Incident Notes & Drill Log: browser-local entries with JSON/CSV export and confirmed local clearing.
+
+LIMITATIONS / HONEST BOUNDARY
+- Chromium opened the organization policy block page instead of the local staging app. Browser-rendered app visuals and true browser DOM/runtime smoke tests therefore remain NOT VERIFIED; no browser-render PASS is claimed.
+- No GitHub repository push or live GitHub Pages deployment was performed. The public URL could not be resolved from this runtime, and the repository/Actions status is unavailable without an authenticated GitHub connection.
+- No new external API was claimed as connected, and no hardware feed was queried by the new module.
+- Radar echoes and infrastructure node states are local illustrations/manual scenario inputs, not real observations.
+- Battery runtime is a first-order estimate, not a safety certification or electrical design approval.

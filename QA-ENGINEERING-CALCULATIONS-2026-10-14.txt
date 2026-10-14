@@ -1,5 +1,5 @@
 IGERS-BD-01 · ENGINEERING CALCULATION UPGRADE QA
-Release: 2026-10-14-engineering-core-v2
+Release: 2026-10-14-defensive-modules-v2
 Build date: 2026-10-14
 
 PASS: Build completed from root-linked local resources using dynamic HTML/JS/CSS asset collection.
@@ -10,8 +10,11 @@ PASS: Wind, hydraulic, river-current, solar specific-yield, solar PSH, battery-a
 PASS: PV annual PSH calculation does not multiply by instantaneous irradiance a second time.
 PASS: Unified Command Center uses the same road/wind/hydro/PV calculation methods.
 PASS: Railway annual energy/battery calculation uses shared calculation kernel.
-PASS: Modified script URL versions and service-worker revision updated; release marker: 2026-10-14-engineering-core-v2.
+PASS: Modified script URL versions and service-worker revision updated; release marker: 2026-10-14-defensive-modules-v2.
 PASS: Direct local HTML resource references exist in dist.
-PASS: 78 files total (upload target fewer than 98).
+PASS: Defensive Modular Workspace included: radar-style local demo, source-state audit, infrastructure dependency scenario, hazard shortcuts, battery autonomy calculator and local event log.
+PASS: Defensive module runtime harness covers boot, battery validation/recalculation, scenario cycle/reset, local log save/export/clear, persisted toggle state and animation pause/resume.
+PASS: Defensive module status values are labelled local/demo; no remote infrastructure controls or synthetic live telemetry are exposed.
+PASS: 83 files total (upload target fewer than 98).
 
 BOUNDARY: JavaScript syntax, numerical regression, release build, CSS asset references and local HTML references were tested here. A Chromium smoke test was attempted, but the execution environment blocked access to local host/file URLs; therefore browser-rendering is not marked PASS. Live GitHub Pages deployment, external data feeds/WebGL and hardware telemetry were not directly tested. All engineering outputs remain scenario estimates until field data is supplied.

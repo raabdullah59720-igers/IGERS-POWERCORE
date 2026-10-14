@@ -11,7 +11,7 @@
   const groups = Array.from(nav.querySelectorAll('details.nav-group'));
   if (!groups.length) return;
 
-  const iconMap = ['⌘', '◌', '✈', '▤', 'ϟ', '✚', '⬡'];
+  const iconMap = ['⌘', '◌', '✈', '▤', 'ϟ', '✚', '⬡', '⛨'];
   const descMap = [
     'Project identity, concept architecture, research visualizers and engineering boundaries.',
     'Environmental context, weather, local time, seismic and coastal monitoring.',
@@ -19,9 +19,10 @@
     'Transport infrastructure, toll intelligence, satellite and connectivity views.',
     'Energy recovery calculations, analysis tools and system controls.',
     'Emergency tools, feedback and customer-support interfaces.',
-    'Integrated command, engineering simulation and operations health.'
+    'Integrated command, engineering simulation and operations health.',
+    'Passive awareness, public-source integrity, infrastructure continuity and browser-local incident drills.'
   ];
-  const workspaceColors = ['cyan', 'mint', 'blue', 'amber', 'violet', 'rose', 'steel'];
+  const workspaceColors = ['cyan', 'mint', 'blue', 'amber', 'violet', 'rose', 'steel', 'mint'];
   const safeText = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   })[char]);

@@ -2,7 +2,7 @@
  * Keep this file intentionally network-light: no stale application cache is kept.
  * Bump REVISION whenever shipping an application update.
  */
-const REVISION = 'igers-2026-10-14-engineering-core-v2';
+const REVISION = 'igers-2026-10-14-defensive-modules-v2';
 self.addEventListener('install', event => {
   event.waitUntil(self.skipWaiting());
 });
