@@ -9,3 +9,5 @@ For reproducible staging, run: npm run build (the static build is created under 
 After commit, check Actions / Pages deployment status. In View Source, verify meta[name="igers-engineering-release"] is 2026-10-14-visual-admin-v2. Hard-refresh with Ctrl+Shift+R.
 
 Live external APIs, browser-specific graphics/WebGL and GitHub-hosted deployment must be verified on the deployed URL; static package checks cannot guarantee external feed uptime.
+
+Secure Connectivity Companion included: Android/Desktop VPN setup readiness, satellite device/provider requirement checklist, and browser online/offline status. This panel does not enable a real VPN tunnel or satellite internet by itself.

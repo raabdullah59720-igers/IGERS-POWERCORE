@@ -1,0 +1,25 @@
+IGERS-POWERCORE / SECURE CONNECTIVITY UPGRADE QA
+Date: 2026-10-15
+Source: IGERS-POWERCORE-main (20).zip + Secure Connectivity Companion
+
+PASS — Original ZIP integrity check: 293 entries, no CRC failure.
+PASS — Original JavaScript syntax: 64/64 files.
+PASS — New Secure Connectivity JavaScript syntax: passed.
+PASS — Project production build: passed; 91 files in dist and 49 local HTML references resolved.
+PASS — Calculation regression suite: passed.
+PASS — Defensive Modular Workspace regression suite: passed.
+PASS — Visual Command Deck / Admin Machine Control regression suite: passed.
+PASS — HTTP smoke test: index.html 200; igers-secure-connectivity.js 200; igers-secure-connectivity.css 200.
+PASS — HTML parse check: one body open/close; single secure-connectivity script reference; no duplicate IDs found.
+PASS — DOM-mock behavior tests: 9 checks passed, including module creation/mounting, stylesheet link, Android identification, online/offline status, non-claim of active VPN, and both guide buttons.
+PASS — Release has fewer than 98 root files after QA and install documentation.
+
+NOT VERIFIED / IMPORTANT LIMITS
+- Headless Chromium did not complete in this runtime; full real-browser rendering is unverified.
+- GitHub Pages deployment and tests on physical Android/Desktop are not performed.
+- No real VPN tunnel, VPN-provider credentials, satellite hardware, carrier entitlement, internet connectivity, or satellite internet was activated by this update.
+- The module deliberately does not report a VPN tunnel as active because a browser page cannot safely confirm or enable the system VPN.
+- No password was hard-coded into public JavaScript. An admin password embedded in a public static site would be visible to visitors; configure real access control on a server or in a native app.
+
+CONCLUSION
+Package-level source/build/regression/network-serving checks passed. The release is prepared for deployment, but a successful live deployment and end-to-end device run cannot honestly be confirmed before deploying it to the user's GitHub Pages host and testing on target devices.

@@ -1,0 +1,24 @@
+IGERS-POWERCORE — SECURE CONNECTIVITY RELEASE
+Release basis: IGERS-POWERCORE-main (20) + Secure Connectivity Companion
+Platform target: Android browser + desktop/laptop browser
+
+INSTALL / DEPLOY
+1. Back up the current GitHub repository.
+2. Extract this release ZIP. Its contents are already flat: index.html is at the ZIP root.
+3. Upload the extracted files to the publishing root of the repository (do not upload the ZIP itself or create a nested project folder). Replace matching files with this release's versions.
+4. Confirm index.html contains one script reference to igers-secure-connectivity.js?v=20261015-v1 near </body>.
+5. Confirm both igers-secure-connectivity.js and igers-secure-connectivity.css exist in the same root.
+6. Deploy GitHub Pages, wait for the deployment workflow to report success, then hard-refresh the site (Ctrl+Shift+R). Test on the actual Android phone and desktop.
+7. The build package uses fewer than 98 files for the repository upload target.
+
+WHAT IS VERIFIED
+- Production build and project regression harnesses passed before packaging.
+- All JavaScript files in the release pass Node.js syntax checks.
+- HTML local references are present; the web server returned HTTP 200 for index.html, the new JS and the new CSS.
+- A lightweight DOM mock passed panel mounting, platform detection, honest VPN status, setup-guide buttons, and online/offline status checks.
+
+LIMITS
+- A real Chromium rendering session could not be completed in the supplied execution environment. This is not a claim of an end-to-end browser/device test.
+- GitHub Pages deployment, real Android/desktop devices, external feeds, provider coverage, VPN tunnel operation and satellite connectivity have not been verified from this package build.
+- This is a readiness/configuration panel, not a VPN engine, satellite modem, or internet service.
+- Do not put an administrator password, VPN private key, or provider credential into public HTML/JavaScript. Use server-side authentication or OS-protected credentials for real access control.
