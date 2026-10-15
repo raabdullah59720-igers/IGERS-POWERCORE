@@ -1,11 +1,11 @@
 IGERS-POWERCORE · GITHUB PAGES RELEASE
-Release: 2026-10-14-defensive-modules-v2
+Release: 2026-10-14-visual-admin-v2
 
-This ZIP is a flat static-site root package with the new Defensive Modular Workspace (passive awareness, resilience grid, local incident notes and backup-power estimate). Extract it and upload the files inside directly to the repository publishing root; do not upload the ZIP file alone or add a second nested project folder. Enable GitHub Pages from your chosen branch and /(root). The package includes index.html and the runtime assets.
+This ZIP is a flat static-site root package with the Visual Command Deck, Admin Machine Control and Defensive Modular Workspace (passive awareness, resilience grid, local incident notes and backup-power estimate). Extract it and upload the files inside directly to the repository publishing root; do not upload the ZIP file alone or add a second nested project folder. Enable GitHub Pages from your chosen branch and /(root). The package includes index.html and the runtime assets.
 
 For code testing on a machine with Node.js, run: node calculation-regression-tests.cjs
 For reproducible staging, run: npm run build (the static build is created under dist/).
 
-After commit, check Actions / Pages deployment status. In View Source, verify meta[name="igers-engineering-release"] is 2026-10-14-defensive-modules-v2. Hard-refresh with Ctrl+Shift+R.
+After commit, check Actions / Pages deployment status. In View Source, verify meta[name="igers-engineering-release"] is 2026-10-14-visual-admin-v2. Hard-refresh with Ctrl+Shift+R.
 
 Live external APIs, browser-specific graphics/WebGL and GitHub-hosted deployment must be verified on the deployed URL; static package checks cannot guarantee external feed uptime.

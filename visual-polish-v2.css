@@ -1,0 +1,37 @@
+/* IGERS POWERCORE · visual quality layer v2
+   Additive only: navigation comfort, calmer depth scene, keyboard focus, and clear locked states. */
+:root{--igers-sticky-height:88px;--igers-focus:rgba(88,224,255,.62)}
+html{scroll-padding-top:calc(var(--igers-sticky-height,88px) + 14px)}
+main>section[id],main>section[id] [id],#visualCommandDeck,#adminMachineControl{scroll-margin-top:calc(var(--igers-sticky-height,88px) + 14px)}
+/* The global perspective floor is a background accent, never a foreground element. */
+.global-3d-canvas{opacity:.36!important}
+body[data-theme="day"] .global-3d-canvas{opacity:.13!important}
+/* Unified keyboard navigation without changing existing click behavior. */
+:where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--igers-focus);outline-offset:3px}
+button:disabled,[role="button"][aria-disabled="true"]{cursor:not-allowed}
+/* Locked means visually locked: prevent a bright enabled-looking master command. */
+#adminMachineControl[data-admin-locked="true"] .amc-toolbar .amc-btn:disabled{background:#10202a!important;color:#718894!important;border-color:#29424e!important;box-shadow:none!important;opacity:.82!important;filter:saturate(.35);transform:none!important}
+#adminMachineControl[data-admin-locked="true"] .amc-toolbar .amc-btn.primary:disabled{background:linear-gradient(135deg,#253b46,#263a3a)!important;color:#81969e!important;border-color:#314a54!important}
+#adminMachineControl[data-admin-locked="true"] .amc-toolbar .amc-btn.danger:disabled{background:#211b21!important;color:#917d83!important;border-color:#45323a!important}
+#adminMachineControl[data-admin-locked="true"] .amc-machine-controls button:disabled{background:#111f28!important;color:#748994!important;border-color:#29404b!important;opacity:.88!important;filter:saturate(.2)}
+#adminMachineControl .amc-state{transition:color .18s ease,border-color .18s ease,background .18s ease}
+#adminMachineControl .amc-unlocked{border-color:rgba(123,240,187,.42);background:rgba(46,132,99,.11);box-shadow:0 0 24px rgba(123,240,187,.06)}
+#adminMachineControl .amc-locked{border-color:rgba(255,199,109,.3);background:rgba(130,89,30,.08)}
+/* Keep touch controls readable on compact phones. */
+@media(max-width:520px){
+  #adminMachineControl .amc-machine-controls button{font-size:9px;min-height:31px;padding:7px 4px;letter-spacing:0}
+  #adminMachineControl .amc-toolbar .amc-btn{min-height:38px}
+  #adminMachineControl .amc-login{gap:10px}
+  #visualCommandDeck .vcd-sub,#adminMachineControl .amc-sub{font-size:12px;line-height:1.65}
+}
+@media(max-width:370px){#adminMachineControl .amc-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+/* Compact brand rail on narrow panel views. Keep the back action readable without collision. */
+@media(max-width:430px){
+  body.igers-app-shell[data-igers-view="panel"] .nav .navin:before{content:"IGERS";font-size:8px!important;letter-spacing:.12em!important;margin-right:auto;flex:0 0 auto}
+  body.igers-app-shell[data-igers-view="panel"] #igersAppBackButton{padding:7px 8px;gap:4px;max-width:calc(100vw - 100px)}
+}
+@media(max-width:360px){
+  body.igers-app-shell[data-igers-view="panel"] #igersAppBackButton{max-width:calc(100vw - 70px)}
+  body.igers-app-shell[data-igers-view="panel"] #igersAppBackButton .ias-nav-back-label{max-width:110px;overflow:hidden;text-overflow:ellipsis}
+}

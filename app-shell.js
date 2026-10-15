@@ -31,6 +31,14 @@
     catch (_) { return String(hash || '').replace(/^#/, ''); }
   };
   const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Keep hash/deep-link navigation below the responsive sticky navigation.
+  const syncStickyOffset = () => {
+    const height = nav?.getBoundingClientRect?.().height || 0;
+    document.documentElement.style.setProperty('--igers-sticky-height', `${Math.max(64, Math.ceil(height))}px`);
+  };
+  syncStickyOffset();
+  if (typeof ResizeObserver === 'function' && nav) new ResizeObserver(syncStickyOffset).observe(nav);
+  else window.addEventListener('resize', syncStickyOffset, { passive: true });
   const scrollToElement = (element, behavior = 'smooth') => {
     if (!element || typeof element.scrollIntoView !== 'function') return;
     element.scrollIntoView({ block: 'start', behavior: reduceMotion() ? 'auto' : behavior });
