@@ -1,0 +1,24 @@
+IGERS-POWERCORE — 99-FILE UPLOAD GUIDE
+Release: 2026-10-15 · direct VPN package
+
+KEEP THE APP ASSETS AND GRAPHICS AT ORIGINAL QUALITY
+These upload packages are the same project contents as the verified standalone packages. No graphics/assets have been reduced or removed for this repackaging.
+
+IMPORTANT: The outer Upload Kit contains 3 ZIP files plus this guide and QA manifest. Do NOT upload the outer ZIP contents directly to the website repository. Extract the one inner ZIP appropriate for the target platform first.
+
+1) WEBSITE / GITHUB PAGES — 93 files
+   Use 01-WEB-GITHUB-PAGES-93-FILES.zip.
+   Extract it locally and upload its 93 root files to the publishing root of the GitHub Pages repository. Do not upload the ZIP itself and do not add a nested folder. This web build renders the VPN panel and graphics. Static GitHub Pages JavaScript cannot turn on the operating system VPN by itself.
+
+2) ANDROID NATIVE VPN APP — 94 files
+   Use 02-ANDROID-NATIVE-VPN-94-FILES.zip.
+   Extract and open its project root in Android Studio; build the APK there or use the included GitHub Actions workflow. This is a separate native Android source project, not a folder to merge into the website root.
+
+3) WINDOWS DESKTOP VPN APP — 97 files
+   Use 03-WINDOWS-DESKTOP-VPN-97-FILES.zip.
+   Extract and run on Windows with Node.js and the official WireGuard for Windows client installed. This is a separate Electron project, not a folder to merge into the GitHub Pages website.
+
+VPN CONNECTION REQUIREMENTS
+A genuine WireGuard profile (.conf) from a trusted provider or a server you control is required. No VPN server, credentials, keys, free bandwidth or satellite subscription are included. Android requires user permission; Windows may require UAC/admin approval. A native APK/EXE was not compiled in this Linux environment, and real-device/peer-handshake tests remain necessary.
+
+NO 100% success guarantee is possible without actual deployment, native builds, valid provider configuration and physical device tests.

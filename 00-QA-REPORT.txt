@@ -1,0 +1,17 @@
+IGERS-POWERCORE — 99-FILE UPLOAD KIT QA
+Date: 2026-10-15
+
+PASS — Original Complete Bundle archive CRC/integrity.
+PASS — Web package ZIP CRC/integrity, 93 file entries.
+PASS — Android native source ZIP CRC/integrity, 94 file entries.
+PASS — Windows desktop source ZIP CRC/integrity, 97 file entries.
+PASS — Byte-for-byte SHA-256 comparison: each standalone package file content matches its corresponding directory within the original Complete Bundle. No content/graphics were removed or recompressed at source-file level.
+PASS — Upload kit separates the three different deployment targets so their files are not mistakenly placed together in a single GitHub Pages root.
+PASS — Upload Kit has 5 top-level entries (3 inner ZIPs + guide + QA report) and every inner project is below the 99-file target.
+
+LIMITATIONS:
+- Native Android APK and Windows EXE were not compiled/tested in this Linux environment.
+- Real VPN handshake, peer routing, Android permission prompt, Windows UAC/service installation and live GitHub Pages deployment were not tested.
+- Web panel graphics can render on GitHub Pages, but a static website cannot initiate an operating-system VPN tunnel. Real connect/disconnect uses the native Android/Windows project.
+- A trusted VPN .conf profile and a reachable VPN endpoint are required. No guaranteed free satellite/VPN internet is included.
+- This verifies package/file-count integrity only; it does not guarantee end-to-end runtime success on every device/network.
