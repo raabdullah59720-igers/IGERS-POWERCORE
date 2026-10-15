@@ -1,0 +1,28 @@
+IGERS POWERCORE — DIRECT VPN PANEL + NATIVE CONNECTOR QA REPORT
+Release: 2026-10-15-direct-vpn-v2
+QA date: 2026-10-15
+
+WEB BUILD / PANEL
+PASS — Production web build generated a flat 93-file GitHub Pages release and checked 50 local HTML references.
+PASS — HTML resource audit found zero missing local src/href references.
+PASS — Panel is embedded in index.html and exposed in Defensive Modular Panels navigation, with Import .conf, Connect VPN, Disconnect, Refresh Status, and Satellite Requirements controls.
+PASS — Panel JavaScript/CSS references use the current direct-vpn-v2 cache key; service-worker revision updated.
+PASS — Imported profile is held in page memory only, limited to 64 KiB and basic WireGuard section/key validation; it is not persisted to localStorage.
+PASS — Browser-only mode reports native connector unavailable rather than pretending it can connect a system VPN.
+PASS — Existing calculation/engineering, Defensive Modular Workspace, and Visual Command Deck/Admin Machine Control regression suites all passed.
+PASS — The direct VPN UI interaction harness passed: Connect/Disconnect bridge requests, native status mapping, no-native-host state, invalid-profile rejection, profile size cap, and satellite checklist behavior.
+PASS — Node syntax validation for the connectivity module, Electron main process, and preload bridge.
+PASS — Source assets copied into Android and Windows projects match the web release by SHA-256 for index.html, connectivity JavaScript/CSS and service-worker file.
+PASS — Android manifest/resource XML parsed successfully; Electron package.json parses as valid JSON.
+PASS — Each individual project folder stays below the user's 98-file threshold: Web 93 files, Android project 94 files, Windows Electron project 97 files. Runtime web assets bundled in Android WebView: 79 files.
+PASS — Release ZIP CRC/integrity, expected entries and file counts validated after packaging.
+
+NATIVE AND PLATFORM LIMITS
+PASS — Android source uses an origin-allowlisted AndroidX WebMessageListener, checks main-frame origin, validates/parses the WireGuard profile with the official WireGuard config parser, requests explicit user confirmation and Android VpnService permission, calls the native WireGuard tunnel backend, and implements disconnect/status requests.
+SOURCE REVIEW — Windows Electron source is Node syntax-checked. It locates official WireGuard for Windows, requests Windows UAC, relies on WireGuard Manager to create its protected DPAPI profile before installing a tunnel service, and attempts to remove the IGERS-managed profile during disconnect.
+NOT TESTED — Android source was not compiled into an APK because Android SDK/Gradle dependencies are unavailable in this runtime. A plain kotlinc invocation reports unresolved Android/WireGuard APIs (missing SDK/classpath), with no syntax-parser diagnostics; this is not an Android build.
+NOT TESTED — Windows service install, elevation/UAC, DPAPI profile conversion, native .exe/installer build and actual connection were not run on Windows in this Linux runtime.
+NOT TESTED — GitHub Pages live deployment, physical-device browser rendering, peer handshake, internet routing and satellite service were not verified.
+
+IMPORTANT LIMITATION
+A normal browser/PWA on GitHub Pages cannot create/manage a system VPN tunnel. Direct connect/disconnect needs the native Android app or Windows desktop host from the source bundles, plus a genuine WireGuard .conf profile from a trusted provider or a server under the user's control. The bundle includes no VPN server, endpoint credentials, private keys, subscription or free bandwidth. A running tunnel interface/service alone does not prove a peer handshake or working internet. No 100% success guarantee is claimed without native builds, provider configuration and device testing.

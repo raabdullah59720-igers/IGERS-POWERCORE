@@ -6,7 +6,7 @@ import { execFileSync } from 'node:child_process';
 // collecting all directly linked assets plus local files referenced by active JS/CSS.
 const root = resolve(process.cwd());
 const dist = join(root, 'dist');
-const release = '2026-10-15-secure-connectivity-v2';
+const release = '2026-10-15-atmosphere-rf-v1';
 const staticFiles = [
   '.nojekyll','404.html','LICENSE','index.html','copyright.html','privacy.html','terms.html',
   'manifest.webmanifest','sw.js','bangladesh-boundary-fallback.geojson','bangladesh-flag-overlay.svg',
@@ -16,8 +16,8 @@ const staticFiles = [
   'thesis-concept-road.svg','thesis-concept-sluice-gate.jpg','thesis-concept-solar.svg',
   'thesis-concept-thermal-canopy.svg','thesis-concept-vibration.svg','thesis-concept-railway.svg',
   'IGERS-BD-01_Professional_Engineering_Magazine.pdf','engineering-calculation-core.js',
-  'SECURE-CONNECTIVITY-INSTALL-BN-EN.txt','QA-SECURE-CONNECTIVITY-2026-10-15.txt',
-  'build.mjs','package.json','calculation-regression-tests.cjs','defensive-modular-regression-tests.cjs','visual-command-deck-regression-tests.cjs','DEFENSIVE-MODULAR-PANELS-README.md','DEFENSIVE-MODULAR-PANELS-VALIDATION.txt','UPGRADE-2026-10-14-VISUAL-ADMIN.md','VISUAL-POLISH-QA-2026-10-14.md'
+  'build.mjs','package.json','calculation-regression-tests.cjs','defensive-modular-regression-tests.cjs','visual-command-deck-regression-tests.cjs','DEFENSIVE-MODULAR-PANELS-README.md','DEFENSIVE-MODULAR-PANELS-VALIDATION.txt','UPGRADE-2026-10-14-VISUAL-ADMIN.md','VISUAL-POLISH-QA-2026-10-14.md',
+  'DIRECT-VPN-INSTALL-BN-EN.txt','DIRECT-VPN-QA-REPORT-2026-10-15.txt','ATMOSPHERE-RF-MONITOR-QA-2026-10-15.txt'
 ];
 const allowed = /\.(?:html?|css|m?js|cjs|json|webmanifest|geojson|svg|png|jpe?g|webp|gif|pdf|woff2?|ttf|otf|mp3|wav|webm|mp4)$/i;
 const queue = [];
@@ -141,7 +141,8 @@ writeFileSync(join(dist,'GITHUB-UPLOAD-INSTRUCTIONS-BN-EN.txt'),instructions,'ut
 const countFiles=(folder)=>readdirSync(folder,{withFileTypes:true}).reduce((n,e)=>n+(e.isDirectory()?countFiles(join(folder,e.name)):1),0);
 const count=countFiles(dist)+1; // QA report is written immediately below.
 if(count>=98){console.error(`Build failed: ${count} files exceed the <98 upload target.`);process.exit(1);}
-const qa=`IGERS-BD-01 · ENGINEERING CALCULATION UPGRADE QA\nRelease: ${release}\nBuild date: 2026-10-14\n\nPASS: Build completed from root-linked local resources using dynamic HTML/JS/CSS asset collection.\nPASS: Main road model checked against thesis reference case: 2.980833 GWh/year; 340.2778 kW calendar average.\nPASS: Kinetic-reduction ceiling rejects assumed captured energy above available ΔKE.\nPASS: Blank numeric inputs are rejected by shared kernel.\nPASS: Wind, hydraulic, river-current, solar specific-yield, solar PSH, battery-autonomy, railway and FEAS formulas covered by dependency-free regression suite.\nPASS: PV annual PSH calculation does not multiply by instantaneous irradiance a second time.\nPASS: Unified Command Center uses the same road/wind/hydro/PV calculation methods.\nPASS: Railway annual energy/battery calculation uses shared calculation kernel.\nPASS: Modified script URL versions and service-worker revision updated; release marker: ${release}.\nPASS: Direct local HTML resource references exist in dist.\nPASS: Defensive Modular Workspace included: radar-style local demo, source-state audit, infrastructure dependency scenario, hazard shortcuts, battery autonomy calculator and local event log.
+const qa=`IGERS-BD-01 · ENGINEERING CALCULATION UPGRADE QA\nRelease: ${release}\nBuild date: 2026-10-15\n\nPASS: Build completed from root-linked local resources using dynamic HTML/JS/CSS asset collection.\nPASS: Main road model checked against thesis reference case: 2.980833 GWh/year; 340.2778 kW calendar average.\nPASS: Kinetic-reduction ceiling rejects assumed captured energy above available ΔKE.\nPASS: Blank numeric inputs are rejected by shared kernel.\nPASS: Wind, hydraulic, river-current, solar specific-yield, solar PSH, battery-autonomy, railway and FEAS formulas covered by dependency-free regression suite.\nPASS: PV annual PSH calculation does not multiply by instantaneous irradiance a second time.\nPASS: Unified Command Center uses the same road/wind/hydro/PV calculation methods.\nPASS: Railway annual energy/battery calculation uses shared calculation kernel.\nPASS: Modified script URL versions and service-worker revision updated; release marker: ${release}.\nPASS: Direct local HTML resource references exist in dist.\nPASS: Defensive Modular Workspace included: radar-style local demo, source-state audit, infrastructure dependency scenario, hazard shortcuts, battery autonomy calculator and local event log.
+PASS: DM-07 atmosphere monitor added with regional Air Quality model sampling, NOAA planetary Kp and F10.7 indices, and public SatNOGS transmitter-catalogue frequency filtering. Live RF spectrum is never fabricated; direct measurement is marked as requiring local receiver hardware.
 PASS: Defensive module runtime harness covers boot, battery validation/recalculation, scenario cycle/reset, local log save/export/clear, persisted toggle state and animation pause/resume.
 PASS: Visual Command Deck/Admin Machine Control regression harness covers source-balance calculation, node selection, animation pause, eight machine cards, locked controls, existing admin-gate delegation, master ON, individual state change, simulated emergency stop, local audit and logout locking.
 PASS: Defensive module status values are labelled local/demo; no remote infrastructure controls or synthetic live telemetry are exposed.

@@ -1,6 +1,6 @@
 # IGERS-BD-01 Engineering Calculation Reference Register
 
-Release: 2026-10-15-secure-connectivity-v2
+Release: 2026-10-15-atmosphere-rf-v1
 
 The shared calculation kernel is used by the main Energy Calculator, Unified Command Center, Concept Lab, Scenario Silo/Vault and Railway energy calculator. Results are user-input scenario estimates until prototype tests and field data are supplied.
 

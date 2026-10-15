@@ -1,0 +1,28 @@
+IGERS POWERCORE — DIRECT VPN CONNECTIVITY INSTALL NOTES
+Release: 2026-10-15-direct-vpn-v2
+
+WHAT THE WEBSITE ZIP DOES
+- Adds a visual VPN panel inside Defensive Modular Workspace.
+- Includes Import .conf, Connect VPN, Disconnect, Refresh Status, profile validation, and native-connector detection.
+- Keeps imported WireGuard profile text in browser memory only; it is not written to localStorage.
+- On ordinary GitHub Pages / browser mode, direct system VPN is intentionally unavailable. Browser JavaScript cannot create the OS VPN/TUN interface.
+
+TO ENABLE REAL CONNECT/DISCONNECT
+ANDROID:
+1. Use the separate Android native source project included in the Direct-VPN bundle. Open its android-native folder in Android Studio.
+2. Allow Gradle sync/download of the official WireGuard tunnel dependency and AndroidX WebKit/Activity dependencies.
+3. Build and run the app on an actual Android device. The first Connect request asks Android for VPN permission.
+4. In the panel, Import a trusted WireGuard .conf profile, press Connect VPN, read the native confirmation and approve the Android VPN permission prompt. Disconnect stops that tunnel.
+
+WINDOWS DESKTOP:
+1. Use the separate desktop-electron source project included in the Direct-VPN bundle.
+2. Install Node.js and the official WireGuard for Windows client.
+3. From desktop-electron, run `npm install` and `npm start`.
+4. Import a trusted .conf profile and press Connect VPN. Windows may ask for administrator/UAC permission. The connector uses WireGuard Manager’s protected DPAPI profile store; Disconnect removes the IGERS-managed tunnel and its protected profile.
+
+IMPORTANT
+- The website panel alone does NOT establish a VPN tunnel. The native Android or desktop host is required.
+- No VPN endpoint, WireGuard keys, VPN account, server, free bandwidth, or satellite internet is included. Bring a valid configuration from a provider you trust or a server you control.
+- “Tunnel active/service running” means the OS tunnel/interface was started; it does not prove a successful WireGuard peer handshake or working internet. Check recent handshake and traffic in the native client.
+- Satellite service separately requires compatible hardware, supported regional coverage, and provider activation where applicable.
+- The Android source project and Windows Electron source are provided; a compiled/signed APK or EXE is not included. The Windows connector is designed around WireGuard Manager’s encrypted `.conf.dpapi` store so its tunnel service does not depend on a deleted temporary file. Android build could not be device-tested in this environment. Windows elevation/real tunnel requires testing on a Windows machine with WireGuard installed.

@@ -1,6 +1,6 @@
 IGERS-BD-01 · ENGINEERING CALCULATION UPGRADE QA
-Release: 2026-10-15-secure-connectivity-v2
-Build date: 2026-10-14
+Release: 2026-10-15-atmosphere-rf-v1
+Build date: 2026-10-15
 
 PASS: Build completed from root-linked local resources using dynamic HTML/JS/CSS asset collection.
 PASS: Main road model checked against thesis reference case: 2.980833 GWh/year; 340.2778 kW calendar average.
@@ -10,12 +10,13 @@ PASS: Wind, hydraulic, river-current, solar specific-yield, solar PSH, battery-a
 PASS: PV annual PSH calculation does not multiply by instantaneous irradiance a second time.
 PASS: Unified Command Center uses the same road/wind/hydro/PV calculation methods.
 PASS: Railway annual energy/battery calculation uses shared calculation kernel.
-PASS: Modified script URL versions and service-worker revision updated; release marker: 2026-10-15-secure-connectivity-v2.
+PASS: Modified script URL versions and service-worker revision updated; release marker: 2026-10-15-atmosphere-rf-v1.
 PASS: Direct local HTML resource references exist in dist.
 PASS: Defensive Modular Workspace included: radar-style local demo, source-state audit, infrastructure dependency scenario, hazard shortcuts, battery autonomy calculator and local event log.
+PASS: DM-07 atmosphere monitor added with regional Air Quality model sampling, NOAA planetary Kp and F10.7 indices, and public SatNOGS transmitter-catalogue frequency filtering. Live RF spectrum is never fabricated; direct measurement is marked as requiring local receiver hardware.
 PASS: Defensive module runtime harness covers boot, battery validation/recalculation, scenario cycle/reset, local log save/export/clear, persisted toggle state and animation pause/resume.
 PASS: Visual Command Deck/Admin Machine Control regression harness covers source-balance calculation, node selection, animation pause, eight machine cards, locked controls, existing admin-gate delegation, master ON, individual state change, simulated emergency stop, local audit and logout locking.
 PASS: Defensive module status values are labelled local/demo; no remote infrastructure controls or synthetic live telemetry are exposed.
-PASS: 93 files total (upload target fewer than 98).
+PASS: 96 files total (upload target fewer than 98).
 
 BOUNDARY: JavaScript syntax, numerical regression, release build, CSS asset references and local HTML references were tested here. A Chromium smoke test was attempted, but the execution environment blocked navigation to local HTTP/file URLs (ERR_BLOCKED_BY_ADMINISTRATOR); browser rendering is not marked as verified. Live GitHub Pages deployment, external data feeds/WebGL and hardware telemetry were not directly tested. All physical outputs remain unverified until measured prototype data are supplied.

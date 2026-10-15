@@ -1,0 +1,35 @@
+IGERS-POWERCORE — DM-07 ATMOSPHERE & RF SPECTRUM MONITOR
+Release: 2026-10-15-atmosphere-rf-v1
+Target: GitHub Pages flat root, Android/desktop browsers
+
+WHAT WAS ADDED
+- DM-07 inside Defensive Modular Workspace, with navigation shortcut.
+- Responsive high-tech dashboard: air-quality gauge, pollutant bars, space-weather cards, frequency ruler, transmitter table, physical receiver status and separate source-state labels.
+- Regional air-quality sampling radius options: 25, 50, 100 and 200 km. It queries the center and eight surrounding bearings, deduplicates the model-cell coordinates returned by the source, and displays the mean for unique returned grid cells.
+- Optional geolocation after the user clicks “Use my location”; default remains Dhaka until permission is granted.
+- Open-Meteo/CAMS air-quality current model values (US AQI, PM2.5, PM10, NO2, O3) with returned model time.
+- NOAA SWPC planetary Kp and F10.7 solar-radio-flux index. F10.7 parsing prefers adjusted flux if the endpoint returns it.
+- SatNOGS public transmitter records and a local min/max MHz filter. Up to four API pages are requested; catalog records are labelled as database records, never as locally received RF signals.
+- A Schumann-resonance nominal reference (about 7.83 Hz) that is clearly marked as reference, not a live measurement.
+- Independent Monitor ON/OFF toggle. When OFF, dashboard controls are disabled and automatic refresh pauses. Public feeds refresh every 15 minutes when enabled/visible; transmitter catalogue is reused in memory for up to one hour unless manually refreshed.
+- Service worker revision and meta release marker changed to force updated assets to be picked up.
+
+VALIDATION — PASS
+- Production static build: 96 root files including this report; below GitHub's 99-file target.
+- Existing engineering calculation regression suite passed.
+- Existing Defensive Modular Workspace regression suite passed.
+- Existing Visual Command Deck / Admin Machine Control regression suite passed.
+- All 33 JavaScript files in the flat release passed Node.js syntax checking.
+- Atmosphere monitor mock-data harness passed 12 assertions: all four source parsers, pollutant values, satellite database parsing, MHz filter, optional geolocation, local Monitor ON/OFF and feed-status reporting.
+- HTML: panel and navigation anchor present; one body open/close; no duplicate IDs; all relative href/src references resolved.
+- CSS braces balanced; final ZIP archive integrity verified.
+- Preservation audit against the preceding Direct VPN Web Update ZIP: 41 shared visual assets (existing stylesheets, SVG graphics, raster images, fonts and other visual resources) had byte-identical SHA-256 hashes. No pre-existing shared visual asset changed. Six shared files that differ are limited to index.html integration, build/cache metadata and release documentation; three files were added for the new Atmosphere/RF panel and its QA.
+- Flat deployable archive contains 96 root entries, leaving three entries of headroom under a 99-file upload target. Original CSS/design files and existing image assets were not recompressed, resized, renamed or regenerated; the ZIP uses lossless archive compression only.
+
+DATA-INTEGRITY LIMITS
+- Outbound API fetches could not be live-tested from this build environment because external DNS requests failed. Runtime external API reachability and CORS must therefore be tested on the deployed HTTPS site. If a request fails, this panel shows OFFLINE/UNKNOWN and does not use fake fallback measurements.
+- Open-Meteo air quality is gridded model output (CAMS global approximately 45 km grid, 3-hour temporal resolution, updated on model schedule), not a calibrated local sensor. The regional average is not a government-certified station measurement. See https://open-meteo.com/en/docs/air-quality-api
+- NOAA Kp is a global geomagnetic activity index, not a local received frequency or spectrum scan. F10.7 is solar radio flux at 10.7 cm / 2800 MHz, not a radio reading made by the app. See https://www.spaceweather.gov/products/planetary-k-index and https://swpc-drupal.woc.noaa.gov/phenomena/f107-cm-radio-emissions
+- SatNOGS DB transmitter frequencies are crowdsourced/maintained catalogue records, not proof that a satellite is currently above the user, transmitting, or receivable at their location. See https://db.satnogs.org/about/ (CC BY-SA 4.0)
+- Local ambient RF strength, signal presence, spectrum occupancy and live Schumann resonance cannot be measured by browser JavaScript alone. A suitable SDR / radio / ELF sensor and a permissioned local bridge are required; the display explicitly says NOT CONNECTED / NO MEASUREMENT without them.
+- Full browser screenshot/rendering, GitHub Pages deployment, real external API calls, physical SDR/ELF hardware and an actual device run were not testable here. Build and simulated API-parser tests do not prove a live feed or hardware measurement.
