@@ -1,24 +1,26 @@
-IGERS-POWERCORE — SECURE CONNECTIVITY RELEASE
-Release basis: IGERS-POWERCORE-main (20) + Secure Connectivity Companion
-Platform target: Android browser + desktop/laptop browser
+IGERS-POWERCORE · SECURE CONNECTIVITY GATEWAY · INSTALL GUIDE
+Release: 2026-10-15-secure-connectivity-v2
 
-INSTALL / DEPLOY
-1. Back up the current GitHub repository.
-2. Extract this release ZIP. Its contents are already flat: index.html is at the ZIP root.
-3. Upload the extracted files to the publishing root of the repository (do not upload the ZIP itself or create a nested project folder). Replace matching files with this release's versions.
-4. Confirm index.html contains one script reference to igers-secure-connectivity.js?v=20261015-v1 near </body>.
-5. Confirm both igers-secure-connectivity.js and igers-secure-connectivity.css exist in the same root.
-6. Deploy GitHub Pages, wait for the deployment workflow to report success, then hard-refresh the site (Ctrl+Shift+R). Test on the actual Android phone and desktop.
-7. The build package uses fewer than 98 files for the repository upload target.
+বাংলা / BANGLA
 
-WHAT IS VERIFIED
-- Production build and project regression harnesses passed before packaging.
-- All JavaScript files in the release pass Node.js syntax checks.
-- HTML local references are present; the web server returned HTTP 200 for index.html, the new JS and the new CSS.
-- A lightweight DOM mock passed panel mounting, platform detection, honest VPN status, setup-guide buttons, and online/offline status checks.
+এই প্যাকেজে VPN + Satellite Connectivity Panel মূল index.html-এ আছে। তাই ফাইলগুলো প্রকাশিত root-এ সঠিকভাবে আপলোড হলে navigation group “08 · DEFENSIVE MODULAR PANELS”-এর “VPN + Satellite Connectivity” লিংক এবং মূল প্যানেল দেখা যাবে।
 
-LIMITS
-- A real Chromium rendering session could not be completed in the supplied execution environment. This is not a claim of an end-to-end browser/device test.
-- GitHub Pages deployment, real Android/desktop devices, external feeds, provider coverage, VPN tunnel operation and satellite connectivity have not been verified from this package build.
-- This is a readiness/configuration panel, not a VPN engine, satellite modem, or internet service.
-- Do not put an administrator password, VPN private key, or provider credential into public HTML/JavaScript. Use server-side authentication or OS-protected credentials for real access control.
+INSTALL:
+1. ZIP extract করো। ZIP ফাইলটিকে repository-তে আপলোড করলেই website update হবে না।
+2. ZIP-এর ভেতরের root files সরাসরি GitHub repository-এর publishing root-এ upload/replace করো; একটি extra nested folder তৈরি কোরো না। এই release-এ 93টি root file আছে, আগের app assets-সহ।
+3. Commit/push করার পর GitHub Pages deployment success হয়েছে কি না দেখো।
+4. Website খুলে Ctrl+Shift+R দিয়ে hard refresh করো। Android-এ browser-এর site data/cache clear করে পুনরায় খুলতে হতে পারে।
+5. Navigation → “08 · DEFENSIVE MODULAR PANELS” → “VPN + Satellite Connectivity” নির্বাচন করো। অথবা পেজের নিচের দিকে scroll করো।
+6. VPN setup button চাপলে device-specific নির্দেশনা খুলবে; satellite button-এ provider checklist পাওয়া যাবে।
+
+ENGLISH
+
+The gateway panel is embedded in index.html, not generated only by JavaScript. If the release files are uploaded to the correct GitHub Pages publishing root and the deployment succeeds, the visual panel should render and its navigation anchor should work. The JS enhances platform detection, online/offline labels and the instruction toggles.
+
+IMPORTANT: This is a static website. It CANNOT switch on or authenticate a system-wide VPN by itself. To establish a real tunnel, install an OS-supported VPN client (such as the official WireGuard client), obtain a trusted VPN configuration/profile from a provider or administrator, import it, grant OS permission and connect inside that client. This bundle does not contain a VPN server, private key, provider account or free internet bandwidth. Do not import unknown .conf files.
+
+Satellite internet similarly requires compatible hardware, service coverage and an activated provider/carrier plan. Satellite images, orbital data and this visual module do not provide device internet access. The page intentionally never reports VPN/satellite as connected without trusted native/provider verification.
+
+ADMIN PASSWORD: no administrator password is embedded in public JavaScript. Client-side passwords can be extracted from a published static site. Use server-side authentication or OS-protected credentials for real access control.
+
+TEST BOUNDARY: Build and code checks ran locally. GitHub Pages deployment and physical Android/Desktop end-to-end connection were not testable from this package build. No “100% guaranteed” or actual VPN-live claim is made.

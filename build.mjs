@@ -6,7 +6,7 @@ import { execFileSync } from 'node:child_process';
 // collecting all directly linked assets plus local files referenced by active JS/CSS.
 const root = resolve(process.cwd());
 const dist = join(root, 'dist');
-const release = '2026-10-14-visual-admin-v2';
+const release = '2026-10-15-secure-connectivity-v2';
 const staticFiles = [
   '.nojekyll','404.html','LICENSE','index.html','copyright.html','privacy.html','terms.html',
   'manifest.webmanifest','sw.js','bangladesh-boundary-fallback.geojson','bangladesh-flag-overlay.svg',
@@ -16,6 +16,7 @@ const staticFiles = [
   'thesis-concept-road.svg','thesis-concept-sluice-gate.jpg','thesis-concept-solar.svg',
   'thesis-concept-thermal-canopy.svg','thesis-concept-vibration.svg','thesis-concept-railway.svg',
   'IGERS-BD-01_Professional_Engineering_Magazine.pdf','engineering-calculation-core.js',
+  'SECURE-CONNECTIVITY-INSTALL-BN-EN.txt','QA-SECURE-CONNECTIVITY-2026-10-15.txt',
   'build.mjs','package.json','calculation-regression-tests.cjs','defensive-modular-regression-tests.cjs','visual-command-deck-regression-tests.cjs','DEFENSIVE-MODULAR-PANELS-README.md','DEFENSIVE-MODULAR-PANELS-VALIDATION.txt','UPGRADE-2026-10-14-VISUAL-ADMIN.md','VISUAL-POLISH-QA-2026-10-14.md'
 ];
 const allowed = /\.(?:html?|css|m?js|cjs|json|webmanifest|geojson|svg|png|jpe?g|webp|gif|pdf|woff2?|ttf|otf|mp3|wav|webm|mp4)$/i;

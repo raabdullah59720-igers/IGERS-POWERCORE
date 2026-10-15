@@ -1,25 +1,20 @@
-IGERS-POWERCORE / SECURE CONNECTIVITY UPGRADE QA
+IGERS-POWERCORE · SECURE CONNECTIVITY GATEWAY QA
+Release: 2026-10-15-secure-connectivity-v2
 Date: 2026-10-15
-Source: IGERS-POWERCORE-main (20).zip + Secure Connectivity Companion
 
-PASS — Original ZIP integrity check: 293 entries, no CRC failure.
-PASS — Original JavaScript syntax: 64/64 files.
-PASS — New Secure Connectivity JavaScript syntax: passed.
-PASS — Project production build: passed; 91 files in dist and 49 local HTML references resolved.
-PASS — Calculation regression suite: passed.
-PASS — Defensive Modular Workspace regression suite: passed.
-PASS — Visual Command Deck / Admin Machine Control regression suite: passed.
-PASS — HTTP smoke test: index.html 200; igers-secure-connectivity.js 200; igers-secure-connectivity.css 200.
-PASS — HTML parse check: one body open/close; single secure-connectivity script reference; no duplicate IDs found.
-PASS — DOM-mock behavior tests: 9 checks passed, including module creation/mounting, stylesheet link, Android identification, online/offline status, non-claim of active VPN, and both guide buttons.
-PASS — Release has fewer than 98 root files after QA and install documentation.
+PASS — Original project archive integrity: 293 ZIP entries / source content extracted without CRC error.
+PASS — Updated full static app build: 93 release files after secure-connectivity documentation; builder enforces fewer than 98 root files.
+PASS — Existing production regression suite: engineering calculations, Defensive Modular Workspace, Visual Command Deck / Admin Machine Control all passed.
+PASS — New module JavaScript syntax check.
+PASS — Static HTML panel: present in index.html (visible even if the enhancer JS fails); navigation anchor targets the panel.
+PASS — CSS and JS are explicit local files with versioned index references.
+PASS — HTML structure: one body start/end, no duplicate IDs detected.
+PASS — Local resource audit: 0 missing relative href/src assets across index.html.
+PASS — Release markers and service-worker revision changed to 2026-10-15-secure-connectivity-v2.
+PASS — Mock DOM interaction test, 12 assertions: Android and Desktop platform detection; online/offline refresh; VPN remains NOT VERIFIED; VPN guide open/close; satellite requirements panel opens; ARIA expanded state updates.
+PASS — VPN/satellite status logic contains no “auto-connect” claim and no VPN private key/admin password.
 
-NOT VERIFIED / IMPORTANT LIMITS
-- Headless Chromium did not complete in this runtime; full real-browser rendering is unverified.
-- GitHub Pages deployment and tests on physical Android/Desktop are not performed.
-- No real VPN tunnel, VPN-provider credentials, satellite hardware, carrier entitlement, internet connectivity, or satellite internet was activated by this update.
-- The module deliberately does not report a VPN tunnel as active because a browser page cannot safely confirm or enable the system VPN.
-- No password was hard-coded into public JavaScript. An admin password embedded in a public static site would be visible to visitors; configure real access control on a server or in a native app.
+NOT VERIFIED — Chromium full-page rendering/screenshot did not complete in this execution environment; the HTTP local server probe also could not establish a loopback HTTP response. Browser rendering is therefore not marked PASS.
+NOT VERIFIED — GitHub Pages deployment, physical Android and Desktop behavior, native VPN client, VPN credentials/server, satellite modem/carrier and real internet tunnel.
 
-CONCLUSION
-Package-level source/build/regression/network-serving checks passed. The release is prepared for deployment, but a successful live deployment and end-to-end device run cannot honestly be confirmed before deploying it to the user's GitHub Pages host and testing on target devices.
+CONCLUSION — The integrated static panel is expected to appear after deployment from the correct repository root. A real VPN tunnel will NOT connect automatically from this web page: the user must install/configure a trusted VPN client or a separately developed native Android/Desktop app with OS permissions and a real VPN endpoint. The build and local code checks passed, but deployment or real-device success cannot be guaranteed from a local ZIP alone.
