@@ -1,0 +1,2 @@
+Paste this one line immediately before the closing </body> tag in the EXISTING current index.html:
+<script src="satellite-link-speed.js?v=20261016-mbps-v1" defer></script>

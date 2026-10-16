@@ -1,20 +1,16 @@
-IGERS POWERCORE — GITHUB PAGES UPLOAD PACKAGE
-Release date: 12 October 2026
+IGERS POWERCORE — Satellite / Internet Link Speed Test add-on
+Release: 2026-10-16-link-speed-v1
 
-এই ZIP-টি GitHub-এর একবারে ৯৮টির কম ফাইল আপলোড করার সীমা মাথায় রেখে তৈরি। ZIP-এর ভিতরে 45টি app runtime file এবং 3টি maintenance/test tool-সহ মোট 50টি ফাইল একই root level-এ আছে; আলাদা data/ বা magazine/ folder লাগবে না।
+এই ZIP-টি পুরো ওয়েবসাইট নয়; বর্তমান GitHub Pages সাইটের নতুন Atmosphere/RF এবং Secure Connectivity অংশ অক্ষত রেখে শুধু Mbps speed-test panel যোগ করার add-on। পুরোনো IGERS-POWERCORE-main (20).zip দিয়ে সম্পূর্ণ index.html overwrite করবেন না।
 
-UPLOAD STEPS
-1. ZIP Extract করুন।
-2. Extract করা folder-এর ভিতরের সব 50টি file select করুন। Parent folder বা ZIP ফাইলটিকে repo-তে upload করবেন না।
-3. GitHub repository খুলুন → Add file → Upload files।
-4. সব 50টি file একসঙ্গে drag/drop করুন। আগে থেকে একই নামের runtime file থাকলে নতুন release-এর version দিয়ে replace/overwrite করুন।
-5. Commit changes করুন। GitHub Pages যদি /docs folder বা অন্য branch থেকে publish করে, সেই existing publishing setting অপরিবর্তিত রাখুন এবং শুধু configured publish location-এ files দিন।
-6. Actions/Pages deployment সফল হলে site refresh করুন; stale service worker থাকলে hard refresh বা browser site data clear করে নতুন release পরীক্ষা করুন।
+১) ZIP extract করুন।
+২) শুধু satellite-link-speed.js ফাইলটি আপনার GitHub repository-এর বর্তমান main branch-এর root-এ upload করুন—index.html-এর পাশে যেখানে অন্যান্য .js ফাইল আছে।
+৩) GitHub-এ বর্তমান index.html খুলে Edit (✏️) চাপুন। শেষের দিকে </body> ট্যাগের ঠিক আগের লাইনে এই লাইনটি যোগ করুন:
+   <script src="satellite-link-speed.js?v=20261016-mbps-v1" defer></script>
+৪) Commit changes করুন। Actions → Pages-এ deployment Success না হওয়া পর্যন্ত অপেক্ষা করে সাইট Ctrl+Shift+R দিয়ে hard refresh করুন। Navigation-এর Infrastructure & Network group থেকে “Link Speed Test (Mbps)” খুলুন।
 
-IMPORTANT
-- index.html এবং এর পাশের CSS/JS/assets একই directory-তে থাকতে হবে। Files-কে নতুন folder-এর ভিতরে সরাবেন না।
-- .nojekyll ফাইলটি release-এর অংশ; file picker-এ hidden files দেখা না গেলে সেটিও আলাদাভাবে include করুন।
-- এটি একটি static GitHub Pages release। External provider feeds তাদের API/availability/CORS policy অনুযায়ী কাজ করবে; live data সবসময় guaranteed নয়।
-- Salah notification-এর জন্য HTTPS site, browser notification permission এবং user-activated alarm setup প্রয়োজন। Browser/app সম্পূর্ণ বন্ধ থাকলে static website নির্ভরযোগ্য alarm guarantee করে না।
-- Concept Lab-এর 3D/live-flow animation হলো conceptual visualization; real sensor telemetry বা measured power output নয়। Engineering deployment-এর আগে civil, traffic, electrical, environmental ও cost validation প্রয়োজন।
-- GitHub Pages frontend-only authentication production-grade server security নয়; secrets/API keys কখনো repository-তে commit করবেন না।
+গুরুত্বপূর্ণ সীমা:
+- Panelটি browser-এর বর্তমান network path দিয়ে public Cloudflare speed-test edge-এর download/upload Mbps ও latency মাপে। Test সফল হবে কি না তা browser, ISP, CORS/network policy এবং endpoint availability-এর ওপর নির্ভরশীল।
+- এই test একাই satellite ISP/terminal সক্রিয় আছে প্রমাণ করে না; সে জন্য provider/modem telemetry দরকার।
+- GitHub Pages-এর static page নিজে Windows/Android-এ system-level VPN tunnel তৈরি করতে পারে না। Tunnel-এর জন্য native VPN app এবং provider-এর বৈধ profile/config দরকার।
+- এই add-on ফাইলে system file, credentials, VPN keys বা provider password নেই।
